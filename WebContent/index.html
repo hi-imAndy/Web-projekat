@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Home page</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<link rel="stylesheet" type = "text/css" href = "css/home.css">
+</head>
+<body>
+	<nav>
+		<ul>
+			<li><a href = "#" v-on:click="login">Log in</a></li>
+			<li><a href = "#">Register</a></li>
+		</ul>
+	</nav>
+	
+	<div id = "home">
+		<table>
+			<tr>
+				<th>Location</th>
+				<th>Check in</th>
+				<th>Check out</th>
+				<th>Price</th>
+				<th>Guests</th>
+			</tr>
+			<tr>
+				<td><input type = "text"/></td>
+				<td><input type = "text"/></td>
+				<td><input type = "text"/></td>
+				<td><input type = "text"/></td>
+				<td><input type = "text"/></td>
+			</tr>
+		</table>
+	</div>
+	
+	<div id = "login" v-bind:disabled="mode=='BROWSE'">
+		<label>Log in</label></br></br>
+		<input type = "text" placeholder = "Username"/></br></br>
+		<input type = "password" placeholder = "Password"/></br></br>
+		<button>Login</button>
+	</div>
+
+	
+<script src="js/vue.js"></script>
+<script src="js/axios.js"></script>
+<script src="app/login.js"></script>
+</body>
+
+</html>
