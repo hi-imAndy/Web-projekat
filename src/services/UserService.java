@@ -1,5 +1,8 @@
 package services;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
@@ -50,6 +53,15 @@ public class UserService {
 	}
 	
 	@POST
+	@Path("/register")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public User register(User user) {
+		saveUser(user);
+		return user;
+	}
+	
+	@POST
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
 	public User login(@Context HttpServletRequest request, User user) {
@@ -77,5 +89,20 @@ public class UserService {
 		return (User) request.getSession().getAttribute("user");
 	}
 	
+	private void saveUser(User user) {
+		try {
+			
+			FileWriter fw = new FileWriter("files/users.txt",true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			PrintWriter pw = new PrintWriter(bw);
+			
+			pw.println(user.getUsername() + ";" + user.getPassword() + ";" + user.getFirstName() + ";" + user.getLastName() + ";" +"MALE" + ";" + "GUEST" );
+			pw.flush();
+			pw.close();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 }

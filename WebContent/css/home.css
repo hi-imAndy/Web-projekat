@@ -9,7 +9,6 @@ th{
 ul{
 	float : right;
 	list-style-type: none;
-	margin-top: 15px;
 	margin-right: 50px;
 	height : 20;
 }
@@ -21,7 +20,7 @@ ul li{
 
 #home{
 	position:fixed;
-	top:12%;
+	top:6%;
 	left:12%;
 }
 

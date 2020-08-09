@@ -4,14 +4,19 @@ var home = new Vue({
 		users:null,
 		user:{},
 		mode:"BROWSE",
-		title: "Home"
+		title: "Home",
+		login:false
 	},
 	mounted () {
-		
     },
 	methods:{
 		login : function(){
-			this.mode = "LOGIN";
+			$("#myModal").modal('show');
+		},
+		register : function(user){
+			axios
+	          .post('/Project/rest/users/register', user)
+	          .then(response => (this.user = response.data))
 		}
 	}
 });

@@ -7,14 +7,15 @@
 <link rel="stylesheet" type = "text/css" href = "css/home.css">
 </head>
 <body>
-	<nav>
-		<ul>
-			<li><a href = "#" v-on:click="login">Log in</a></li>
-			<li><a href = "#">Register</a></li>
-		</ul>
-	</nav>
 	
 	<div id = "home">
+		<nav>
+			<ul>
+				<li><a href = "#" v-on:click="login">Log in</a></li>
+				<li><a href = "#" v-on:click="register">Register</a></li>
+			</ul>
+		</nav>
+	
 		<table>
 			<tr>
 				<th>Location</th>
@@ -31,19 +32,37 @@
 				<td><input type = "text"/></td>
 			</tr>
 		</table>
+		
+		<!--  <label>Register</label></br></br>
+		<input type = "text" placeholder = "Username" v-model = "user.username"/></br></br>
+	    <input type = "text" placeholder = "Password" v-model = "user.password"/></br></br>
+	    <input type = "text" placeholder = "First name" v-model = "user.firstName"/></br></br>
+	    <input type = "text" placeholder = "Last name" v-model = "user.lastName"/></br></br>
+		<button v-on:click="register(user)">Register</button> -->
+		
 	</div>
 	
-	<div id = "login" v-bind:disabled="mode=='BROWSE'">
-		<label>Log in</label></br></br>
-		<input type = "text" placeholder = "Username"/></br></br>
-		<input type = "password" placeholder = "Password"/></br></br>
-		<button>Login</button>
+	<div class = "modal" id = "myModal">
+		<div class = "modal-dialog">
+			<div class = "modal-content">
+				<div class = "modal-header">
+					<h2 class = "modal-title">Log in</h2>
+				</div>
+				<div class = "modal-body">
+					<label>Log in</label></br></br>
+					<input type = "text" placeholder = "Username"/></br></br>
+					<input type = "password" placeholder = "Password"/></br></br>
+					<button>Login</button>
+				</div>
+			</div>
+		</div>
 	</div>
+	
 
 	
 <script src="js/vue.js"></script>
 <script src="js/axios.js"></script>
-<script src="app/login.js"></script>
+<script src="app/home.js"></script>
 </body>
 
 </html>
