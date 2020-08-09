@@ -8,6 +8,7 @@ import enums.ApartmentType;
 
 public class Apartment {
 	
+	private String id;
 	private ApartmentType apartmentType;
 	private int numberOfRooms;
 	private int numberOfGuests;
@@ -25,10 +26,11 @@ public class Apartment {
 	private List<Reservation> reservations;
 	
 	
-	public Apartment(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
+	public Apartment(String id, ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
 			List<Date> allDates, List<Date> availableDates, Host host, List<Comment> comments, List<String> pictures,
 			double pricePerNight, LocalTime checkInTime, LocalTime checkOutTime, boolean status,
 			List<Amenities> amenities, List<Reservation> reservations) {
+		this.id = id;
 		this.apartmentType = apartmentType;
 		this.numberOfRooms = numberOfRooms;
 		this.numberOfGuests = numberOfGuests;
@@ -45,7 +47,14 @@ public class Apartment {
 		this.amenities = amenities;
 		this.reservations = reservations;
 	}
+	
+	public String getId() {
+		return this.id;
+	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public ApartmentType getApartmentType() {
 		return apartmentType;

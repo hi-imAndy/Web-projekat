@@ -1,8 +1,11 @@
 package dao;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,15 +17,16 @@ import enums.Role;
 
 public class UserDAO {
 
-private Map<String, User> users = new HashMap<>();
-	
+	private Map<String, User> users = new HashMap<>();
+	private String path;
 	
 	public UserDAO() {
 		
 	}
 	
 	public UserDAO(String contextPath) {
-		loadUsers(contextPath);
+		this.path = contextPath;
+		loadUsers();
 	}
 	
 	public User find(String username, String password) {
@@ -44,10 +48,26 @@ private Map<String, User> users = new HashMap<>();
 		return users.values();
 	}
 	
-	private void loadUsers(String contextPath) {
+	public void saveUser(User user) {
+		users.put(user.getUsername(), user);
+		try {
+			File file = new File(path + "files/users.txt");
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+			PrintWriter pw = new PrintWriter(bw);
+			
+			pw.println(user.getUsername() + ";" + user.getPassword() + ";" + user.getFirstName() + ";" + user.getLastName() + ";" +"MALE" + ";" + "GUEST" );
+			pw.flush();
+			pw.close();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void loadUsers() {
 		BufferedReader in = null;
 		try {
-			File file = new File(contextPath + "/files/users.txt");
+			File file = new File(path + "/files/users.txt");
 			in = new BufferedReader(new FileReader(file));
 			String line;
 			StringTokenizer st;

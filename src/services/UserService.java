@@ -1,8 +1,5 @@
 package services;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
@@ -36,29 +33,17 @@ public class UserService {
 		}
 	}
 	
-	@GET
-	@Path("/getAllUsers")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<User> getAllUsers() {
-		UserDAO dao = (UserDAO) ctx.getAttribute("users");
-		return dao.findAll();
-	}
-	
-	@GET
-	@Path("/findByUsername")
-	@Produces(MediaType.APPLICATION_JSON)
-	public User getUser(String username) {
-		UserDAO dao = (UserDAO) ctx.getAttribute("users");
-		return dao.findByUsername(username);
-	}
-	
 	@POST
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public User register(User user) {
-		saveUser(user);
-		return user;
+		UserDAO dao = (UserDAO) ctx.getAttribute("users");
+		if(dao.findByUsername(user.getUsername()) == null) {
+			dao.saveUser(user);
+			return user;
+		}
+		return null;
 	}
 	
 	@POST
@@ -80,29 +65,13 @@ public class UserService {
 	public void logout(@Context HttpServletRequest request) {
 		request.getSession().invalidate();
 	}
-	
+
 	@GET
-	@Path("/currentUser")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/getAllUsers")
 	@Produces(MediaType.APPLICATION_JSON)
-	public User login(@Context HttpServletRequest request) {
-		return (User) request.getSession().getAttribute("user");
-	}
-	
-	private void saveUser(User user) {
-		try {
-			
-			FileWriter fw = new FileWriter("files/users.txt",true);
-			BufferedWriter bw = new BufferedWriter(fw);
-			PrintWriter pw = new PrintWriter(bw);
-			
-			pw.println(user.getUsername() + ";" + user.getPassword() + ";" + user.getFirstName() + ";" + user.getLastName() + ";" +"MALE" + ";" + "GUEST" );
-			pw.flush();
-			pw.close();
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
+	public Collection<User> getAllUsers() {
+		UserDAO dao = (UserDAO) ctx.getAttribute("users");
+		return dao.findAll();
 	}
 	
 }
