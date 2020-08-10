@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <link rel="stylesheet" type = "text/css" href = "css/home.css">
+<link rel="stylesheet" type = "text/css" href = "http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
 	
@@ -26,13 +27,15 @@
 			</tr>
 			<tr>
 				<td><input type = "text"/></td>
-				<td><input type = "text"/></td>
-				<td><input type = "text"/></td>
+				<td><input type="date" id="picker" class="form-control"></td>
+				<td><input type="date" id="picker" class="form-control"></td>
 				<td><input type = "text"/></td>
 				<td><input type = "text"/></td>
 			</tr>
 		</table>
-		
+						
+
+
 		<!--  <label>Register</label></br></br>
 		<input type = "text" placeholder = "Username" v-model = "user.username"/></br></br>
 	    <input type = "text" placeholder = "Password" v-model = "user.password"/></br></br>
@@ -62,7 +65,9 @@
 	
 	
 
-	
+<script> src = "http://code.jquery.com/jquery-3.3.1.min.js"</script>
+<script> src = "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"</script>
+<script> src = "http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"</script>
 <script src="js/vue.js"></script>
 <script src="js/axios.js"></script>
 <script src="app/home.js"></script>
