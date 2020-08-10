@@ -15,6 +15,8 @@ import javax.ws.rs.core.MediaType;
 
 import beans.User;
 import dao.UserDAO;
+import enums.Gender;
+import enums.Role;
 
 @Path("/users")
 public class UserService {

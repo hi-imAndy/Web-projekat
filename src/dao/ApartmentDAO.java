@@ -1,16 +1,13 @@
 package dao;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
+
+import org.codehaus.jackson.map.ObjectMapper;
 
 import beans.Apartment;
-import beans.User;
 
 public class ApartmentDAO {
 
@@ -31,48 +28,31 @@ public class ApartmentDAO {
 		saveApartment(ap);
 	}
 	
-	public void saveApartment(Apartment ap) {
+	
+	private void saveApartment(Apartment ap) {
+		
+		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			File file = new File(path + "files/apartments.txt");
-			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-			PrintWriter pw = new PrintWriter(bw);
-			
-			pw.println(""); //TODO: Zavrsiti metodu
-			pw.flush();
-			pw.close();
-			
+			objectMapper.writeValue(new File(path + "/files/apartments.json"), ap);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	private void loadApartments() {
-		BufferedReader in = null;
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		BufferedReader br;
 		try {
-			
-			File file = new File(this.path + "/files/apartments.txt");
-			in = new BufferedReader(new FileReader(file));
-			String line;
-			StringTokenizer st;
-			while((line = in.readLine()) != null) {
-				line = line.trim();
-				if(line.equals("") || line.indexOf('#') ==0) 
-					continue;
-				st = new StringTokenizer(line,";");
-				while(st.hasMoreTokens()) {
-					//TODO: zavrsiti funkciju
-				}
+			br = new BufferedReader(new FileReader(path + "/files/apartments.json"));
+			String line = br.readLine();
+			while(line != null) {
+				Apartment newApartment = objectMapper.readValue(line, Apartment.class);
+				apartments.put(newApartment.getId(), newApartment);
+				line = br.readLine();
 			}
-			
 		}catch(Exception e) {
 			e.printStackTrace();
-		}finally {
-			if (in != null) {
-				try {
-					in.close();
-				}
-				catch (Exception e) { }
-			}
 		}
 	}
 }

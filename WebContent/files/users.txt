@@ -1,3 +1,0 @@
-pera;peric;Pera;Peric;MALE;HOST
-mika;mikic;Mika;Mikic;FEMALE;GUEST
-djura;djuric;Djura;Djuric;MALE;GUEST
