@@ -8,15 +8,3 @@ ul li{
 	margin: 0 60px 0 0;
 }
 
-#login{
-	 top: 30%;
-	 left: 40%;
-	 position:absolute;
-	 border:2px solid #888;
-	 padding:40px;
-	 text-align:center;
-}
-
-#login label{
-	font-weight: bold;
-}

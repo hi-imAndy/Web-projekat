@@ -6,6 +6,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <link rel="stylesheet" type = "text/css" href = "css/home.css">
 <link rel="stylesheet" type = "text/css" href = "http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="icon" href="pictures/icon.jpg">
 </head>
 <body>
 	
@@ -14,7 +15,7 @@
 			<a href = "#" style="margin-left: 30px;">Home</a>
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><a href = "#" v-on:click="login" >Log in</a></li>
+					<li class="nav-item"><a href = "#" v-on:click="login" data-toggle="modal" data-target="#loginModal">Log in</a></li>
 					<li class="nav-item"><a href = "#" v-on:click="register" >Register</a></li>
 				</ul>
 			</div>
@@ -51,30 +52,6 @@
 			
 		</div>
 	
-		<!--
-			<table>
-			<tr>
-				<th>Location</th>
-				<th>Check in</th>
-				<th>Check out</th>
-				<th>Price</th>
-				<th>Guests</th>
-			</tr>
-			<tr>
-				<td><input type = "text"/></td>
-				<td><input type="date" id="picker" class="form-control"></td>
-				<td><input type="date" id="picker" class="form-control"></td>
-				<td><label><0</label></br><input id="myRange" class="slider" type="range" min="0" value="5" max="10" v-on:input = "rangeChange">
-				</td>
-				
-				<td><input type = "number" value="1" min="1" max="25" step="1" class = "form-control"/></td>
-			</tr>
-		</table>
-		-->
-		
-						
-
-
 		<!--  <label>Register</label></br></br>
 		<input type = "text" placeholder = "Username" v-model = "user.username"/></br></br>
 	    <input type = "text" placeholder = "Password" v-model = "user.password"/></br></br>
@@ -82,33 +59,60 @@
 	    <input type = "text" placeholder = "Last name" v-model = "user.lastName"/></br></br>
 		<button v-on:click="register(user)">Register</button> -->
 
-		<div  id = "myModal" class = "modal"> <!-- class = "modal" -->
-			<div class = "modal-dialog">
+		<div id="loginModal" class="modal fade"> 
+			<div class = "modal-dialog modal-dialog-centered">
 				<div class = "modal-content">
 					<div class = "modal-header">
-						<h2 class = "modal-title">Log in</h2>
+						<div class="container">
+							<div class="row justify-content-md-center">
+								<div class="col-5">
+									<img src="pictures/login.png" width="50px" height="50px"/>
+								</div>
+								<div class="col">
+									<h2 class = "modal-title">Login</h2>
+									</div>
+							</div>
+						</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span>&times</span>
+						</button>
 					</div>
 					<div class = "modal-body">
-						<label>Log in</label></br></br>
-						<input type = "text" placeholder = "Username"/></br></br>
-						<input type = "password" placeholder = "Password "/></br></br>
-						<button>Login</button>
+						<div class="container">
+							<div class="row justify-content-md-center">
+								<div class="col-md-auto">
+									<input type = "text" placeholder = "Username"/></br></br>
+								</div>
+							</div>
+							<div class="row justify-content-md-center">
+								<div class="col-md-auto">
+									<input type = "password" placeholder = "Password "/></br></br>
+								</div>
+							</div>
+							<div class="row justify-content-md-center">
+								<div class="col-md-auto">
+									<button type = "button" class="btn btn-primary">Log in</button>
+								</div>
+								<div class="col-md-auto">
+									<button type = "button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
 					</div>
+					
 				</div>
 			</div>
-		
-	</div>
+		</div>
 	
-	
-		
-</div>
-	
-
-	
-
+<!--
 <script> src = "http://code.jquery.com/jquery-3.3.1.min.js"</script>
 <script> src = "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"</script>
 <script> src = "http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"</script>
+
+-->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src="js/vue.js"></script>
 <script src="js/axios.js"></script>
 <script src="app/home.js"></script>
