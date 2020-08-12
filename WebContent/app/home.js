@@ -5,12 +5,16 @@ var home = new Vue({
 		user:{},
 		mode:"BROWSE",
 		title: "Home",
-		login:false
+		login:false,
+		register:false
 	},
 	mounted () {
     },
 	methods:{
 		login : function(){
+			$("#myModal").modal('show');
+		},
+		register : function(){
 			$("#myModal").modal('show');
 		},
 		register : function(user){
