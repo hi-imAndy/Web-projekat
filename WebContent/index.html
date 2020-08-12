@@ -10,14 +10,49 @@
 <body>
 	
 	<div id = "home">
-		<nav>
-			<ul>
-				<li><a href = "#" v-on:click="login">Log in</a></li>
-				<li><a href = "#" v-on:click="register">Register</a></li>
-			</ul>
+		<nav class="navbar navbar-light navbar-expand-lg navbar-expand-md navbar-expand-sm bg-light">
+			<a href = "#" style="margin-left: 30px;">Home</a>
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item"><a href = "#" v-on:click="login" >Log in</a></li>
+					<li class="nav-item"><a href = "#" v-on:click="register" >Register</a></li>
+				</ul>
+			</div>
 		</nav>
+
+		<div class="container" style="margin-top:40px">
+			<div class="row">
+				<div class="col" style="text-align: center;">Location</div>
+				<div class="col" style="text-align: center;">Check in</div>
+				<div class="col" style="text-align: center;">Check out</div>
+				<div class="col" style="text-align: center;">Price</div>
+				<div class="col" style="text-align: center;">Guests</div>
+			</div>
+			<div class = "row">
+				<div class="col">
+					<select class="browser-default custom-select" searchable="Search here..">
+						<option value="All">All</option>
+						<option value="Novi Sad">Novi Sad</option>
+						<option value="Beograd">Beograd</option>	
+				  	</select></div>
+				<div class="col"><input type="date" id="picker" class="form-control"></div>
+				<div class="col"><input type="date" id="picker" class="form-control"></div>
+				<div class="col"><b>0 </b><input type="range" id="myRange" class="slider"  min="0" value="5" max="10" v-on:input = "rangeChange" style="vertical-align:middle;"><b> 5000</b></div>
+				<div class="col"><input type = "number" value="1" min="1" max="25" step="1" class = "form-control"></div>
+			</div>
+			<!--
+			<div class = "row" style="padding-top: 50px;">
+				<div class = "col" style="border: 1px solid black;" >
+					</div>
+				<div class = "col" style="border: 1px solid black;" >
+					</div>
+			</div>
+			-->
+			
+		</div>
 	
-		<table>
+		<!--
+			<table>
 			<tr>
 				<th>Location</th>
 				<th>Check in</th>
@@ -29,10 +64,14 @@
 				<td><input type = "text"/></td>
 				<td><input type="date" id="picker" class="form-control"></td>
 				<td><input type="date" id="picker" class="form-control"></td>
-				<td><input type = "text"/></td>
+				<td><label><0</label></br><input id="myRange" class="slider" type="range" min="0" value="5" max="10" v-on:input = "rangeChange">
+				</td>
+				
 				<td><input type = "number" value="1" min="1" max="25" step="1" class = "form-control"/></td>
 			</tr>
 		</table>
+		-->
+		
 						
 
 
@@ -42,25 +81,27 @@
 	    <input type = "text" placeholder = "First name" v-model = "user.firstName"/></br></br>
 	    <input type = "text" placeholder = "Last name" v-model = "user.lastName"/></br></br>
 		<button v-on:click="register(user)">Register</button> -->
+
+		<div  id = "myModal" class = "modal"> <!-- class = "modal" -->
+			<div class = "modal-dialog">
+				<div class = "modal-content">
+					<div class = "modal-header">
+						<h2 class = "modal-title">Log in</h2>
+					</div>
+					<div class = "modal-body">
+						<label>Log in</label></br></br>
+						<input type = "text" placeholder = "Username"/></br></br>
+						<input type = "password" placeholder = "Password "/></br></br>
+						<button>Login</button>
+					</div>
+				</div>
+			</div>
 		
 	</div>
 	
-	<div  id = "myModal" hidden="true"> <!-- class = "modal" -->
-		<div class = "modal-dialog">
-			<div class = "modal-content">
-				<div class = "modal-header">
-					<h2 class = "modal-title">Log in</h2>
-				</div>
-				<div class = "modal-body">
-					<label>Log in</label></br></br>
-					<input type = "text" placeholder = "Username"/></br></br>
-					<input type = "password" placeholder = "Password "/></br></br>
-					<button>Login</button>
-				</div>
-			</div>
-		</div>
+	
 		
-	</div>
+</div>
 	
 
 	
