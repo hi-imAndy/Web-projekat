@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -49,6 +51,7 @@ public class UserDAO {
 	}
 	
 	public void saveUser(User user) {
+		
 		users.put(user.getUsername(), user);
 		ObjectMapper objectMapper = new ObjectMapper();
 
@@ -59,13 +62,15 @@ public class UserDAO {
 		    printWriter.print(userAsString);
 		    printWriter.print("\n");
 			printWriter.close();
-			System.out.println(userAsString);
+			//System.out.println(userAsString);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	private void loadUsers() {
+		
+		users.clear();
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		BufferedReader br;

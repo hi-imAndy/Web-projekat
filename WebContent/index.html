@@ -7,20 +7,22 @@
 <link rel="stylesheet" type = "text/css" href = "css/home.css">
 <link rel="stylesheet" type = "text/css" href = "http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <link rel="icon" href="pictures/icon.jpg">
+
 </head>
 <body>
 	
-	<div id = "home">
+<div id = "home">
+
 		<nav class="navbar navbar-light navbar-expand-lg navbar-expand-md navbar-expand-sm bg-light">
-			<a href = "#" style="margin-left: 30px;">Home</a>
+			<a href = "index.html" style="margin-left: 30px;">Home</a>
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><a href = "#" v-on:click="login" data-toggle="modal" data-target="#loginModal">Log in</a></li>
-					<li class="nav-item"><a href = "#" v-on:click="register" data-toggle="modal" data-target="#registerModal">Register</a></li>
+					<li class="nav-item"><a href = "#" data-toggle="modal" data-target="#loginModal">Log in</a></li>
+					<li class="nav-item"><a href = "#" data-toggle="modal" data-target="#registerModal">Register</a></li>
 				</ul>
 			</div>
 		</nav>
-
+		
 		<div class="container" style="margin-top:40px">
 			<div class="row">
 				<div class="col" style="text-align: center;">Location</div>
@@ -31,14 +33,14 @@
 			</div>
 			<div class = "row">
 				<div class="col">
-					<select class="browser-default custom-select" searchable="Search here..">
+					<select class="browser-default custom-select">
 						<option value="All">All</option>
 						<option value="Novi Sad">Novi Sad</option>
 						<option value="Beograd">Beograd</option>	
 				  	</select></div>
 				<div class="col"><input type="date" id="picker" class="form-control"></div>
 				<div class="col"><input type="date" id="picker" class="form-control"></div>
-				<div class="col"><b>0 </b><input type="range" id="myRange" class="slider"  min="0" value="5" max="10" v-on:input = "rangeChange" style="vertical-align:middle;"><b> 5000</b></div>
+				<div class="col"><b>0 </b><input type="range" id="myRange" class="slider"  min="0" value="5" max="10" style="vertical-align:middle;"><b> 5000</b></div>
 				<div class="col"><input type = "number" value="1" min="1" max="25" step="1" class = "form-control"></div>
 			</div>
 			<!--
@@ -50,15 +52,36 @@
 			</div>
 			-->
 			
+			<!--    ADMINISTRATOR: PREGLED SVIH KORISNIKA
+			<div class = "row" style="margin-top: 20px;">
+				<div class = "col">
+					<button type="button" class="btn btn-secondary" v-on:click="getAllUsers">View users</button>
+				</div>
+			</div>
+			<div class = "row">
+				<table style="border:1px solid black;"  >
+					<tr>
+						<th>Username</th>
+						<th>Password</th>
+						<th>First name</th>
+						<th>Last name</th>
+						<th>Gender</th>
+						<th>Role</th>
+					</tr>
+					<tr v-for="u in users">
+						<td>{{u.username }}</td>
+						<td>{{u.password }}</td>
+						<td>{{u.firstName }}</td>
+						<td>{{u.lastName }}</td>
+						<td>{{u.gender}}</td> 
+						<td>{{u.role}}</td>
+					</tr>
+				</table>
+			</div>
+			 -->
+			
 		</div>
-	
-		<!--  <label>Register</label></br></br>
-		<input type = "text" placeholder = "Username" v-model = "user.username"/></br></br>
-	    <input type = "text" placeholder = "Password" v-model = "user.password"/></br></br>
-	    <input type = "text" placeholder = "First name" v-model = "user.firstName"/></br></br>
-	    <input type = "text" placeholder = "Last name" v-model = "user.lastName"/></br></br>
-		<button v-on:click="register(user)">Register</button> -->
-
+	</div>
 		<div id="loginModal" class="modal fade"> 
 			<div class = "modal-dialog modal-dialog-centered">
 				<div class = "modal-content">
@@ -91,7 +114,7 @@
 							</div>
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
-									<button type = "button" class="btn btn-primary">Log in</button>
+									<button type = "button" class="btn btn-primary" v-on:click="login">Log in</button>
 								</div>
 								<div class="col-md-auto">
 									<button type = "button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -105,13 +128,15 @@
 		</div>
 
 	
-		<div id="registerModal" class="modal fade"  > 
+</div>
+
+<div id="registerModal" class="modal fade"  > 
 			<div class = "modal-dialog modal-dialog-centered">
 				<div class = "modal-content">
 					<div class = "modal-header">
 						<div class="container">
 							<div class="row justify-content-md-center">
-								<div class="col-5">
+								<div class="col-4">
 									<img src="pictures/login.png" width="50px" height="50px"/>
 								</div>
 								<div class="col">
@@ -128,36 +153,35 @@
 						<div class="container" >
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
-									<input type = "text" placeholder = "Username"/></br></br>
+									<input type = "text" placeholder = "Username" v-model="newUser.username"/></br></br>
 								</div>
 							</div>
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
-									<input type = "password" placeholder = "Password "/></br></br>
+									<input type = "password" placeholder = "Password" v-model="newUser.password"/></br></br>
 								</div>
 							</div>
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
-									<input type = "firstName" placeholder = "First Name "/></br></br>
+									<input type = "firstName" placeholder = "First Name " v-model="newUser.firstName"/></br></br>
 								</div>
 							</div>
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
-									<input type = "lastName" placeholder = "Last Name "/></br></br>
+									<input type = "lastName" placeholder = "Last Name " v-model="newUser.lastName"/></br></br>
 								</div>
-							</div>
-							<div>			
-								<select class="browser-default custom-select justify-content-md-center"  searchable="Search here.." >
-									<option value="Male">Male</option>
-									<option value="Female">Female</option>	
-								</select>
-							</div>			
-							<div>
-								<br>
-							</div>			
+							</div>		
 							<div class="row justify-content-md-center">
+								<div class = "col-md-6">
+									<select class="browser-default custom-select justify-content-md-center" v-model="newUser.gender" >
+										<option value="MALE">Male</option>
+										<option value="FEMALE">Female</option>	
+									</select>
+								</div>
+							</div>		
+							<div class="row justify-content-md-center" style="margin-top: 10px;">
 								<div class="col-md-auto">
-									<button type = "button" class="btn btn-primary">Register</button>
+									<button type = "button" class="btn btn-primary"  v-on:click="register(newUser)">Register</button>
 								</div>
 								<div class="col-md-auto">
 									<button type = "button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -165,16 +189,10 @@
 							</div>
 						</div>
 					</div>
-					
 				</div>
 			</div>
 		</div>	
-<!--
-<script> src = "http://code.jquery.com/jquery-3.3.1.min.js"</script>
-<script> src = "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"</script>
-<script> src = "http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"</script>
-
--->
+		
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

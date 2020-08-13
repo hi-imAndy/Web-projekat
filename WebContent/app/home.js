@@ -2,24 +2,35 @@ var home = new Vue({
 	el : '#home',
 	data:{
 		users:null,
-		user:{},
+		newUser:{},
 		mode:"BROWSE",
 		title: "Home",
-		login:false,
-		register:false
+		searchFieldUsername:"",
+		searchedUsers:null
+	},
+	mounted(){
+	},
+	methods:{
+		getAllUsers: function(){
+    		axios
+    		.get("/Project/rest/users/getAllUsers")
+    		.then(response => (this.users = response.data))
+    	}
+	}
+});
+
+var register = new Vue({
+	el:'#registerModal',
+	data:{
+		newUser:{}
 	},
 	mounted () {
+		this.newUser.role = "GUEST";
     },
 	methods:{
-		login : function(){
-			$("#myModal").modal('show');
-		},
-		register : function(){
-			$("#myModal").modal('show');
-		},
 		register : function(user){
 			axios
-	          .post('/Project/rest/users/register', user)
+	          .post("/Project/rest/users/register", user)
 	          .then(response => (this.user = response.data))
 		}
 	}

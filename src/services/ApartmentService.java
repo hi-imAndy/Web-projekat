@@ -1,7 +1,6 @@
 package services;
 
 import javax.annotation.PostConstruct;
-
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
