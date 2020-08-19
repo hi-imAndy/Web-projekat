@@ -57,7 +57,7 @@ public class UserDAO {
 
 		try {
 			String userAsString = objectMapper.writeValueAsString(user);
-			FileWriter fileWriter = new FileWriter(path + "/files/users.json", true);
+			FileWriter fileWriter = new FileWriter(path + "files\\users.json", true);
 		    PrintWriter printWriter = new PrintWriter(fileWriter);
 		    printWriter.print(userAsString);
 		    printWriter.print("\n");

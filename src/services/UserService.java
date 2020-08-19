@@ -40,13 +40,13 @@ public class UserService {
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public User register(User user) {
+	public String register(User user) {
 		UserDAO dao = (UserDAO) ctx.getAttribute("users");
 		if(dao.findByUsername(user.getUsername()) == null) {
 			dao.saveUser(user);
-			return user;
+			return "OK";
 		}
-		return null;
+		return "ERROR";
 	}
 	
 	@POST

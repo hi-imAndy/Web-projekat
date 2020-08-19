@@ -29,9 +29,15 @@ var register = new Vue({
     },
 	methods:{
 		register : function(user){
+			var u = {username : user.username, password : user.password, firstName : user.firstName, lastName : user.lastName, role:user.role, gender:user.gender};
 			axios
-	          .post("/Project/rest/users/register", user)
-	          .then(response => (this.user = response.data))
+	          .post("/Project/rest/users/register", u)
+	          .then(response => { 
+	        	  if(response.data=="OK")
+	        		  (alert("User " + u.firstName + " " + u.lastName + " is successfuly registered."));
+	        	  else
+	        		  (alert("User with that username already exists!"));
+	          })
 		}
 	}
 });
