@@ -51,11 +51,30 @@
 					</div>
 			</div>
 			-->
-			
 			<!--    ADMINISTRATOR: PREGLED SVIH KORISNIKA -->
 			<div class = "row" style="margin-top: 20px;">
-				<div class = "col">
+				<div class = "col-2">
 					<button type="button" class="btn btn-secondary" v-on:click="getAllUsers">View users</button>
+				</div>
+				<div class = "col-2">
+					<input type = "text" v-model="searchUsername" placeholder="Username..">
+				</div>
+				<div class = "col-1">
+					<select>
+						<option value = "GUEST">Guest</option>
+						<option value = "HOST">Host</option>
+						<option value = "ADMINISTRATOR">Admin</option>
+					</select>
+				</div>
+				<div class = "col-1">
+					<select>
+						<option value = "MALE">Male</option>
+						<option value = "FEMALE">Female</option>
+					</select>
+				</div>
+				
+				<div class = "col-2">
+					<button type="button" class="btn btn-secondary" v-on:click="search">Search</button>
 				</div>
 			</div>
 			<div class = "row">
@@ -199,11 +218,6 @@
 <script src="js/vue.js"></script>
 <script src="js/axios.js"></script>
 <script src="app/home.js"></script>
-
-<script src = "bootstrap-input-spinner.js"></script>
-<script>
-	$('input[type=number]').inputSpinner();
-</script>
 
 </body>
 

@@ -5,8 +5,7 @@ var home = new Vue({
 		newUser:{},
 		mode:"BROWSE",
 		title: "Home",
-		searchFieldUsername:"",
-		searchedUsers:null
+		searchUsername:""
 	},
 	mounted(){
 	},
@@ -14,6 +13,11 @@ var home = new Vue({
 		getAllUsers: function(){
     		axios
     		.get("/Project/rest/users/getAllUsers")
+    		.then(response => (this.users = response.data))
+    	},
+    	search : function(){
+    		axios
+    		.get("/Project/rest/users/searchUsers", {params: {username : this.searchUsername}})
     		.then(response => (this.users = response.data))
     	}
 	}

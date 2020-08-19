@@ -41,6 +41,15 @@ public class UserDAO {
 		}
 		return user;
 	}
+
+	public Collection<User> searchUsers(String username){
+		List<User> ret_users = new ArrayList<User>();
+		for(User u : users.values()) {
+			if(u.getUsername().equals(username))
+				ret_users.add(u);
+		}
+		return ret_users;
+	}
 	
 	public User findByUsername(String username) {
 		return users.get(username);
