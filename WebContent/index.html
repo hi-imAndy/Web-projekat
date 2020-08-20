@@ -52,7 +52,7 @@
 			</div>
 			-->
 			<!--    ADMINISTRATOR: PREGLED SVIH KORISNIKA -->
-			<div class = "row" style="margin-top: 20px;">
+			<div class = "row justify-content-between" style="margin-top: 20px;">
 				<div class = "col-2">
 					<button type="button" class="btn btn-secondary" v-on:click="getAllUsers">View users</button>
 				</div>
@@ -77,25 +77,33 @@
 					<button type="button" class="btn btn-secondary" v-on:click="search">Search</button>
 				</div>
 			</div>
-			<div class = "row">
-				<table style="border:1px solid black;"  >
-					<tr>
-						<th>Username</th>
-						<th>Password</th>
-						<th>First name</th>
-						<th>Last name</th>
-						<th>Gender</th>
-						<th>Role</th>
-					</tr>
-					<tr v-for="u in users">
-						<td>{{u.username }}</td>
-						<td>{{u.password }}</td>
-						<td>{{u.firstName }}</td>
-						<td>{{u.lastName }}</td>
-						<td>{{u.gender}}</td> 
-						<td>{{u.role}}</td>
-					</tr>
-				</table>
+			<div class = "row justify-content-md-center">
+				<div class = "col-md-auto">
+					<h3>List of all users</h3>
+				</div>
+			</div>
+			<div class = "row table-responsive">
+				<div class = "col">
+					<table class = "table table-bordered table-hover" >
+						<caption>List of all users</caption>
+						<tr class="table-info">
+							<th scope="col">Username</th>
+							<th scope="col">Password</th>
+							<th scope="col">First name</th>
+							<th scope="col">Last name</th>
+							<th scope="col">Gender</th>
+							<th scope="col">Role</th>
+						</tr>
+						<tr v-for="u in users">
+							<td>{{u.username }}</td>
+							<td>{{u.password }}</td>
+							<td>{{u.firstName }}</td>
+							<td>{{u.lastName }}</td>
+							<td>{{u.gender}}</td> 
+							<td>{{u.role}}</td>
+						</tr>
+					</table>
+				</div>
 			</div>
 			 
 			
