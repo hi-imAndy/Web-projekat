@@ -3,7 +3,6 @@
 <head>
 <title>Home page</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <link rel="stylesheet" type = "text/css" href = "css/home.css">
 <link rel="stylesheet" type = "text/css" href = "http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <link rel="icon" href="pictures/icon.jpg">
@@ -17,12 +16,12 @@
 			<a href = "index.html" style="margin-left: 30px;">Home</a>
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav ml-auto">
+					<li class="nav-item" v-if="mode != 'BROWSE'">{{currentUser.firstName + currentUser.lastName}}</li>
 					<li class="nav-item"><a href = "#" data-toggle="modal" data-target="#loginModal">Log in</a></li>
 					<li class="nav-item"><a href = "#" data-toggle="modal" data-target="#registerModal">Register</a></li>
 				</ul>
 			</div>
 		</nav>
-		
 		<div class="container" style="margin-top:40px">
 			<div class="row">
 				<div class="col" style="text-align: center;">Location</div>
@@ -52,31 +51,43 @@
 			</div>
 			-->
 			<!--    ADMINISTRATOR: PREGLED SVIH KORISNIKA -->
-			<div class = "row justify-content-between" style="margin-top: 20px;">
-				<div class = "col-2">
-					<button type="button" class="btn btn-secondary" v-on:click="getAllUsers">View users</button>
+			<div class = "row justify-content-end" style="margin-top: 20px;">
+				<div class="col-2 custom-control custom-checkbox">
+				    <input type="checkbox" class="custom-control-input" id="defaultUnchecked1" v-model="usernameChecked">
+				    <label class="custom-control-label" for="defaultUnchecked1">Search by username</label>
 				</div>
+				<div class="col-1 custom-control custom-checkbox">
+				    <input type="checkbox" class="custom-control-input" id="defaultUnchecked2" v-model="roleChecked">
+				    <label class="custom-control-label" for="defaultUnchecked2">Role</label>
+				</div>
+				<div class="col-1 custom-control custom-checkbox">
+				    <input type="checkbox" class="custom-control-input" id="defaultUnchecked3" v-model="genderChecked">
+				    <label class="custom-control-label" for="defaultUnchecked3">Gender</label>
+				</div>
+			</div>
+			<div class = "row justify-content-md-end">
 				<div class = "col-2">
-					<input type = "text" v-model="searchUsername" placeholder="Username..">
+					<input type = "text" v-model="searchUsername" placeholder="Username.." v-bind:disabled="usernameChecked==false">
 				</div>
 				<div class = "col-1">
-					<select>
+					<select v-model="searchRole" v-bind:disabled="roleChecked==false">
 						<option value = "GUEST">Guest</option>
 						<option value = "HOST">Host</option>
 						<option value = "ADMINISTRATOR">Admin</option>
 					</select>
 				</div>
 				<div class = "col-1">
-					<select>
+					<select v-model="searchGender" v-bind:disabled="genderChecked==false">
 						<option value = "MALE">Male</option>
 						<option value = "FEMALE">Female</option>
 					</select>
 				</div>
-				
-				<div class = "col-2">
+		    </div>
+		    <div class = "row justify-content-md-end">
+		    	<div class = "col-2">
 					<button type="button" class="btn btn-secondary" v-on:click="search">Search</button>
 				</div>
-			</div>
+		    </div>
 			<div class = "row justify-content-md-center">
 				<div class = "col-md-auto">
 					<h3>List of all users</h3>
@@ -105,10 +116,9 @@
 					</table>
 				</div>
 			</div>
-			 
-			
 		</div>
-	</div>
+</div>
+	
 		<div id="loginModal" class="modal fade"> 
 			<div class = "modal-dialog modal-dialog-centered">
 				<div class = "modal-content">
@@ -154,8 +164,6 @@
 			</div>
 		</div>
 
-	
-</div>
 
 <div id="registerModal" class="modal fade"  > 
 			<div class = "modal-dialog modal-dialog-centered">

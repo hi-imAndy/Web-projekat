@@ -42,12 +42,65 @@ public class UserDAO {
 		return user;
 	}
 
-	public Collection<User> searchUsers(String username){
+	public Collection<User> searchUsers(String username, Role role, Gender gender, boolean u, boolean r, boolean g){
 		List<User> ret_users = new ArrayList<User>();
-		for(User u : users.values()) {
-			if(u.getUsername().contains(username))
-				ret_users.add(u);
+		
+		if(u) {
+			if(r) {
+				if(g) {
+					for(User user : users.values()) {
+						if(user.getUsername().contains(username) && user.getRole() == role && user.getGender() == gender) {
+							ret_users.add(user);
+						}
+					}
+				}else {
+					for(User user : users.values()) {
+						if(user.getUsername().contains(username) && user.getRole() == role) {
+							ret_users.add(user);
+						}
+					}
+				}
+			}else {
+				if(g) {
+					for(User user : users.values()) {
+						if(user.getUsername().contains(username) && user.getGender() == gender) {
+							ret_users.add(user);
+						}
+					}
+				}else {
+					for(User user : users.values()) {
+						if(user.getUsername().contains(username)) {
+							ret_users.add(user);
+						}
+					}
+				}
+			}
+		}else {
+			if(r) {
+				if(g) {
+					for(User user : users.values()) {
+						if(user.getRole() == role && user.getGender() == gender) {
+							ret_users.add(user);
+						}
+					}
+				}else {
+					for(User user : users.values()) {
+						if(user.getRole() == role) {
+							ret_users.add(user);
+						}
+					}
+				}
+			}else {
+				if(g) {
+					for(User user : users.values()) {
+						if(user.getGender() == gender) {
+							ret_users.add(user);
+						}
+					}
+				}
+			}
 		}
+		
 		return ret_users;
 	}
 	

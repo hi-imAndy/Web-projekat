@@ -1,6 +1,8 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -17,6 +19,8 @@ import javax.ws.rs.core.MediaType;
 
 import beans.User;
 import dao.UserDAO;
+import enums.Gender;
+import enums.Role;
 
 @Path("/users")
 public class UserService {
@@ -80,9 +84,9 @@ public class UserService {
 	@GET
 	@Path("/searchUsers")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<User> searchUsers(@QueryParam("username") String username) {
+	public Collection<User> searchUsers(@QueryParam("username") String username, @QueryParam("role") Role role,@QueryParam("gender") Gender gender,@QueryParam("u") boolean u,@QueryParam("r") boolean r,@QueryParam("g") boolean g) {
 		UserDAO dao = (UserDAO) ctx.getAttribute("users");
-		return dao.searchUsers(username);
+		return dao.searchUsers(username, role, gender, u, r, g);
 	}
 	
 }

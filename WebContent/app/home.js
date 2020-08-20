@@ -2,12 +2,20 @@ var home = new Vue({
 	el : '#home',
 	data:{
 		users:null,
-		newUser:{},
 		mode:"BROWSE",
-		title: "Home",
-		searchUsername:""
+		searchUsername:"",
+		searchRole:"",
+		searchGender:"",
+		loginInfo:{},
+		currentUser:{},
+		usernameChecked:false,
+		roleChecked:false,
+		genderChecked:false
 	},
 	mounted(){
+		axios
+		.get("/Project/rest/users/getAllUsers")
+		.then(response => (this.users = response.data))
 	},
 	methods:{
 		getAllUsers: function(){
@@ -16,9 +24,14 @@ var home = new Vue({
     		.then(response => (this.users = response.data))
     	},
     	search : function(){
-    		axios
-    		.get("/Project/rest/users/searchUsers", {params: {username : this.searchUsername}})
-    		.then(response => (this.users = response.data))
+    		if(this.usernameChecked === true || this.roleChecked === true || this.genderChecked == true){
+    			axios
+        		.get("/Project/rest/users/searchUsers", {params: {username : this.searchUsername, role : this.searchRole, gender: this.searchGender, u : this.usernameChecked, r: this.roleChecked, g: this.genderChecked}})
+        		.then(response => (this.users = response.data))
+    		}
+    	},
+    	login : function(){
+    		this.mode = 'logged';
     	}
 	}
 });
@@ -42,6 +55,17 @@ var register = new Vue({
 	        	  else
 	        		  (alert("User with that username already exists!"));
 	          })
+		}
+	}
+});
+
+var login = new Vue({
+	el:'#loginModal',
+	data:{
+	},
+	methods:{
+		login : function(){
+			this.mode = 'logged';
 		}
 	}
 });
