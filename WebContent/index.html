@@ -119,6 +119,7 @@
 		</div>
 </div>
 	
+
 		<div id="loginModal" class="modal fade"> 
 			<div class = "modal-dialog modal-dialog-centered">
 				<div class = "modal-content">
@@ -164,76 +165,105 @@
 			</div>
 		</div>
 
-
-<div id="registerModal" class="modal fade"  > 
-			<div class = "modal-dialog modal-dialog-centered">
-				<div class = "modal-content">
-					<div class = "modal-header">
-						<div class="container">
-							<div class="row justify-content-md-center">
-								<div class="col-4">
-									<img src="pictures/login.png" width="50px" height="50px"/>
-								</div>
-								<div class="col">
-									<h2 class = "modal-title">Register</h2>
+<form action = "" class = "main-form needs-validation" novalidate >
+		<div id="registerModal" class="modal fade"  > 
+					<div class = "modal-dialog modal-dialog-centered">
+						<div class = "modal-content">
+							<div class = "modal-header">
+								<div class="container">
+									<div class="row justify-content-md-center">
+										<div class="col-4">
+											<img src="pictures/login.png" width="50px" height="50px"/>
+										</div>
+										<div class="col">
+											<h2 class = "modal-title">Register</h2>
+											</div>
 									</div>
+								</div>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span>&times</span>
+								</button>
 							</div>
-						</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span>&times</span>
-						</button>
-					</div>
-
-					<div class = "modal-body " >
-						<div class="container" >
-							<div class="row justify-content-md-center">
-								<div class="col-md-auto">
-									<input type = "text" placeholder = "Username" v-model="newUser.username"/></br></br>
-								</div>
-							</div>
-							<div class="row justify-content-md-center">
-								<div class="col-md-auto">
-									<input type = "password" placeholder = "Password" v-model="newUser.password"/></br></br>
-								</div>
-							</div>
-							<div class="row justify-content-md-center">
-								<div class="col-md-auto">
-									<input type = "firstName" placeholder = "First Name " v-model="newUser.firstName"/></br></br>
-								</div>
-							</div>
-							<div class="row justify-content-md-center">
-								<div class="col-md-auto">
-									<input type = "lastName" placeholder = "Last Name " v-model="newUser.lastName"/></br></br>
-								</div>
-							</div>		
-							<div class="row justify-content-md-center">
-								<div class = "col-md-6">
-									<select class="browser-default custom-select justify-content-md-center" v-model="newUser.gender" >
-										<option value="MALE">Male</option>
-										<option value="FEMALE">Female</option>	
-									</select>
-								</div>
-							</div>		
-							<div class="row justify-content-md-center" style="margin-top: 10px;">
-								<div class="col-md-auto">
-									<button type = "button" class="btn btn-primary"  v-on:click="register(newUser)">Register</button>
-								</div>
-								<div class="col-md-auto">
-									<button type = "button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>	
 		
+							<div class = "modal-body " >
+								<div class="container" >
+									<div class="row justify-content-md-center">
+										<div class="col-md-auto">
+											<input class = "form-control" type = "text" placeholder = "Username" v-model="newUser.username" required>
+											<div class = "invalid-feedback">This field can't be empty.</div></br>
+										</div>
+									</div>
+									<div class="row justify-content-md-center">
+										<div class="col-md-auto">
+											<input class = "form-control"type = "password" placeholder = "Password" v-model="newUser.password" required pattern=".{8,}"  title="8 characters minimum" >
+											<div class = "invalid-feedback">Password must contain minimum 8 characters.</div></br>
+										</div>
+									</div>
+									<div class="row justify-content-md-center">
+										<div class="col-md-auto">
+											<input class = "form-control" type = "password" placeholder = "Confirm Password" v-model="newUser.passwordConfirm" required pattern=".{8,}"  title="8 characters minimum" >
+											<div class = "invalid-feedback">This field can't be empty.</div></br>
+										</div>
+									</div>
+									<div class="row justify-content-md-center">
+										<div class="col-md-auto">
+											<input class = "form-control" type = "firstName" placeholder = "First Name " v-model="newUser.firstName" required>
+											<div class = "invalid-feedback">This field can't be empty.</div></br>
+										</div>
+									</div>
+									<div class="row justify-content-md-center">
+										<div class="col-md-auto">
+											<input class = "form-control" type = "lastName" placeholder = "Last Name " v-model="newUser.lastName" required>
+											<div class = "invalid-feedback">This field can't be empty.</div></br>
+										</div>
+									</div>		
+									<div class="row justify-content-md-center">
+										<div class = "col-md-6">
+											<select class = "form-control" class="browser-default custom-select justify-content-md-center" v-model="newUser.gender" required >
+												<option value="MALE">Male</option>
+												<option value="FEMALE">Female</option>	
+											</select>
+											<div class = "invalid-feedback">This field can't be empty.</div></br>
+										</div>
+									</div>		
+									<div class="row justify-content-md-center" style="margin-top: 10px;">
+										<div class="col-md-auto">
+											<button type = "submit" class="btn btn-primary" v-on:click="register(newUser)">Register</button>
+										</div>
+										<div class="col-md-auto">
+											<button type = "button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>	
+</form>		
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src="js/vue.js"></script>
 <script src="js/axios.js"></script>
 <script src="app/home.js"></script>
+
+<script>
+	var form = document.querySelector('.needs-validation');
+	
+	form.addEventListener('submit',function(event){
+		if(form.checkValidity() === false){
+			event.preventDefault(); 
+			event.stopPropagation();
+		}
+		
+		form.classList.add('was-validated');
+		
+		
+	})
+	
+	
+	
+</script>
 
 </body>
 
