@@ -46,15 +46,21 @@ var register = new Vue({
     },
 	methods:{
 		register : function(user){
-			var u = {username : user.username, password : user.password, firstName : user.firstName, lastName : user.lastName, role:user.role, gender:user.gender};
-			axios
-	          .post("/Project/rest/users/register", u)
-	          .then(response => { 
-	        	  if(response.data=="OK")
-	        		  (alert("User " + u.firstName + " " + u.lastName + " is successfuly registered."));
-	        	  else
-	        		  (alert("User with that username already exists!"));
-	          })
+			if(user.username != "" && user.username != undefined && user.username != null && user.password != "" && user.password != undefined && user.password != null && user.passwordConfirm != "" && user.passwordConfirm != undefined && user.passwordConfirm != null && user.firstName != "" &&  user.firstName != undefined && user.firstName != null && user.lastName != "" && user.lastName != undefined && user.lastName != null && user.gender != "" && user.gender != undefined && user.gender != null){
+				if(user.password != user.passwordConfirm){
+					alert("Passwords don't match!");
+				}else{
+				var u = {username : user.username, password : user.password, firstName : user.firstName, lastName : user.lastName, role:user.role, gender:user.gender};
+				axios
+		          .post("/Project/rest/users/register", u)
+		          .then(response => { 
+		        	  if(response.data=="OK")
+		        		  (alert("User " + u.firstName + " " + u.lastName + " is successfuly registered."));
+		        	  else
+		        		  (alert("User with that username already exists!"));
+		          })
+				}
+			}
 		}
 	}
 });
