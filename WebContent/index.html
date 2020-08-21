@@ -119,7 +119,7 @@
 		</div>
 </div>
 	
-
+<form action = "" class = "main-form needs-validation" novalidate >
 		<div id="loginModal" class="modal fade"> 
 			<div class = "modal-dialog modal-dialog-centered">
 				<div class = "modal-content">
@@ -142,17 +142,21 @@
 						<div class="container">
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
-									<input type = "text" placeholder = "Username"/></br></br>
+									<input class = "form-control" type = "text" placeholder = "Username" required="required"/>
+									<div class = "invalid-feedback">This field can't be empty.</div></br>
+									
 								</div>
 							</div>
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
-									<input type = "password" placeholder = "Password "/></br></br>
+									<input class = "form-control" type = "password" placeholder = "Password " required="required" pattern=".{8,}"  title="8 characters minimum" />
+									<div class = "invalid-feedback">This field can't be empty.</div></br>
+									
 								</div>
 							</div>
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
-									<button type = "button" class="btn btn-primary" v-on:click="login">Log in</button>
+									<button type = "submit" class="btn btn-primary" v-on:click="login">Log in</button>
 								</div>
 								<div class="col-md-auto">
 									<button type = "button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -164,6 +168,7 @@
 				</div>
 			</div>
 		</div>
+</form>		
 
 <form action = "" class = "main-form needs-validation" novalidate >
 		<div id="registerModal" class="modal fade"  > 
