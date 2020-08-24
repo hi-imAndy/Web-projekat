@@ -16,9 +16,11 @@
 			<a href = "index.html" style="margin-left: 30px;">Home</a>
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item" v-if="mode != 'BROWSE'">{{currentUser.firstName + currentUser.lastName}}</li>
-					<li class="nav-item"><a href = "#" data-toggle="modal" data-target="#loginModal">Log in</a></li>
-					<li class="nav-item"><a href = "#" data-toggle="modal" data-target="#registerModal">Register</a></li>
+					<li class="nav-item" v-if="mode != 'BROWSE'">{{currentUser.firstName + "  " + currentUser.lastName}}</li>
+					<li class="nav-item" v-if="mode != 'LOGIN'"><a href = "#" data-toggle="modal" data-target="#loginModal">Log in</a></li>
+					<li class="nav-item" v-else><a href = "#" data-toggle="modal" data-target="#loginModal">Account settings</a></li>
+					<li class="nav-item" v-if="mode != 'LOGIN'"><a href = "#" data-toggle="modal" data-target="#registerModal">Register</a></li>
+					<li class="nav-item" v-else><a href = "#" data-toggle="modal" data-target="#loginModal">Log out</a></li>
 				</ul>
 			</div>
 		</nav>
@@ -119,7 +121,7 @@
 		</div>
 </div>
 	
-<form action = "" class = "main-form needs-validation" novalidate >
+<form >
 		<div id="loginModal" class="modal fade"> 
 			<div class = "modal-dialog modal-dialog-centered">
 				<div class = "modal-content">
@@ -142,21 +144,21 @@
 						<div class="container">
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
-									<input class = "form-control" type = "text" placeholder = "Username" required="required"/>
+									<input class = "form-control" type = "text" placeholder = "Username" v-model="loginInfo.username" required="required"/>
 									<div class = "invalid-feedback">This field can't be empty.</div></br>
 									
 								</div>
 							</div>
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
-									<input class = "form-control" type = "password" placeholder = "Password " required="required" pattern=".{8,}"  title="8 characters minimum" />
+									<input class = "form-control" type = "password" placeholder = "Password " v-model="loginInfo.password" required="required" pattern=".{8,}"  title="8 characters minimum" />
 									<div class = "invalid-feedback">This field can't be empty.</div></br>
 									
 								</div>
 							</div>
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
-									<button type = "submit" class="btn btn-primary" v-on:click="login">Log in</button>
+									<button type = "button" class="btn btn-primary" v-on:click="login(loginInfo)">Log in</button>
 								</div>
 								<div class="col-md-auto">
 									<button type = "button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -207,7 +209,7 @@
 									<div class="row justify-content-md-center">
 										<div class="col-md-auto">
 											<input class = "form-control" type = "password" placeholder = "Confirm Password" v-model="newUser.passwordConfirm" required pattern=".{8,}"  title="8 characters minimum" >
-											<div class = "invalid-feedback">This field can't be empty.</div></br>
+											<div class = "invalid-feedback">Password must contain minimum 8 characters.</div></br>
 										</div>
 									</div>
 									<div class="row justify-content-md-center">
@@ -233,7 +235,7 @@
 									</div>		
 									<div class="row justify-content-md-center" style="margin-top: 10px;">
 										<div class="col-md-auto">
-											<button type = "submit" class="btn btn-primary" v-on:click="register(newUser)">Register</button>
+											<button type = "button" class="btn btn-primary" v-on:click="register(newUser)">Register</button>
 										</div>
 										<div class="col-md-auto">
 											<button type = "button" class="btn btn-secondary" data-dismiss="modal">Close</button>

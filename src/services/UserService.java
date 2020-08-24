@@ -52,15 +52,14 @@ public class UserService {
 		return "ERROR";
 	}
 	
-	@POST
+	@GET
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
-	public User login(@Context HttpServletRequest request, User user) {
+	public User login(@QueryParam("username") String username,@QueryParam("password") String password) {
 		UserDAO dao = (UserDAO) ctx.getAttribute("users");
-		User loggedUser = dao.find(user.getUsername(), user.getPassword());
-		if(loggedUser != null) {
-			request.getSession().setAttribute("user", loggedUser);
-		}
+		User loggedUser = dao.find(username, password);
+
+		
 		return loggedUser;
 	}
 	
@@ -90,3 +89,5 @@ public class UserService {
 	}
 	
 }
+	
+

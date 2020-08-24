@@ -54,8 +54,10 @@ var register = new Vue({
 				axios
 		          .post("/Project/rest/users/register", u)
 		          .then(response => { 
-		        	  if(response.data=="OK")
+		        	  if(response.data=="OK"){
 		        		  (alert("User " + u.firstName + " " + u.lastName + " is successfuly registered."));
+							$('#registerModal').modal('hide')
+						}
 		        	  else
 		        		  (alert("User with that username already exists!"));
 		          })
@@ -68,10 +70,36 @@ var register = new Vue({
 var login = new Vue({
 	el:'#loginModal',
 	data:{
+		loginInfo:{},
+		logedUser : null,
+		mode : "BROWSE"
 	},
+	mounted () {
+		this.loginInfo.username = null;
+		this.logedUser = null;
+		this.mode = "BROWSE"
+		home.mode = "BROWSE";
+    },
 	methods:{
-		login : function(){
-			this.mode = 'logged';
+		login : function(loginInfo){				
+				axios
+		          .get("/Project/rest/users/login", {params: {username : loginInfo.username, password : loginInfo.password}})
+		          .then(response => {
+					this.logedUser = response.data; 					
+					if(this.logedUser != ""){
+						home.currentUser.firstName = this.logedUser.firstName;
+						home.currentUser.lastName = this.logedUser.lastName;
+						this.mode = "LOGIN";
+						home.mode = "LOGIN";
+						$('#loginModal').modal('hide')
+      					
+						}
+					else{
+						alert("Username or password are incorrect");
+						} })
+
 		}
-	}
+		}
 });
+
+
