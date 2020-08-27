@@ -58,8 +58,6 @@ public class UserService {
 	public User login(@QueryParam("username") String username,@QueryParam("password") String password) {
 		UserDAO dao = (UserDAO) ctx.getAttribute("users");
 		User loggedUser = dao.find(username, password);
-
-		
 		return loggedUser;
 	}
 	
@@ -86,6 +84,15 @@ public class UserService {
 	public Collection<User> searchUsers(@QueryParam("username") String username, @QueryParam("role") Role role,@QueryParam("gender") Gender gender,@QueryParam("u") boolean u,@QueryParam("r") boolean r,@QueryParam("g") boolean g) {
 		UserDAO dao = (UserDAO) ctx.getAttribute("users");
 		return dao.searchUsers(username, role, gender, u, r, g);
+	}
+	
+	@GET
+	@Path("/updateAccount")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public boolean updateUser(@QueryParam("username") String username,@QueryParam("oldPassword") String oldPassword,@QueryParam("password") String password,@QueryParam("confirmPassword") String confirmPassword,@QueryParam("firstName") String firstName,@QueryParam("lastName") String lastName) {
+		UserDAO dao = (UserDAO) ctx.getAttribute("users");
+		return dao.changeUserData(username, oldPassword, confirmPassword, confirmPassword, firstName, lastName);
 	}
 	
 }

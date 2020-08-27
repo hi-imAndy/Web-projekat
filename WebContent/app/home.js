@@ -77,14 +77,17 @@ var login = new Vue({
 	mounted () {
 		this.loginInfo.username = null;
 		this.logedUser = null;
-		this.mode = "BROWSE"
+		this.mode = "BROWSE";
 		home.mode = "BROWSE";
     },
 	methods:{
 		login : function(loginInfo){				
 				axios
-		          .get("/Project/rest/users/login", {params: {username : loginInfo.username, password : loginInfo.password}})
+		          .get("/Project/rest/users/login", {params: {username:loginInfo.username, password : loginInfo.password}})
 		          .then(response => {
+					accountModal.logedUser = response.data;
+					accountModal.updatedUser = response.data;
+					accountModal.updatedUser.oldPassword = accountModal.logedUser.password;
 					this.logedUser = response.data; 					
 					if(this.logedUser != ""){
 						home.currentUser.firstName = this.logedUser.firstName;
@@ -102,4 +105,31 @@ var login = new Vue({
 		}
 });
 
+var accountModal = new Vue({
+	el:'#accountModal',
+	data:{
+		logedUser : null,
+		updatedUser : null
+	},
+	mounted () {
+    },
+	methods:{
+		updateAccount : function(updatedUser){		
+				axios
+		          .get("/Project/rest/users/updateAccount",{params:{username : updatedUser.username, oldPassword : updatedUser.oldPassword,
+															password : updatedUser.password , confirmPassword : updatedUser.confirmPassword ,
+															firstName : updatedUser.firstName , lastName : updatedUser.lastName}})
+		          .then(response => {
+						alert("proba");
+						if(response.data){
+							alert("Sucessfuly updated");
+							$('#accountModal').modal('hide')
+						}
+						else
+							alert("Passwords are not matching");
+							})
+
+		}
+		}
+});
 

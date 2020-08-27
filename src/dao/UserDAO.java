@@ -41,6 +41,7 @@ public class UserDAO {
 		}
 		return user;
 	}
+	
 
 	public Collection<User> searchUsers(String username, Role role, Gender gender, boolean u, boolean r, boolean g){
 		List<User> ret_users = new ArrayList<User>();
@@ -150,4 +151,31 @@ public class UserDAO {
 		}
 	}
 	
+	public void updateUser(User user , String username) {
+		users.replace(username, user);
+	}
+	
+	public boolean changeUserData(String username, String oldPassword , String password, String passwordConfirm ,String firstName,String lastName) {
+
+		if(password != null && passwordConfirm != null)
+			if(password != passwordConfirm && !password.isEmpty() && !passwordConfirm.isEmpty() ) {
+
+				return false;
+			}
+			
+			User u = findByUsername(username);
+			if(password != null && passwordConfirm != null)
+				if(!password.isEmpty() && !passwordConfirm.isEmpty() )
+					u.setPassword(password);
+			u.setFirstName(firstName);
+			u.setLastName(lastName);
+			updateUser(u, username);
+
+
+			return true;
+		
+		
+	}
+	
+
 }
