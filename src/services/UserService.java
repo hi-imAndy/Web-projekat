@@ -92,7 +92,7 @@ public class UserService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public boolean updateUser(@QueryParam("username") String username,@QueryParam("oldPassword") String oldPassword,@QueryParam("password") String password,@QueryParam("confirmPassword") String confirmPassword,@QueryParam("firstName") String firstName,@QueryParam("lastName") String lastName) {
 		UserDAO dao = (UserDAO) ctx.getAttribute("users");
-		return dao.changeUserData(username, oldPassword, confirmPassword, confirmPassword, firstName, lastName);
+		return dao.changeUserData(username, oldPassword, password, confirmPassword, firstName, lastName);
 	}
 	
 }

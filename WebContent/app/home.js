@@ -94,6 +94,7 @@ var login = new Vue({
 						home.currentUser.lastName = this.logedUser.lastName;
 						this.mode = "LOGIN";
 						home.mode = "LOGIN";
+						accountModal.updatedUser.password = null;
 						$('#loginModal').modal('hide')
       					
 						}
@@ -112,15 +113,16 @@ var accountModal = new Vue({
 		updatedUser : null
 	},
 	mounted () {
+		
     },
 	methods:{
-		updateAccount : function(updatedUser){		
+		updateAccount : function(updatedUser){	
+				
 				axios
 		          .get("/Project/rest/users/updateAccount",{params:{username : updatedUser.username, oldPassword : updatedUser.oldPassword,
 															password : updatedUser.password , confirmPassword : updatedUser.confirmPassword ,
 															firstName : updatedUser.firstName , lastName : updatedUser.lastName}})
 		          .then(response => {
-						alert("proba");
 						if(response.data){
 							alert("Sucessfuly updated");
 							$('#accountModal').modal('hide')

@@ -156,24 +156,30 @@ public class UserDAO {
 	}
 	
 	public boolean changeUserData(String username, String oldPassword , String password, String passwordConfirm ,String firstName,String lastName) {
-
-		if(password != null && passwordConfirm != null)
-			if(password != passwordConfirm && !password.isEmpty() && !passwordConfirm.isEmpty() ) {
-
-				return false;
+			for(int i = 0 ; i < 100 ; i++) {
+				System.out.println("PASSWORD: " + password);
 			}
+			for(int i = 0 ; i < 100 ; i++) {
+				System.out.println("CONFIRM: " + passwordConfirm);
+			}
+
+
 			
 			User u = findByUsername(username);
-			if(password != null && passwordConfirm != null)
-				if(!password.isEmpty() && !passwordConfirm.isEmpty() )
+			if(password != null || passwordConfirm != null) {
+				if(!password.equals(passwordConfirm))
+						return false;
+				else if(password.length() < 8 || passwordConfirm.length() < 8) 
+					return false;			
+				else 
 					u.setPassword(password);
-			u.setFirstName(firstName);
-			u.setLastName(lastName);
-			updateUser(u, username);
-
-
-			return true;
-		
+	}
+				u.setFirstName(firstName);
+				u.setLastName(lastName);
+				updateUser(u, username);
+	
+				return true;
+			
 		
 	}
 	

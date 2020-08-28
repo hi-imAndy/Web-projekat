@@ -145,15 +145,13 @@
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
 									<input class = "form-control" type = "text" placeholder = "Username" v-model="loginInfo.username" required="required"/>
-									<div class = "invalid-feedback">This field can't be empty.</div></br>
-									
+									<div class = "invalid-feedback">This field can't be empty.</div></br>				
 								</div>
 							</div>
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
 									<input class = "form-control" type = "password" placeholder = "Password " v-model="loginInfo.password" required="required" pattern=".{8,}"  title="8 characters minimum" />
-									<div class = "invalid-feedback">This field can't be empty.</div></br>
-									
+									<div class = "invalid-feedback">This field can't be empty.</div></br>								
 								</div>
 							</div>
 							<div class="row justify-content-md-center">
@@ -188,7 +186,7 @@
 			<label for = "username">Username:</label>
 			<input type = "text" name = "username" class = "form-control" v-bind:placeholder="updatedUser.username" readonly="readonly">
 			<label for = "password">Password:</label>
-			<input type = "password" name = "password" class = "form-control" v-model = "updatedUser.confirmPassword">
+			<input type = "password" name = "password" class = "form-control" v-model = "updatedUser.password">
 			<label for = "confirmPassword">Confirm password:</label>
 			<input type = "password" name = "confirmPassword" class = "form-control" v-model = "updatedUser.confirmPassword">
 			<label for = "firstName">First name:</label>
