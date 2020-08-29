@@ -8,8 +8,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -44,61 +46,34 @@ public class UserDAO {
 	
 
 	public Collection<User> searchUsers(String username, Role role, Gender gender, boolean u, boolean r, boolean g){
-		List<User> ret_users = new ArrayList<User>();
+		Set<User> usersByUsername = new HashSet<User>();
+		Set<User> usersByRole = new HashSet<User>();
+		Set<User> usersByGender = new HashSet<User>();
+		
+		for(User user : users.values()) {
+			if(user.getUsername().contains(username))
+				usersByUsername.add(user);
+			if(user.getRole().equals(role))
+				usersByRole.add(user);
+			if(user.getGender().equals(gender))
+				usersByGender.add(user);
+		}
+		
+		Set<User> ret_users;
 		
 		if(u) {
-			if(r) {
-				if(g) {
-					for(User user : users.values()) {
-						if(user.getUsername().contains(username) && user.getRole() == role && user.getGender() == gender) {
-							ret_users.add(user);
-						}
-					}
-				}else {
-					for(User user : users.values()) {
-						if(user.getUsername().contains(username) && user.getRole() == role) {
-							ret_users.add(user);
-						}
-					}
-				}
-			}else {
-				if(g) {
-					for(User user : users.values()) {
-						if(user.getUsername().contains(username) && user.getGender() == gender) {
-							ret_users.add(user);
-						}
-					}
-				}else {
-					for(User user : users.values()) {
-						if(user.getUsername().contains(username)) {
-							ret_users.add(user);
-						}
-					}
-				}
-			}
+			ret_users = new HashSet<User>(usersByUsername);
+			if(r)
+				ret_users.retainAll(usersByRole);
+			if(g)
+				ret_users.retainAll(usersByGender);
 		}else {
 			if(r) {
-				if(g) {
-					for(User user : users.values()) {
-						if(user.getRole() == role && user.getGender() == gender) {
-							ret_users.add(user);
-						}
-					}
-				}else {
-					for(User user : users.values()) {
-						if(user.getRole() == role) {
-							ret_users.add(user);
-						}
-					}
-				}
+				ret_users = new HashSet<User>(usersByRole);
+				if(g)
+					ret_users.retainAll(usersByGender);
 			}else {
-				if(g) {
-					for(User user : users.values()) {
-						if(user.getGender() == gender) {
-							ret_users.add(user);
-						}
-					}
-				}
+				ret_users = new HashSet<User>(usersByGender);
 			}
 		}
 		

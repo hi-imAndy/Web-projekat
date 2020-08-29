@@ -2,20 +2,32 @@ var home = new Vue({
 	el : '#home',
 	data:{
 		users:null,
-		mode:"BROWSE",
+		mode:'',
 		searchUsername:"",
 		searchRole:"",
 		searchGender:"",
 		loginInfo:{},
 		currentUser:{},
+		currentUsername:'',
 		usernameChecked:false,
 		roleChecked:false,
 		genderChecked:false
 	},
 	mounted(){
+		if(localStorage.currentUsername){
+			this.currentUsername = localStorage.currentUsername;
+			this.mode = "LOGIN";
+		}else{
+			this.mode = "BROWSE";
+		}
 		axios
 		.get("/Project/rest/users/getAllUsers")
 		.then(response => (this.users = response.data))
+	},
+	watch: {
+		currentUsername(newUsename) {
+	      localStorage.currentUsername = newUsename;
+	    }
 	},
 	methods:{
 		getAllUsers: function(){
@@ -30,8 +42,9 @@ var home = new Vue({
         		.then(response => (this.users = response.data))
     		}
     	},
-    	login : function(){
-    		this.mode = 'logged';
+    	logout : function(){
+    		this.currentUsername = '';
+    		this.mode = 'BROWSE';
     	}
 	}
 });
@@ -90,6 +103,7 @@ var login = new Vue({
 					accountModal.updatedUser.oldPassword = accountModal.logedUser.password;
 					this.logedUser = response.data; 					
 					if(this.logedUser != ""){
+						home.currentUsername = this.logedUser.username;
 						home.currentUser.firstName = this.logedUser.firstName;
 						home.currentUser.lastName = this.logedUser.lastName;
 						this.mode = "LOGIN";
