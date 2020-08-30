@@ -25,6 +25,7 @@ public class Apartment {
 	private List<Amenities> amenities;
 	private List<Reservation> reservations;
 	
+	public Apartment() {}
 	
 	public Apartment(String id, ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
 			List<Date> allDates, List<Date> availableDates, Host host, List<Comment> comments, List<String> pictures,

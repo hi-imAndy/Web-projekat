@@ -7,6 +7,7 @@ var home = new Vue({
 		searchUsername:"",
 		searchRole:"",
 		searchGender:"",
+		newApartment:{},
 		loginInfo:{},
 		currentUser:{},
 		currentUsername:'',
@@ -47,6 +48,9 @@ var home = new Vue({
     	logout : function(){
     		this.currentUsername = '';
     		this.mode = 'BROWSE';
+    	},
+    	updateImages : function(event){
+    		this.newApartment.images = event.target.files;
     	}
 	}
 });

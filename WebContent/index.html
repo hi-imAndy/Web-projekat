@@ -156,7 +156,7 @@
 			<div class = "row justify-content-md-center">
 				<div class = "col-md-auto">All available dates:</div>
 				<div class = "col-md-auto">
-					<div class="col"><input type="date" id="allDatesPicker" class="form-control"></div>
+					<div class="col"><input type="date"  id="allDatesPicker" class="form-control"></div>
 				</div>
 				<div class = "col-md-auto">Price per night:</div>
 				<div class = "col-md-auto"><input type = "text"/></div>
@@ -175,8 +175,12 @@
 				<div class = "col-md-auto">
 					 <select class="browser-default custom-select">
 						<option value="true">Active</option>
-						<option value="false">Inactive</option>
+						<option value="false" selected>Inactive</option>
 				  	</select>
+				</div>
+				<div class = "col-md-auto">
+					<label for="picture">Select pictures:</label>
+					<input type="file" id="picture" multiple="true" name="picture" accept="image/*" v-on:change="updateImages">
 				</div>
 			</div>
 			</br>
