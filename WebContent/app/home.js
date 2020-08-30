@@ -50,7 +50,12 @@ var home = new Vue({
     		this.mode = 'BROWSE';
     	},
     	updateImages : function(event){
-    		this.newApartment.images = event.target.files;
+    		var fileNames = [];
+    		var files = event.target.files;
+    		for(var i = 0, f; f = files[i]; i++){
+    			fileNames.push(f.name);
+    		}
+    		this.newApartment.pictures = fileNames;
     	}
 	}
 });
