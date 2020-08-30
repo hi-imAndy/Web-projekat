@@ -87,13 +87,10 @@ var login = new Vue({
 	data:{
 		loginInfo:{},
 		logedUser : {},
-		mode : "BROWSE"
 	},
 	mounted () {
 		this.loginInfo.username = '';
 		this.logedUser = {};
-		this.mode = "BROWSE";
-		//home.mode = "BROWSE";
     },
 	methods:{
 		login : function(loginInfo){				
@@ -108,7 +105,6 @@ var login = new Vue({
 						home.currentUsername = this.logedUser.username;
 						home.currentUser.firstName = this.logedUser.firstName;
 						home.currentUser.lastName = this.logedUser.lastName;
-						this.mode = "LOGIN";
 						home.mode = "LOGIN";
 						accountModal.updatedUser.password = null;
 						$('#loginModal').modal('hide')
