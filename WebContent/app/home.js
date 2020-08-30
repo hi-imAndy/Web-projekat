@@ -1,7 +1,8 @@
 var home = new Vue({
 	el : '#home',
 	data:{
-		users:null,
+		users:{},
+		amenities:{},
 		mode:'',
 		searchUsername:"",
 		searchRole:"",
@@ -20,9 +21,15 @@ var home = new Vue({
 		}else{
 			this.mode = "BROWSE";
 		}
+
 		axios
 		.get("/Project/rest/users/getAllUsers")
-		.then(response => (this.users = response.data))
+		.then(response => (this.users = response.data));
+		
+		axios
+		.get("/Project/rest/amenities/getAllAmenities")
+		.then(response => (this.amenities = response.data));
+		
 	},
 	watch: {
 		currentUsername(newUsename) {
@@ -30,11 +37,6 @@ var home = new Vue({
 	    }
 	},
 	methods:{
-		getAllUsers: function(){
-    		axios
-    		.get("/Project/rest/users/getAllUsers")
-    		.then(response => (this.users = response.data))
-    	},
     	search : function(){
     		if(this.usernameChecked === true || this.roleChecked === true || this.genderChecked == true){
     			axios
@@ -84,14 +86,14 @@ var login = new Vue({
 	el:'#loginModal',
 	data:{
 		loginInfo:{},
-		logedUser : null,
+		logedUser : {},
 		mode : "BROWSE"
 	},
 	mounted () {
-		this.loginInfo.username = null;
-		this.logedUser = null;
+		this.loginInfo.username = '';
+		this.logedUser = {};
 		this.mode = "BROWSE";
-		home.mode = "BROWSE";
+		//home.mode = "BROWSE";
     },
 	methods:{
 		login : function(loginInfo){				
@@ -123,8 +125,8 @@ var login = new Vue({
 var accountModal = new Vue({
 	el:'#accountModal',
 	data:{
-		logedUser : null,
-		updatedUser : null
+		logedUser : {},
+		updatedUser : {}
 	},
 	mounted () {
 		

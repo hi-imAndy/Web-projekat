@@ -13,7 +13,7 @@
 <div id = "home">
 
 		<nav class="navbar navbar-light navbar-expand-lg navbar-expand-md navbar-expand-sm bg-light">
-			<a href = "index.html" style="margin-left: 30px;">Home</a>
+			<a href = "/Project/" style="margin-left: 30px;">Home</a>
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item" v-if="mode != 'BROWSE'">{{currentUser.firstName + "  " + currentUser.lastName}}</li>
@@ -44,14 +44,6 @@
 				<div class="col"><b>0 </b><input type="range" id="myRange" class="slider"  min="0" value="5" max="10" style="vertical-align:middle;"><b> 5000</b></div>
 				<div class="col"><input type = "number" value="1" min="1" max="25" step="1" class = "form-control"></div>
 			</div>
-			<!--
-			<div class = "row" style="padding-top: 50px;">
-				<div class = "col" style="border: 1px solid black;" >
-					</div>
-				<div class = "col" style="border: 1px solid black;" >
-					</div>
-			</div>
-			-->
 			<!--    ADMINISTRATOR: PREGLED SVIH KORISNIKA -->
 			<div class = "row justify-content-end" style="margin-top: 20px;">
 				<div class="col-2 custom-control custom-checkbox">
@@ -188,10 +180,26 @@
 				</div>
 			</div>
 			</br>
-			<div class = "row justify-content-md-center" style="border:1px solid blue">
-			<div class = "col">Amenities:</div>
+			<div style="border:1px solid blue">
+				<div class = "row">
+					<div class = "col">Amenities:</div>
+				</div>
+				<div class = "row justify-content-md-center">
+					<ul>
+						<li v-for="am in amenities">
+							<input type="checkbox" id="am.id" value="am.id">
+							<label for="am.id"> {{am.name}}</label>
+						</li>
+					</ul>
+				</div>
 			</div>
-		</div>
+			</br>
+			<div class = "row justify-content-md-center">
+				<div class = "col-md-auto">
+					<button class = "btn btn-primary">Create</button>
+				</div>
+			</div>
+	</div>
 </div>
 	
 <form >
@@ -255,7 +263,7 @@
 				<span>&times</span>
 			</button>
 		</div>
-		<div class="container">
+		<div class="container" v-if="updatedUser">
 			<label for = "username">Username:</label>
 			<input type = "text" name = "username" class = "form-control" v-bind:placeholder="updatedUser.username" readonly="readonly">
 			<label for = "password">Password:</label>
@@ -365,9 +373,10 @@
 <script src="js/axios.js"></script>
 <script src="app/home.js"></script>
 
+
 <script>
 
-	$('#input_starttime').pickatime({});
+	//$('#input_starttime').pickatime({});
 	
 	var form = document.querySelector('.needs-validation');
 	
@@ -381,9 +390,6 @@
 		
 		
 	})
-	
-	
-});
 	
 </script>
 
