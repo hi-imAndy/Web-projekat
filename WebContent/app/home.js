@@ -19,6 +19,9 @@ var home = new Vue({
 		if(localStorage.currentUsername){
 			this.currentUsername = localStorage.currentUsername;
 			this.mode = "LOGIN";
+			axios
+    		.get("/Project/rest/users/currentUser")
+    		.then(response => (this.currentUser = response.data));
 		}else{
 			this.mode = "BROWSE";
 		}
@@ -33,8 +36,8 @@ var home = new Vue({
 		
 	},
 	watch: {
-		currentUsername(newUsename) {
-	      localStorage.currentUsername = newUsename;
+		currentUsername(newUsername) {
+	      localStorage.currentUsername = newUsername;
 	    }
 	},
 	methods:{
@@ -48,6 +51,13 @@ var home = new Vue({
     	logout : function(){
     		this.currentUsername = '';
     		this.mode = 'BROWSE';
+    		axios
+    		.post("/Project/rest/users/logout")
+    	},
+    	getLoggedUser : function(){
+    		axios
+    		.get("/Project/rest/users/currentUser")
+    		.then(response => (this.currentUser = response.data));
     	},
     	updateImages : function(event){
     		var fileNames = [];

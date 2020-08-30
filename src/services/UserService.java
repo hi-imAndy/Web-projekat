@@ -55,9 +55,11 @@ public class UserService {
 	@GET
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
-	public User login(@QueryParam("username") String username,@QueryParam("password") String password) {
+	public User login(@QueryParam("username") String username,@QueryParam("password") String password, @Context HttpServletRequest request) {
 		UserDAO dao = (UserDAO) ctx.getAttribute("users");
 		User loggedUser = dao.find(username, password);
+		if(loggedUser != null)
+			request.getSession().setAttribute("loggedUser", loggedUser);
 		return loggedUser;
 	}
 	
@@ -67,6 +69,14 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public void logout(@Context HttpServletRequest request) {
 		request.getSession().invalidate();
+	}
+	
+	@GET
+	@Path("/currentUser")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public User login(@Context HttpServletRequest request) {
+		return (User) request.getSession().getAttribute("loggedUser");
 	}
 
 	@GET
