@@ -29,6 +29,7 @@ var home = new Vue({
     		this.mode = 'BROWSE';
     		axios
     		.post("/Project/rest/users/logout")
+    		router.back();
     	},
     	getLoggedUser : function(){
     		axios
@@ -95,7 +96,12 @@ var login = new Vue({
 						home.mode = "LOGIN";
 						accountModal.updatedUser.password = null;
 						$('#loginModal').modal('hide')
-      					
+						if(this.logedUser.role == "HOST")
+							router.push("host")
+						else if(this.logedUser.role == "GUEST")
+							router.push("guest")
+						else if(this.logedUser.role == "ADMIN")
+							router.push("admin")
 						}
 					else{
 						alert("Username or password are incorrect");
