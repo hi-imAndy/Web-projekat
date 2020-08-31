@@ -1,7 +1,8 @@
 Vue.component("browse", {
 	data: function(){
 		return{
-			currentUser: {}
+			currentUser: {},
+			apartments:{}
 		}
 	},
 	template: ` 
@@ -27,9 +28,45 @@ Vue.component("browse", {
 				<div class="col"><input type = "number" value="1" min="1" max="25" step="1" class = "form-control"></div>
 			</div>
 		</div>
+		
+			<div class="container">
+				<table class="table table-hover" id="myTable">
+				  <div class="row">
+				    <div class="col-12">
+						<table class="table table-image">
+						  <thead>
+						    <tr>
+						      <th scope="col"></th>
+						      <th scope="col">Appartment ID</th>
+						      <th scope="col">Host</th>
+						      <th scope="col">Location</th>
+						      <th scope="col">Status</th>
+						    </tr>
+						  </thead>
+						  <tbody>
+									<tr v-for="u in apartments">
+									<img v-bind:src="u.pictures[1]" class="img-fluid img-thumbnail " width="250" height="100">
+									<td>{{u.id }}</td>
+									<td>{{u.id }}</td>
+									<td>{{u.id}}</td>
+									<td>{{u.id }}</td>
+							    </tr>
+						  </tbody>
+						</table>   
+				    </div>
+				  </div>
+				</table>
+			</div>
 	</div>
+	
+	
+	
+
 	`,
 	mounted(){
-		
+		axios
+			.get("/Project/rest/apartments/getAllApartments")
+			.then(response => {this.apartments = response.data;
+			});
 	}
 });

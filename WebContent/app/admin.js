@@ -84,6 +84,7 @@ Vue.component("admin", {
 		axios
 		.get("/Project/rest/users/getAllUsers")
 		.then(response => (this.users = response.data));
+
 	},
 	methods : {
 		search : function(){
