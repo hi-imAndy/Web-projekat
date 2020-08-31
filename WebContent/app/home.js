@@ -1,19 +1,10 @@
 var home = new Vue({
 	el : '#home',
 	data:{
-		users:{},
-		amenities:{},
 		mode:'',
-		searchUsername:"",
-		searchRole:"",
-		searchGender:"",
-		newApartment:{},
 		loginInfo:{},
 		currentUser:{},
-		currentUsername:'',
-		usernameChecked:false,
-		roleChecked:false,
-		genderChecked:false
+		currentUsername:''
 	},
 	mounted(){
 		if(localStorage.currentUsername){
@@ -25,14 +16,6 @@ var home = new Vue({
 		}else{
 			this.mode = "BROWSE";
 		}
-
-		axios
-		.get("/Project/rest/users/getAllUsers")
-		.then(response => (this.users = response.data));
-		
-		axios
-		.get("/Project/rest/amenities/getAllAmenities")
-		.then(response => (this.amenities = response.data));
 		
 	},
 	watch: {
@@ -41,13 +24,6 @@ var home = new Vue({
 	    }
 	},
 	methods:{
-    	search : function(){
-    		if(this.usernameChecked === true || this.roleChecked === true || this.genderChecked == true){
-    			axios
-        		.get("/Project/rest/users/searchUsers", {params: {username : this.searchUsername, role : this.searchRole, gender: this.searchGender, u : this.usernameChecked, r: this.roleChecked, g: this.genderChecked}})
-        		.then(response => (this.users = response.data))
-    		}
-    	},
     	logout : function(){
     		this.currentUsername = '';
     		this.mode = 'BROWSE';
@@ -58,14 +34,6 @@ var home = new Vue({
     		axios
     		.get("/Project/rest/users/currentUser")
     		.then(response => (this.currentUser = response.data));
-    	},
-    	updateImages : function(event){
-    		var fileNames = [];
-    		var files = event.target.files;
-    		for(var i = 0, f; f = files[i]; i++){
-    			fileNames.push(f.name);
-    		}
-    		this.newApartment.pictures = fileNames;
     	}
 	}
 });
@@ -164,5 +132,25 @@ var accountModal = new Vue({
 
 		}
 		}
+});
+
+const Browse = { template: '<browse></browse>' }
+const Guest = { template: '<guest></guest>' }
+const Admin = { template: '<admin></admin>' }
+const Host = { template: '<host></host>' }
+
+const router = new VueRouter({
+	  mode: 'hash',
+	  routes: [
+	    { path: '/', component: Browse},
+	    { path: '/guest', component: Guest },
+	    { path: '/admin', component: Admin },
+	    { path: '/host', component: Host }
+	  ]
+});
+
+var app = new Vue({
+	router,
+	el: '#routerMode'
 });
 

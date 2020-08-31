@@ -24,186 +24,11 @@
 				</ul>
 			</div>
 		</nav>
-		<div class="container" style="margin-top:40px">
-			<div class="row">
-				<div class="col" style="text-align: center;">Location</div>
-				<div class="col" style="text-align: center;">Check in</div>
-				<div class="col" style="text-align: center;">Check out</div>
-				<div class="col" style="text-align: center;">Price</div>
-				<div class="col" style="text-align: center;">Guests</div>
-			</div>
-			<div class = "row">
-				<div class="col">
-					<select class="browser-default custom-select">
-						<option value="All">All</option>
-						<option value="Novi Sad">Novi Sad</option>
-						<option value="Beograd">Beograd</option>	
-				  	</select></div>
-				<div class="col"><input type="date" id="picker" class="form-control"></div>
-				<div class="col"><input type="date" id="picker" class="form-control"></div>
-				<div class="col"><b>0 </b><input type="range" id="myRange" class="slider"  min="0" value="5" max="10" style="vertical-align:middle;"><b> 5000</b></div>
-				<div class="col"><input type = "number" value="1" min="1" max="25" step="1" class = "form-control"></div>
-			</div>
-			<!--    ADMINISTRATOR: PREGLED SVIH KORISNIKA -->
-			<div class = "row justify-content-end" style="margin-top: 20px;">
-				<div class="col-2 custom-control custom-checkbox">
-				    <input type="checkbox" class="custom-control-input" id="defaultUnchecked1" v-model="usernameChecked">
-				    <label class="custom-control-label" for="defaultUnchecked1">Search by username</label>
-				</div>
-				<div class="col-1 custom-control custom-checkbox">
-				    <input type="checkbox" class="custom-control-input" id="defaultUnchecked2" v-model="roleChecked">
-				    <label class="custom-control-label" for="defaultUnchecked2">Role</label>
-				</div>
-				<div class="col-1 custom-control custom-checkbox">
-				    <input type="checkbox" class="custom-control-input" id="defaultUnchecked3" v-model="genderChecked">
-				    <label class="custom-control-label" for="defaultUnchecked3">Gender</label>
-				</div>
-			</div>
-			<div class = "row justify-content-md-end">
-				<div class = "col-2">
-					<input type = "text" v-model="searchUsername" placeholder="Username.." v-bind:disabled="usernameChecked==false">
-				</div>
-				<div class = "col-1">
-					<select v-model="searchRole" v-bind:disabled="roleChecked==false">
-						<option value = "GUEST">Guest</option>
-						<option value = "HOST">Host</option>
-						<option value = "ADMINISTRATOR">Admin</option>
-					</select>
-				</div>
-				<div class = "col-1">
-					<select v-model="searchGender" v-bind:disabled="genderChecked==false">
-						<option value = "MALE">Male</option>
-						<option value = "FEMALE">Female</option>
-					</select>
-				</div>
-		    </div>
-		    <div class = "row justify-content-md-end">
-		    	<div class = "col-2">
-					<button type="button" class="btn btn-secondary" v-on:click="search">Search</button>
-				</div>
-		    </div>
-			<div class = "row justify-content-md-center">
-				<div class = "col-md-auto">
-					<h3>List of all users</h3>
-				</div>
-			</div>
-			<div class = "row table-responsive">
-				<div class = "col">
-					<table class = "table table-bordered table-hover" >
-						<caption>List of all users</caption>
-						<tr class="table-info">
-							<th scope="col">Username</th>
-							<th scope="col">Password</th>
-							<th scope="col">First name</th>
-							<th scope="col">Last name</th>
-							<th scope="col">Gender</th>
-							<th scope="col">Role</th>
-						</tr>
-						<tr v-for="u in users">
-							<td>{{u.username }}</td>
-							<td>{{u.password }}</td>
-							<td>{{u.firstName }}</td>
-							<td>{{u.lastName }}</td>
-							<td>{{u.gender}}</td> 
-							<td>{{u.role}}</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-		</div>
 		
-		<!-- HOST: ADD NEW APPARTMANT -->
-		<div class="container" style="border: 1px solid gray">
-			<div class = "row">
-				<div class="col" style="text-align: center;"><h3>Add a new apartment</h3></div>
-			</div>
-			</br>
-			<div class = "row justify-content-md-center">
-				<div class="col-md-auto" style="text-align: center;">Apartment type:</div>
-				<div class = "col-md-auto">
-					<select class="browser-default custom-select">
-						<option value="ENTIRE_APARTMENT">Entire apartment</option>
-						<option value="ROOM">Room</option>
-				  	</select>
-				</div>
-				<div class = "col-md-auto" style="text-align:center;">Number of rooms:</div>
-				<div class="col-md-auto"><input type = "number" value="1" min="1" max="10" step="1" ></div>
-				<div class = "col-md-auto" style="text-align:center;">Number of guests:</div>
-				<div class="col-md-auto"><input type = "number" value="1" min="1" max="10" step="1" ></div>
-			</div>
-			</br>
-			<div class = "row justify-content-md-center">
-				<div class = "col-md-auto">Latitude:</div>
-				<div class = "col-md-auto"><input type = "text"/></div>
-				<div class = "col-md-auto">Longitude:</div>
-				<div class = "col-md-auto"><input type = "text"/></div>
-				<div class = "col-md-auto">Street:</div>
-				<div class = "col-md-auto"><input type = "text"/></div>
-			</div>
-			</br>
-			<div class = "row justify-content-md-center">
-				<div class = "col-md-auto">Number:</div>
-				<div class="col-md-auto"><input type = "number" value="1" min="1" max="1000" step="1" ></div> 
-				<div class = "col-md-auto">City:</div>
-				<div class = "col-md-auto">
-					<select class="browser-default custom-select">
-						<option value="NOVI_SAD">Novi Sad</option>
-						<option value="BEOGRAD">Beograd</option>
-				  	</select>
-				</div>
-			</div>
-			</br>
-			<div class = "row justify-content-md-center">
-				<div class = "col-md-auto">All available dates:</div>
-				<div class = "col-md-auto">
-					<div class="col"><input type="date"  id="allDatesPicker" class="form-control"></div>
-				</div>
-				<div class = "col-md-auto">Price per night:</div>
-				<div class = "col-md-auto"><input type = "text"/></div>
-				<div class = "col-md-auto">Check in time:</div>
-				<div class = "col-md-auto">
-					 <input type = "text" value="14:00" placeholder="Initially: 14:00"/>
-				</div>
-			</div>
-			</br>
-			<div class = "row justify-content-md-center">
-				<div class = "col-md-auto">Check out time:</div>
-				<div class = "col-md-auto">
-					 <input type = "text" value="22:00" placeholder="Initially: 22:00"/>
-				</div>
-				<div class = "col-md-auto">Status:</div>
-				<div class = "col-md-auto">
-					 <select class="browser-default custom-select">
-						<option value="true">Active</option>
-						<option value="false" selected>Inactive</option>
-				  	</select>
-				</div>
-				<div class = "col-md-auto">
-					<label for="picture">Select pictures:</label>
-					<input type="file" id="picture" multiple="true" name="picture" accept="image/*" v-on:change="updateImages">
-				</div>
-			</div>
-			</br>
-			<div style="border:1px solid blue">
-				<div class = "row">
-					<div class = "col">Amenities:</div>
-				</div>
-				<div class = "row justify-content-md-center">
-					<ul>
-						<li v-for="am in amenities">
-							<input type="checkbox" id="am.id" value="am.id">
-							<label for="am.id"> {{am.name}}</label>
-						</li>
-					</ul>
-				</div>
-			</div>
-			</br>
-			<div class = "row justify-content-md-center">
-				<div class = "col-md-auto">
-					<button class = "btn btn-primary">Create</button>
-				</div>
-			</div>
-	</div>
+</div>
+
+<div id = "routerMode">
+	<router-view></router-view>
 </div>
 	
 <form >
@@ -373,10 +198,15 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<script src="js/vue.js"></script>
-<script src="js/axios.js"></script>
-<script src="app/home.js"></script>
 
+<script src="js/vue.js"></script>
+<script src="js/vue-router.js"></script>
+<script src="js/axios.js"></script>
+<script src="app/browse.js"></script>
+<script src="app/admin.js"></script>
+<script src="app/host.js"></script>
+<script src="app/guest.js"></script>
+<script src="app/home.js"></script>
 
 <script>
 
