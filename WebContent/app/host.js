@@ -3,41 +3,49 @@ Vue.component("host", {
 		    return {
 		      amenities:{},
 		      newApartment:{},
+		      location:{},
+		      address:{},
+		      city:{}
 		    }
 	},
 	template: ` 
 	<div>
+		{{newApartment}}
+		{{location}}
+		{{address}}
 		<div class="container" style="border: 1px solid gray">
 			<div class = "row">
 				<div class="col" style="text-align: center;"><h3>Add a new apartment</h3></div>
 			</div>
 			</br>
 			<div class = "row justify-content-md-center">
+				<div class="col-md-auto" style="text-align: center;">ID:</div>
+				<div class="col-md-auto"><input type = "text" v-model="newApartment.id" ></div>
 				<div class="col-md-auto" style="text-align: center;">Apartment type:</div>
 				<div class = "col-md-auto">
-					<select class="browser-default custom-select">
+					<select class="browser-default custom-select" v-model="newApartment.apartmentType">
 						<option value="ENTIRE_APARTMENT">Entire apartment</option>
 						<option value="ROOM">Room</option>
 				  	</select>
 				</div>
 				<div class = "col-md-auto" style="text-align:center;">Number of rooms:</div>
-				<div class="col-md-auto"><input type = "number" value="1" min="1" max="10" step="1" ></div>
+				<div class="col-md-auto"><input type = "number" value="1" min="1" max="10" step="1" v-model="newApartment.numberOfRooms"></div>
 				<div class = "col-md-auto" style="text-align:center;">Number of guests:</div>
-				<div class="col-md-auto"><input type = "number" value="1" min="1" max="10" step="1" ></div>
+				<div class="col-md-auto"><input type = "number" value="1" min="1" max="10" step="1" v-model="newApartment.numberOfGuests"></div>
 			</div>
 			</br>
 			<div class = "row justify-content-md-center">
 				<div class = "col-md-auto">Latitude:</div>
-				<div class = "col-md-auto"><input type = "text"/></div>
+				<div class = "col-md-auto"><input type = "text" v-model="location.latitude"/></div>
 				<div class = "col-md-auto">Longitude:</div>
-				<div class = "col-md-auto"><input type = "text"/></div>
+				<div class = "col-md-auto"><input type = "text" v-model="location.longitude"/></div>
 				<div class = "col-md-auto">Street:</div>
-				<div class = "col-md-auto"><input type = "text"/></div>
+				<div class = "col-md-auto"><input type = "text" v-model="address.street"/></div>
 			</div>
 			</br>
 			<div class = "row justify-content-md-center">
 				<div class = "col-md-auto">Number:</div>
-				<div class="col-md-auto"><input type = "number" value="1" min="1" max="1000" step="1" ></div> 
+				<div class="col-md-auto"><input type = "number" value="1" min="1" max="1000" step="1" v-model="address.number"></div> 
 				<div class = "col-md-auto">City:</div>
 				<div class = "col-md-auto">
 					<select class="browser-default custom-select">
@@ -50,26 +58,28 @@ Vue.component("host", {
 			<div class = "row justify-content-md-center">
 				<div class = "col-md-auto">All available dates:</div>
 				<div class = "col-md-auto">
-					<div class="col"><input type="date"  id="allDatesPicker" class="form-control"></div>
+					<div class="col">
+						<input id = "daterange" name = "daterange" placeholder="Select date range.." type="text" v-model="newApartment.allDates"/>
+					</div>
 				</div>
 				<div class = "col-md-auto">Price per night:</div>
-				<div class = "col-md-auto"><input type = "text"/></div>
+				<div class = "col-md-auto"><input type = "text" v-model="newApartment.pricePerNight"/></div>
 				<div class = "col-md-auto">Check in time:</div>
 				<div class = "col-md-auto">
-					 <input type = "text" value="14:00" placeholder="Initially: 14:00"/>
+					 <input type = "text" value="14:00" placeholder="Initially: 14:00" v-model="newApartment.checkInTime"/>
 				</div>
 			</div>
 			</br>
 			<div class = "row justify-content-md-center">
 				<div class = "col-md-auto">Check out time:</div>
 				<div class = "col-md-auto">
-					 <input type = "text" value="22:00" placeholder="Initially: 22:00"/>
+					 <input type = "text" value="22:00" placeholder="Initially: 22:00" v-model="newApartment.checkOutTime"/>
 				</div>
 				<div class = "col-md-auto">Status:</div>
 				<div class = "col-md-auto">
-					 <select class="browser-default custom-select">
-						<option value="true">Active</option>
-						<option value="false" selected>Inactive</option>
+					 <select class="browser-default custom-select" v-model="newApartment.status">
+						<option value="ACTIVE">Active</option>
+						<option value="INACTIVE" selected>Inactive</option>
 				  	</select>
 				</div>
 				<div class = "col-md-auto">
@@ -115,4 +125,10 @@ Vue.component("host", {
     		this.newApartment.pictures = fileNames;
     	}
 	}
+});
+
+$(function(){
+	$('#daterange').daterangepicker({
+		minDate: moment()
+	});
 });
