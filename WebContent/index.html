@@ -31,8 +31,8 @@
 	<router-view></router-view>
 </div>
 	
-<form >
-		<div id="loginModal" class="modal fade" novalidate> 
+<form action = "" class = "main-form needs-validation" novaidate  >
+		<div id="loginModal" class="modal fade"> 
 			<div class = "modal-dialog modal-dialog-centered">
 				<div class = "modal-content">
 					<div class = "modal-header">
@@ -82,7 +82,7 @@
 
 
 
-<form  action="" style = "width: 500px; margin: auto">
+<form  action = "" class = "main-form needs-validation" novalidate >
 	<div id="accountModal" class="modal fade"> 
 		<div class = "modal-dialog modal-dialog-centered">
 		<div class = "modal-content">
@@ -95,7 +95,7 @@
 		<div class="container" v-if="updatedUser">
 			<label for = "username">Username:</label>
 			<input type = "text" name = "username" class = "form-control" v-bind:placeholder="updatedUser.username" readonly="readonly">
-			<label for = "password">Password:</label>
+			<label for = "password">New Password:</label>
 			<input type = "password" name = "password" class = "form-control" v-model = "updatedUser.password">
 			<label for = "confirmPassword">Confirm password:</label>
 			<input type = "password" name = "confirmPassword" class = "form-control" v-model = "updatedUser.confirmPassword">

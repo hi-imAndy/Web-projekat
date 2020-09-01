@@ -2,7 +2,8 @@ Vue.component("browse", {
 	data: function(){
 		return{
 			currentUser: {},
-			apartments:{}
+			apartments:{},
+			selected:{}
 		}
 	},
 	template: ` 
@@ -30,7 +31,7 @@ Vue.component("browse", {
 		</div>
 		
 			<div class="container">
-				<table class="table table-hover" id="myTable">
+				<table class="table">
 				  <div class="row">
 				    <div class="col-12">
 						<table class="table table-image">
@@ -44,7 +45,7 @@ Vue.component("browse", {
 						    </tr>
 						  </thead>
 						  <tbody>
-									<tr v-for="u in apartments">
+									<tr v-for="u in apartments" v-on:click="selectApartment(u)" v-bind:class = "{selected : selected.id === u.id}">
 									<img v-bind:src="u.pictures[1]" class="img-fluid img-thumbnail " width="250" height="100">
 									<td>{{u.id }}</td>
 									<td>{{u.id }}</td>
@@ -57,6 +58,10 @@ Vue.component("browse", {
 				  </div>
 				</table>
 			</div>
+			
+			
+			
+			
 	</div>
 	
 	
@@ -68,5 +73,10 @@ Vue.component("browse", {
 			.get("/Project/rest/apartments/getAllApartments")
 			.then(response => {this.apartments = response.data;
 			});
-	}
+	},
+	methods : {
+		selectApartment : function(apartment){
+			this.selected = apartment;
+    	}
+	},
 });
