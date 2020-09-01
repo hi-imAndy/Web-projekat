@@ -5,6 +5,8 @@ public class City {
 	private String postCode;
 	private String name;
 	
+	public City() {}
+	
 	public City(String postCode, String name) {
 		this.postCode = postCode;
 		this.name = name;

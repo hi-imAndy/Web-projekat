@@ -2,10 +2,15 @@ Vue.component("host", {
 	data: function () {
 		    return {
 		      amenities:{},
+		      allCities:{},
 		      newApartment:{},
 		      location:{},
 		      address:{},
-		      city:{}
+		      city:{},
+		      pictures:{},
+		      startingDate:{},
+		      endingDate:{},
+		      newAmenities:[]
 		    }
 	},
 	template: ` 
@@ -13,6 +18,8 @@ Vue.component("host", {
 		{{newApartment}}
 		{{location}}
 		{{address}}
+		{{pictures}}
+		{{newAmenities}}
 		<div class="container" style="border: 1px solid gray">
 			<div class = "row">
 				<div class="col" style="text-align: center;"><h3>Add a new apartment</h3></div>
@@ -48,9 +55,8 @@ Vue.component("host", {
 				<div class="col-md-auto"><input type = "number" value="1" min="1" max="1000" step="1" v-model="address.number"></div> 
 				<div class = "col-md-auto">City:</div>
 				<div class = "col-md-auto">
-					<select class="browser-default custom-select">
-						<option value="NOVI_SAD">Novi Sad</option>
-						<option value="BEOGRAD">Beograd</option>
+					<select class="browser-default custom-select" v-model="address.city">
+						<option v-for="c in allCities" :value="c">{{c.name}}</option>
 				  	</select>
 				</div>
 			</div>
@@ -59,7 +65,7 @@ Vue.component("host", {
 				<div class = "col-md-auto">All available dates:</div>
 				<div class = "col-md-auto">
 					<div class="col">
-						<input id = "daterange" name = "daterange" placeholder="Select date range.." type="text" v-model="newApartment.allDates"/>
+						<input id = "daterange" name = "daterange" placeholder="Select date range.." v-on:change="updateDate" type="text"/>
 					</div>
 				</div>
 				<div class = "col-md-auto">Price per night:</div>
@@ -95,7 +101,7 @@ Vue.component("host", {
 				<div class = "row justify-content-md-center">
 					<ul>
 						<li v-for="am in amenities">
-							<input type="checkbox" id="am.id" value="am.id">
+							<input type="checkbox" id="am.id" value="am" v-on:change="updateAmenities(am, $event)" ref="amenitiesSelected">
 							<label for="am.id"> {{am.name}}</label>
 						</li>
 					</ul>
@@ -114,6 +120,10 @@ Vue.component("host", {
 		axios
 		.get("/Project/rest/amenities/getAllAmenities")
 		.then(response => (this.amenities = response.data));
+		
+		axios
+		.get("/Project/rest/cities/getAllCities")
+		.then(response => (this.allCities = response.data));
 	},
 	methods:{
 		updateImages : function(event){
@@ -122,13 +132,37 @@ Vue.component("host", {
     		for(var i = 0, f; f = files[i]; i++){
     			fileNames.push(f.name);
     		}
-    		this.newApartment.pictures = fileNames;
-    	}
+    		this.pictures = fileNames;
+    	},
+	updateDate : function(event){
+		var files = event.target.files;
+		for(var i = 0, f; f = files[i]; i++){
+			fileNames.push(f.name);
+		}
+		this.pictures = fileNames;
+		},
+	updateAmenities : function(value, $event){
+		if($event.target.checked){
+			if(!this.newAmenities.includes(value))
+				this.newAmenities.push(value);
+		}else{
+			var newAm = [];
+			for(var i = 0, a; a = this.newAmenities[i]; i++){
+				if(a != value)
+					newAm.push(a);
+			}
+			this.newAmenities = newAm;
+		}
+	}
 	}
 });
 
 $(function(){
 	$('#daterange').daterangepicker({
 		minDate: moment()
-	});
+	}, function(start,end){
+		this.startingDate = start.format('MM/DD/YYYY');
+		this.endingDate = end.format('MM/DD/YYYY');
+	}
+	);
 });
