@@ -9,7 +9,8 @@ Vue.component("admin", {
 				roleChecked:false,
 				genderChecked:false,
 				allAmenities:{},
-				selectedAmenitie:{}
+				selectedAmenitie:{},
+				newAmenitie:{}
 		    }
 	},
 	template: ` 
@@ -49,7 +50,7 @@ Vue.component("admin", {
 		    </div>
 		    <div class = "row justify-content-md-end">
 		    	<div class = "col-2">
-					<button type="button" class="btn btn-secondary" v-on:click="search">Search</button>
+					<button type="button" class="btn btn-outline-primary" v-on:click="search">Search</button>
 				</div>
 		    </div>
 			<div class = "row justify-content-md-center">
@@ -104,14 +105,24 @@ Vue.component("admin", {
 				</div>
 			</div>
 			<div class = "col-md-auto" style="margin-left:20px;">
+				<div class = "row justify-content-center"><h6>Edit amenities:</h6></div>
 				<div class = "row justify-content-center">
-					ID: <input type = "text" style="margin-right:5px;" v-model="selectedAmenitie.id"/>
+					ID: <input type = "text" disabled style="margin-right:5px;" v-model="selectedAmenitie.id"/>
 					Name: <input type = "text" v-model="selectedAmenitie.name"/>
 				</div>
 				<div class = "row justify-content-center" style="margin-top: 10px;">
-					<div class = "col-md-auto"><button class="btn btn-secondary">Save</button></div>
-					<div class = "col-md-auto"><button class="btn btn-secondary">Delete</button></div>
-					<div class = "col-md-auto"><button class="btn btn-secondary">Cancel</button></div>
+					<div class = "col-md-auto"><button class="btn btn-success" v-on:click="editAmenitie">Save</button></div>
+					<div class = "col-md-auto"><button class="btn btn-danger" v-on:click="deleteAmenitie">Delete</button></div>
+					<div class = "col-md-auto"><button class="btn btn-secondary" v-on:click="cancelEdit">Cancel</button></div>
+				</div>
+				<div class = "row justify-content-center" style="margin-top: 100px;"><h6>Create new amenitie:</h6></div>
+				<div class = "row justify-content-center">
+					ID: <input type = "text" style="margin-right:5px;" v-model="newAmenitie.id"/>
+					Name: <input type = "text" v-model="newAmenitie.name"/>
+				</div>
+				<div class = "row justify-content-center" style="margin-top: 10px;">
+					<div class = "col-md-auto"><button class="btn btn-success" v-on:click="createAmenitie">Create</button></div>
+					<div class = "col-md-auto"><button class="btn btn-secondary" v-on:click="cancelCreate" >Cancel</button></div>
 				</div>
 			</div>
 		</div>
@@ -140,13 +151,52 @@ Vue.component("admin", {
     	selectAmenitie : function(am){
     		this.selectedAmenitie = am;
     	},
-    	deleteAmenitie : function(am){
+    	deleteAmenitie : function(){
+    			axios
+        		.post("/Project/rest/amenities/deleteAmenitie", this.selectedAmenitie)
+    			.then(response => {
+    				if(response.data == false)
+    					alert("Amenitie with that ID does not exist!");
+    				else{
+    					this.selectedAmenitie = {};
+    	        		
+    	        		axios
+    	        		.get("/Project/rest/amenities/getAllAmenities")
+    	        		.then(response => (this.allAmenities = response.data));
+    				}
+    			});
     	},
-    	addAmenitie: function(am){
-    		
+    	createAmenitie: function(){
+    		axios
+    		.post("/Project/rest/amenities/addAmenitie", this.newAmenitie)
+    		.then(response => {
+    			if(response.data == false)
+    				alert("Amenities with that ID already exists");
+    			else{
+    				axios
+    	    		.get("/Project/rest/amenities/getAllAmenities")
+    	    		.then(response => (this.allAmenities = response.data));
+    				this.newAmenitie = {};
+    			}
+    		});
     	},
-    	editAmenitie: function(am){
-    		
+    	editAmenitie: function(){
+    		axios
+    		.post("/Project/rest/amenities/editAmenitie", this.selectedAmenitie)
+    		.then(response => {
+    			if(response.data == false)
+    				alert("Amenities with that ID does not exist");
+    		});
+    		this.selectedAmenitie = {};
+    	},
+    	cancelEdit: function(){
+    		this.selectedAmenitie = {};
+    		axios
+    		.get("/Project/rest/amenities/getAllAmenities")
+    		.then(response => (this.allAmenities = response.data));
+    	},
+    	cancelCreate: function(){
+    		this.newAmenitie = {};
     	}
 	},
 });
