@@ -14,6 +14,8 @@ public class Reservation {
 	private Guest guest;
 	private ReservationStatus reservationStatus;
 	
+	public Reservation() {}
+	
 	public Reservation(Apartment reservedApartment, Date checkInDate, int numberOfNights, double fullPrice,
 			String reservationMessage, Guest guest, ReservationStatus reservationStatus) {
 		super();

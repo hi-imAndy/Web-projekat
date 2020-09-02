@@ -1,9 +1,10 @@
 package beans;
 
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import enums.ApartmentStatus;
 import enums.ApartmentType;
 
 public class Apartment {
@@ -15,38 +16,38 @@ public class Apartment {
 	private Location location;
 	private List<Date> allDates;
 	private List<Date> availableDates;
-	private Host host;
+	private User user;
 	private List<Comment> comments;
 	private List<String> pictures;
 	private double pricePerNight;
-	private LocalTime checkInTime;
-	private LocalTime checkOutTime;
-	private boolean status;
+	private String checkInTime;
+	private String checkOutTime;
+	private ApartmentStatus status;
 	private List<Amenities> amenities;
 	private List<Reservation> reservations;
 	
 	public Apartment() {}
 	
 	public Apartment(String id, ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
-			List<Date> allDates, List<Date> availableDates, Host host, List<Comment> comments, List<String> pictures,
-			double pricePerNight, LocalTime checkInTime, LocalTime checkOutTime, boolean status,
-			List<Amenities> amenities, List<Reservation> reservations) {
+			List<Date> allDates, User user, List<String> pictures,
+			double pricePerNight, String checkInTime, String checkOutTime, ApartmentStatus status,
+			List<Amenities> amenities) {
 		this.id = id;
 		this.apartmentType = apartmentType;
 		this.numberOfRooms = numberOfRooms;
 		this.numberOfGuests = numberOfGuests;
 		this.location = location;
 		this.allDates = allDates;
-		this.availableDates = availableDates;
-		this.host = host;
-		this.comments = comments;
+		this.availableDates = new ArrayList<Date>(allDates);
+		this.user = user;
+		this.comments = new ArrayList<Comment>();
 		this.pictures = pictures;
 		this.pricePerNight = pricePerNight;
 		this.checkInTime = checkInTime;
 		this.checkOutTime = checkOutTime;
 		this.status = status;
 		this.amenities = amenities;
-		this.reservations = reservations;
+		this.reservations = new ArrayList<Reservation>();
 	}
 	
 	public String getId() {
@@ -117,13 +118,13 @@ public class Apartment {
 	}
 
 
-	public Host getHost() {
-		return host;
+	public User getUser() {
+		return user;
 	}
 
 
-	public void setHost(Host host) {
-		this.host = host;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 
@@ -157,32 +158,32 @@ public class Apartment {
 	}
 
 
-	public LocalTime getCheckInTime() {
+	public String getCheckInTime() {
 		return checkInTime;
 	}
 
 
-	public void setCheckInTime(LocalTime checkInTime) {
+	public void setCheckInTime(String checkInTime) {
 		this.checkInTime = checkInTime;
 	}
 
 
-	public LocalTime getCheckOutTime() {
+	public String getCheckOutTime() {
 		return checkOutTime;
 	}
 
 
-	public void setCheckOutTime(LocalTime checkOutTime) {
+	public void setCheckOutTime(String checkOutTime) {
 		this.checkOutTime = checkOutTime;
 	}
 
 
-	public boolean isStatus() {
+	public ApartmentStatus isStatus() {
 		return status;
 	}
 
 
-	public void setStatus(boolean status) {
+	public void setStatus(ApartmentStatus status) {
 		this.status = status;
 	}
 

@@ -101,7 +101,6 @@ public class UserDAO {
 		    printWriter.print(userAsString);
 		    printWriter.print("\n");
 			printWriter.close();
-			//System.out.println(userAsString);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

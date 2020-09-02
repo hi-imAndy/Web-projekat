@@ -7,6 +7,8 @@ public class Comment {
 	private String content;
 	private int rating;
 	
+	public Comment() {}
+	
 	public Comment(Guest author, Apartment apartment, String content, int rating) {
 		this.author = author;
 		this.apartment = apartment;
