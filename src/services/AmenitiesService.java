@@ -4,7 +4,9 @@ import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -35,5 +37,29 @@ public class AmenitiesService {
 	public Collection<Amenities> getAllAmenities(){
 		AmenitiesDAO dao = (AmenitiesDAO)ctx.getAttribute("amenities");
 		return dao.findAll();
+	}
+	
+	@POST
+	@Path("/deleteAmenitie")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public boolean deleteAmenitie(Amenities am) {
+		AmenitiesDAO dao = (AmenitiesDAO)ctx.getAttribute("amenities");
+		return dao.deleteAmenitie(am);
+	}
+	
+	@POST
+	@Path("/editAmenitie")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public boolean editAmenitie(Amenities am) {
+		AmenitiesDAO dao = (AmenitiesDAO)ctx.getAttribute("amenities");
+		return dao.editAmenitie(am);
+	}
+	
+	@POST
+	@Path("/addAmenitie")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public boolean addAmenitie(Amenities am) {
+		AmenitiesDAO dao = (AmenitiesDAO)ctx.getAttribute("amenities");
+		return dao.addAmenitie(am);
 	}
 }

@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
+import beans.Amenities;
 import beans.User;
 import enums.Gender;
 import enums.Role;

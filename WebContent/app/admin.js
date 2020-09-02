@@ -7,11 +7,14 @@ Vue.component("admin", {
 				searchGender:"",
 				usernameChecked:false,
 				roleChecked:false,
-				genderChecked:false
+				genderChecked:false,
+				allAmenities:{},
+				selectedAmenitie:{}
 		    }
 	},
 	template: ` 
 	<div>
+		<div class = "container">
 		<div class = "row justify-content-end" style="margin-top: 20px;">
 				<div class="col-2 custom-control custom-checkbox">
 				    <input type="checkbox" class="custom-control-input" id="defaultUnchecked1" v-model="usernameChecked">
@@ -51,7 +54,7 @@ Vue.component("admin", {
 		    </div>
 			<div class = "row justify-content-md-center">
 				<div class = "col-md-auto">
-					<h3>List of all users</h3>
+					<h2>List of all users</h2>
 				</div>
 			</div>
 			<div class = "row table-responsive">
@@ -78,6 +81,42 @@ Vue.component("admin", {
 				</div>
 			</div>
 		</div>
+		<div class = "row justify-content-center" style="margin-top: 20px;">
+			<div class = "col-md-auto"><h2>List of all amenities</h2></div>
+		</div>
+		<div class = "row justify-content-center" style="margin-top: 10px;">
+			<div class = "col-md-auto">
+				<div class = "row justify-content-center">
+					<div class="table-responsive-sm">
+					<table class="table table-sm table-bordered table-hover" style="text-align:center">
+						<thead class="thead-light">
+							<th>ID</th>
+							<th>Name</th>
+						</thead>
+						<tbody>
+							<tr v-for="am in allAmenities" v-on:click="selectAmenitie(am)">
+								<td>{{am.id}}</td>
+								<td>{{am.name}}</td>
+							</tr>
+						</tbody>
+					</table>
+					</div>
+				</div>
+			</div>
+			<div class = "col-md-auto" style="margin-left:20px;">
+				<div class = "row justify-content-center">
+					ID: <input type = "text" style="margin-right:5px;" v-model="selectedAmenitie.id"/>
+					Name: <input type = "text" v-model="selectedAmenitie.name"/>
+				</div>
+				<div class = "row justify-content-center" style="margin-top: 10px;">
+					<div class = "col-md-auto"><button class="btn btn-secondary">Save</button></div>
+					<div class = "col-md-auto"><button class="btn btn-secondary">Delete</button></div>
+					<div class = "col-md-auto"><button class="btn btn-secondary">Cancel</button></div>
+				</div>
+			</div>
+		</div>
+		
+		</div>
 	</div>
 	`,
 	mounted(){
@@ -85,6 +124,10 @@ Vue.component("admin", {
 		.get("/Project/rest/users/getAllUsers")
 		.then(response => (this.users = response.data));
 
+		axios
+		.get("/Project/rest/amenities/getAllAmenities")
+		.then(response => (this.allAmenities = response.data));
+		
 	},
 	methods : {
 		search : function(){
@@ -93,6 +136,17 @@ Vue.component("admin", {
         		.get("/Project/rest/users/searchUsers", {params: {username : this.searchUsername, role : this.searchRole, gender: this.searchGender, u : this.usernameChecked, r: this.roleChecked, g: this.genderChecked}})
         		.then(response => (this.users = response.data))
     		}
+    	},
+    	selectAmenitie : function(am){
+    		this.selectedAmenitie = am;
+    	},
+    	deleteAmenitie : function(am){
+    	},
+    	addAmenitie: function(am){
+    		
+    	},
+    	editAmenitie: function(am){
+    		
     	}
 	},
 });

@@ -44,4 +44,28 @@ public class AmenitiesDAO {
 	public Collection<Amenities> findAll(){
 		return amenities.values();
 	}
+	
+	public boolean deleteAmenitie(Amenities am) {
+		if(amenities.containsKey(am.getId())) {
+			amenities.remove(am.getId());
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean addAmenitie(Amenities am) {
+		if(amenities.containsKey(am.getId())) {
+			return false;
+		}
+		amenities.put(am.getId(), am);
+		return true;
+	}
+	
+	public boolean editAmenitie(Amenities am) {
+		if(amenities.containsKey(am.getId())) {
+			amenities.replace(am.getId(), am);
+			return true;
+		}
+		return false;
+	}
 }
