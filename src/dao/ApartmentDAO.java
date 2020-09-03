@@ -13,6 +13,7 @@ import java.util.Map;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import beans.Address;
+import beans.Amenities;
 import beans.Apartment;
 import beans.City;
 import beans.Location;
@@ -67,6 +68,16 @@ public class ApartmentDAO {
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void deleteAmenitieInApartments(Amenities amenitie) {
+		for(Apartment ap : apartments.values()) {
+			for(Amenities am : ap.getAmenities()) {
+				if(am.getId() == amenitie.getId() && am.getName().equals(amenitie.getName())) {
+					ap.getAmenities().remove(amenitie);
+				}
+			}
 		}
 	}
 	

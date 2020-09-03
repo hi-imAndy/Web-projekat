@@ -158,6 +158,9 @@ Vue.component("admin", {
     				if(response.data == false)
     					alert("Amenitie with that ID does not exist!");
     				else{
+    					axios
+    					.post("/Project/rest/apartments/deleteAmenitieInApartments", this.selectedAmenitie);
+    					
     					this.selectedAmenitie = {};
     	        		
     	        		axios

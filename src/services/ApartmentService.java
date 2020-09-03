@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import beans.Amenities;
 import beans.Apartment;
 import beans.User;
 import dao.ApartmentDAO;
@@ -46,5 +47,13 @@ public class ApartmentService {
 	public Collection<Apartment> getAllApartments(){
 		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
 		return dao.getAllApartments();
+	}
+	
+	@POST
+	@Path("/deleteAmenitieInApartments")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void deleteAmenitieInApartments(Amenities am) {
+		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
+		dao.deleteAmenitieInApartments(am);
 	}
 }
