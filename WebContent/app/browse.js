@@ -66,9 +66,13 @@ Vue.component("browse", {
 			
 			
 			
-				<div id="apartmentInfo"  class = "modal modal-xl  fade">
-				  <div class="modal-dialog modal-xl" role="document" >
-					    <div class="modal-content">
+				
+		
+		
+		
+			<div id="apartmentInfo" class="modal fade"> 
+			<div class = "modal-dialog modal-dialog-centered modal-xl">
+				  <div class="modal-content">
 						      <div class="modal-header">
 								        <h1 class="modal-title">{{selected.id}} informations</h1>
 								        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -129,11 +133,16 @@ Vue.component("browse", {
 
 							      </div>
 							      <div class="modal-footer">
-								        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+											<div class="row justify-content-md-center">
+											<div class="col-md-auto">
+												<button type = "button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+											</div>
+										</div>
 						     	 </div>
-					    </div>
-				  </div>
-			</div>
+							</div>
+						</div>
+		
+					</div>
 			
 			
 			
