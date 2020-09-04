@@ -206,6 +206,16 @@ public class Apartment {
 	public void setReservations(List<Reservation> reservations) {
 		this.reservations = reservations;
 	}
+
+	@Override
+	public String toString() {
+		return "Apartment [id=" + id + ", apartmentType=" + apartmentType + ", numberOfRooms=" + numberOfRooms
+				+ ", numberOfGuests=" + numberOfGuests + ", location=" + location + ", allDates=" + allDates
+				+ ", availableDates=" + availableDates + ", user=" + user + ", comments=" + comments + ", pictures="
+				+ pictures + ", pricePerNight=" + pricePerNight + ", checkInTime=" + checkInTime + ", checkOutTime="
+				+ checkOutTime + ", status=" + status + ", amenities=" + amenities + ", reservations=" + reservations
+				+ "]";
+	}
 	
 	
 	

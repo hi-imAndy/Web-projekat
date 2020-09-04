@@ -73,11 +73,28 @@ public class ApartmentDAO {
 	
 	public void deleteAmenitieInApartments(Amenities amenitie) {
 		for(Apartment ap : apartments.values()) {
-			for(Amenities am : ap.getAmenities()) {
-				if(am.getId() == amenitie.getId() && am.getName().equals(amenitie.getName())) {
-					ap.getAmenities().remove(amenitie);
+			for(int i = 0; i < ap.getAmenities().size(); i++) {
+				if(ap.getAmenities().get(i).getId() == amenitie.getId() && ap.getAmenities().get(i).getName().equals(amenitie.getName())) {
+					ap.getAmenities().remove(i);
 				}
 			}
+		}
+		saveAllApartments();
+	}
+	
+	private void saveAllApartments() {
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			FileWriter fileWriter = new FileWriter(path + "files\\apartments.json", false);
+			PrintWriter printWriter = new PrintWriter(fileWriter);
+			for(Apartment ap : apartments.values()) {
+				String apAsString = objectMapper.writeValueAsString(ap);
+				printWriter.print(apAsString);
+			    printWriter.print("\n");
+			}
+			printWriter.close();
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
