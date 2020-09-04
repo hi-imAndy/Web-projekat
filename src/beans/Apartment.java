@@ -1,6 +1,7 @@
 package beans;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class Apartment {
 		this.numberOfGuests = numberOfGuests;
 		this.location = location;
 		this.allDates = allDates;
-		this.availableDates = new ArrayList<Date>(allDates);
+		this.availableDates = new ArrayList<Date>(this.allDates);
 		this.user = user;
 		this.comments = new ArrayList<Comment>();
 		this.pictures = pictures;

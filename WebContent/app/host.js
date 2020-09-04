@@ -7,9 +7,10 @@ Vue.component("host", {
 		      location:{},
 		      address:{},
 		      pictures:{},
-		      startingDate:{},
-		      endingDate:{},
-		      newAmenities:[]
+		      newAmenities:[],
+		      allDates:[],
+		      selectedDate:{},
+		      minDate:{}
 		    }
 	},
 	template: ` 
@@ -58,10 +59,14 @@ Vue.component("host", {
 			<div class = "row justify-content-md-center">
 				<div class = "col-md-auto">All available dates:</div>
 				<div class = "col-md-auto">
-					<div class="col">
-						<input id = "daterange" name = "daterange" placeholder="Select date range.." type="text"/>
+					<div class="col" style="border:1px solid #00BFFF; padding:5px">
+						<input type = "date" v-on:change="addDate" v-model="selectedDate" />
+						<input type = "text" readonly v-model="allDates"/>
+						<button class ="btn btn-outline-secondary" v-on:click="clearDates">Clear dates</button>
 					</div>
 				</div>
+			</div>
+			<div class = "row justify-content-md-center" style="margin-top:10px">
 				<div class = "col-md-auto">Price per night:</div>
 				<div class = "col-md-auto"><input type = "text" v-model="newApartment.pricePerNight"/></div>
 				<div class = "col-md-auto">Check in time:</div>
@@ -88,7 +93,7 @@ Vue.component("host", {
 				</div>
 			</div>
 			</br>
-			<div style="border:1px solid blue">
+			<div style="border:1px solid #00BFFF; padding:5px">
 				<div class = "row">
 					<div class = "col">Amenities:</div>
 				</div>
@@ -113,7 +118,7 @@ Vue.component("host", {
 	methods:{
 		create: function(){
 			this.location.address = this.address;
-			var ap = {id : this.newApartment.id, apartmentType: this.newApartment.apartmentType, numberOfRooms:this.newApartment.numberOfRooms , numberOfGuests:this.newApartment.numberOfGuests, location: this.location, allDates: null, user : home.currentUser, pictures: this.pictures, pricePerNight: this.newApartment.pricePerNight, checkInTime: this.newApartment.checkInTime, checkOutTime: this.newApartment.checkOutTime, status: this.newApartment.status, amenities: this.newAmenities};
+			var ap = {id : this.newApartment.id, apartmentType: this.newApartment.apartmentType, numberOfRooms:this.newApartment.numberOfRooms , numberOfGuests:this.newApartment.numberOfGuests, location: this.location, allDates: this.allDates, user : home.currentUser, pictures: this.pictures, pricePerNight: this.newApartment.pricePerNight, checkInTime: this.newApartment.checkInTime, checkOutTime: this.newApartment.checkOutTime, status: this.newApartment.status, amenities: this.newAmenities};
 			
 			axios
 			.post("/Project/rest/apartments/addNewApartment", ap)
@@ -140,9 +145,22 @@ Vue.component("host", {
 				}
 				this.newAmenities = newAm;
 			}
+		},
+		addDate : function(){
+			if(this.selectedDate < this.minDate){
+				alert("A date earlier than " + this.minDate + " can not be selected!");
+			}else{
+				if(this.allDates.includes(this.selectedDate) == false)
+					this.allDates.push(this.selectedDate);
+			}
+		},
+		clearDates: function(){
+			this.allDates = [];
 		}
 	},
 	mounted(){
+		this.minDate = moment().format("YYYY-MM-DD");
+		
 		axios
 		.get("/Project/rest/amenities/getAllAmenities")
 		.then(response => (this.amenities = response.data));
@@ -153,6 +171,8 @@ Vue.component("host", {
 	}
 });
 
+
+/*
 $(function(){
 	$('#daterange').daterangepicker({
 		minDate: moment()
@@ -163,4 +183,4 @@ $(function(){
 		this.endingDate = end.format('MM/DD/YYYY');
 	}
 	);
-});
+});*/
