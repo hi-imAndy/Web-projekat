@@ -26,13 +26,15 @@ Vue.component("browse", {
 						<option value="Novi Sad">Novi Sad</option>
 						<option value="Beograd">Beograd</option>	
 				  	</select></div>
-				<div class="col"><input type="date" id="picker" class="form-control" v-model = "searchCriteria.testDate" ></div>
-				<div class="col"><input type="date" id="picker" class="form-control"></div>
+				<div class="col"><input type="date" id="picker" class="form-control" v-model = "searchCriteria.startDate" ></div>
+				<div class="col"><input type="date" id="picker" class="form-control" v-model = "searchCriteria.endDate"></div>
 				<div class="col"><input type="text" placeholder = "minimal price" class = "form-control" style="vertical-align:middle;" v-model = "searchCriteria.pricePerNightMin" >
 								 <input type="text" placeholder = "maximal price" class = "form-control" style="vertical-align:middle;" v-model = "searchCriteria.pricePerNightMax" >
 				</div>
 				<div class="col"><input type = "number"  min="1" max="25" step="1" class = "form-control" v-model = "searchCriteria.numberOfGuests"></div>
-								<div class="col"><input type = "number" value="1" min="1" max="25" step="1" class = "form-control" v-model = "searchCriteria.numberOfRooms"></div>
+				<div class="col"><input type = "number" placeholder = "minimal number of rooms" value="1" min="1" max="25" step="1" class = "form-control" v-model = "searchCriteria.numberOfRoomsMin">
+								<input type = "number" placeholder = "maximal number of rooms" value="1" min="1" max="25" step="1" class = "form-control" v-model = "searchCriteria.numberOfRoomsMax">
+				</div>
 			</div>
 				<button type = "button" class="btn btn-primary" v-on:click="filterApartments(searchCriteria)">Filter appartments</button>
 				<button type = "button" class="btn btn-primary" v-on:click="resetFilters()">Reset filters</button>
@@ -170,10 +172,13 @@ Vue.component("browse", {
 	mounted(){
 		this.searchCriteria.location = null;
 		this.searchCriteria.numberOfGuests = null;
-		this.searchCriteria.testDate = null;
+		this.searchCriteria.startDate = null;
+		this.searchCriteria.endDate = null;
 		this.searchCriteria.numberOfRooms = null;
-			this.searchCriteria.pricePerNightMin = -1;
-			this.searchCriteria.pricePerNightMax = -1;
+		this.searchCriteria.pricePerNightMin = null;
+		this.searchCriteria.pricePerNightMax = null;
+		this.searchCriteria.numberOfRoomsMin = null;
+		this.searchCriteria.numberOfRoomsMax = null;
 		
 		axios
 			.get("/Project/rest/apartments/getAllApartments")
@@ -185,22 +190,56 @@ Vue.component("browse", {
 			this.selected = apartment;
 },
 		filterApartments : function(searchCriteria){
-			axios
-				.get("/Project/rest/apartments/filterApartments",{params : {location : this.searchCriteria.location, numberOfGuests : this.searchCriteria.numberOfGuests, pricePerNightMin : this.searchCriteria.pricePerNightMin,pricePerNightMax : this.searchCriteria.pricePerNightMax , testDate : this.searchCriteria.testDate,numberOfRooms: this.searchCriteria.numberOfRooms}})
-				.then(response => {this.apartments = response.data;
-				});
+			if(Number(this.searchCriteria.pricePerNightMin)  > Number(this.searchCriteria.pricePerNightMax) &&  this.searchCriteria.pricePerNightMax != null  ){
+				alert("Invalid price values");
+			}
+			else if(Number(this.searchCriteria.numberOfRoomsMin)  > Number(this.searchCriteria.numberOfRoomsMax) &&  this.searchCriteria.numberOfRoomsMax != null ){
+				alert("Invalid number of rooms values");
+			}
+			else if(this.searchCriteria.location == null && this.searchCriteria.numberOfGuests == null && this.searchCriteria.testDate == null && this.searchCriteria.numberOfRooms == null
+					&& this.searchCriteria.pricePerNightMin == null && this.searchCriteria.pricePerNightMax == null && this.searchCriteria.numberOfRoomsMin == null && this.searchCriteria.numberOfRoomsMax == null){
+				alert("No values");
+			}
+			else{
+				if(this.searchCriteria.pricePerNightMin == null)
+					this.searchCriteria.pricePerNightMin = -1;
+				if(this.searchCriteria.pricePerNightMax == null)
+					this.searchCriteria.pricePerNightMax = -1;
+				if(this.searchCriteria.numberOfRoomsMin == null)
+					this.searchCriteria.numberOfRoomsMin = -1;
+				if(this.searchCriteria.numberOfRoomsMax == null)
+					this.searchCriteria.numberOfRoomsMax = -1;
+				axios
+					.get("/Project/rest/apartments/filterApartments",{params : {location : this.searchCriteria.location, numberOfGuests : this.searchCriteria.numberOfGuests, pricePerNightMin : this.searchCriteria.pricePerNightMin,pricePerNightMax : this.searchCriteria.pricePerNightMax , startDate : this.searchCriteria.startDate, endDate : this.searchCriteria.endDate ,numberOfRoomsMin: this.searchCriteria.numberOfRoomsMin , numberOfRoomsMax: this.searchCriteria.numberOfRoomsMax}})
+					.then(response => {this.apartments = response.data;
+					});
+					
+				if(this.searchCriteria.pricePerNightMin == -1)
+					this.searchCriteria.pricePerNightMin = null;
+				if(this.searchCriteria.pricePerNightMax == -1)
+					this.searchCriteria.pricePerNightMax = null;
+				if(this.searchCriteria.numberOfRoomsMin == -1)
+					this.searchCriteria.numberOfRoomsMin = null;
+				if(this.searchCriteria.numberOfRoomsMax == -1)
+					this.searchCriteria.numberOfRoomsMax = null;
+			}
     	},
 		resetFilters : function(){
-			this.searchCriteria.location = null;
-			this.searchCriteria.numberOfGuests = null;
-			this.searchCriteria.testDate = null;
-			this.searchCriteria.numberOfRooms = null;
-			this.searchCriteria.pricePerNightMin = -1;
-			this.searchCriteria.pricePerNightMax = -1;
-			axios
-				.get("/Project/rest/apartments/getAllApartments")
-				.then(response => {this.apartments = response.data;
-				});
+
+				this.searchCriteria.location = null;
+				this.searchCriteria.numberOfGuests = null;
+				this.searchCriteria.testDate = null;
+				this.searchCriteria.numberOfRoomsMin = null;
+				this.searchCriteria.numberOfRoomsMax = null;
+				this.searchCriteria.pricePerNightMin = null;
+				this.searchCriteria.pricePerNightMax = null;
+				this.searchCriteria.startDate = null;
+				this.searchCriteria.endDate = null;
+				axios
+					.get("/Project/rest/apartments/getAllApartments")
+					.then(response => {this.apartments = response.data;
+					});
+			
 }
 	},
 
