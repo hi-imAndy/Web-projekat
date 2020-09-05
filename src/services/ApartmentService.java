@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -46,6 +47,7 @@ public class ApartmentService {
 	@GET
 	@Path("/getAllApartments")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Collection<Apartment> getAllApartments(){
 		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
 		return dao.getAllApartments();
@@ -54,7 +56,7 @@ public class ApartmentService {
 	@GET
 	@Path("/filterApartments")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Apartment> filterApartments(@QueryParam("location") String location,@QueryParam("numberOfGuests") int numberOfGuests,@QueryParam("pricePerNight") double pricePerNight,@QueryParam("testDate") Date testDate,@QueryParam("numberOfRooms") int numberOfRooms){
+	public Collection<Apartment> filterApartments(@QueryParam("location") String location,@QueryParam("numberOfGuests") int numberOfGuests,@QueryParam("pricePerNight") double pricePerNight,@QueryParam("testDate") Date testDate,@QueryParam("numberOfRooms") int numberOfRooms, @Context HttpServletRequest request){
 		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
 		return dao.filterApartments(location,numberOfGuests,pricePerNight,testDate,numberOfRooms);
 	}

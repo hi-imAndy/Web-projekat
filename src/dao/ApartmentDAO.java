@@ -118,8 +118,6 @@ public class ApartmentDAO {
 	
 	public Collection<Apartment> filterApartments(String location,int numberOfGuests,double pricePerNight , Date testDate , int numberOfRooms){
 		Map<String, Apartment> returnValue = new HashMap<>();
-
-
 		
 		
 		//LOKACIJA 

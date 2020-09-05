@@ -17,20 +17,25 @@ Vue.component("browse", {
 				<div class="col" style="text-align: center;">Check out</div>
 				<div class="col" style="text-align: center;">Price</div>
 				<div class="col" style="text-align: center;">Guests</div>
+				<div class="col" style="text-align: center;">Rooms</div>
 			</div>
 			<div class = "row">
 				<div class="col">
-					<select class="browser-default custom-select" >
+					<select class="browser-default custom-select" v-model = "searchCriteria.location" >
 						<option value="All">All</option>
 						<option value="Novi Sad">Novi Sad</option>
 						<option value="Beograd">Beograd</option>	
 				  	</select></div>
+				<div class="col"><input type="date" id="picker" class="form-control" v-model = "searchCriteria.testDate" ></div>
 				<div class="col"><input type="date" id="picker" class="form-control"></div>
-				<div class="col"><input type="date" id="picker" class="form-control"></div>
-				<div class="col"><b>0 </b><input type="range" id="myRange" class="slider"  min="0" value="5" max="10" style="vertical-align:middle;"><b> 5000</b></div>
-				<div class="col"><input type = "number" value="1" min="1" max="25" step="1" class = "form-control"></div>
+				<div class="col"><input type="text" class = "form-control" style="vertical-align:middle;" v-model = "searchCriteria.pricePerNight" >
+								 <input type="text" class = "form-control" style="vertical-align:middle;"  >
+				</div>
+				<div class="col"><input type = "number"  min="1" max="25" step="1" class = "form-control" v-model = "searchCriteria.numberOfGuests"></div>
+								<div class="col"><input type = "number" value="1" min="1" max="25" step="1" class = "form-control" v-model = "searchCriteria.numberOfRooms"></div>
 			</div>
 				<button type = "button" class="btn btn-primary" v-on:click="filterApartments(searchCriteria)">Filter appartments</button>
+				<button type = "button" class="btn btn-primary" v-on:click="resetFilters()">Reset filters</button>
 		</div>
 		
 		
@@ -164,10 +169,10 @@ Vue.component("browse", {
 	`,
 	mounted(){
 		this.searchCriteria.location = null;
-		this.searchCriteria.numberOfGuests = 0;
+		this.searchCriteria.numberOfGuests = null;
 		this.searchCriteria.testDate = null;
-		this.searchCriteria.numbeOfRooms = 0;
-		this.searchCriteria.pricePerNight = 0;
+		this.searchCriteria.numberOfRooms = null;
+		this.searchCriteria.pricePerNight = null;
 		
 		axios
 			.get("/Project/rest/apartments/getAllApartments")
@@ -180,12 +185,25 @@ Vue.component("browse", {
 },
 		filterApartments : function(searchCriteria){
 			axios
-				.get("/Project/rest/apartments/filterApartments")
+				.get("/Project/rest/apartments/filterApartments",{params : {location : this.searchCriteria.location, numberOfGuests : this.searchCriteria.numberOfGuests, pricePerNight : this.searchCriteria.pricePerNight, testDate : this.searchCriteria.testDate,numberOfRooms: this.searchCriteria.numberOfRooms}})
 				.then(response => {this.apartments = response.data;
 				});
-    	}
+    	},
+		resetFilters : function(){
+			this.searchCriteria.location = null;
+			this.searchCriteria.numberOfGuests = null;
+			this.searchCriteria.testDate = null;
+			this.searchCriteria.numberOfRooms = null;
+			this.searchCriteria.pricePerNight = null;
+			axios
+				.get("/Project/rest/apartments/getAllApartments")
+				.then(response => {this.apartments = response.data;
+				});
+}
 	},
+
 });
+
 
 
 
