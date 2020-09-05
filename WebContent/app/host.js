@@ -84,7 +84,7 @@ Vue.component("host", {
 				<div class = "col-md-auto">
 					 <select class="browser-default custom-select" v-model="newApartment.status">
 						<option value="ACTIVE">Active</option>
-						<option value="INACTIVE" selected>Inactive</option>
+						<option value="INACTIVE">Inactive</option>
 				  	</select>
 				</div>
 				<div class = "col-md-auto">

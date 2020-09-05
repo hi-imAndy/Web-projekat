@@ -2,6 +2,8 @@ Vue.component("admin", {
 	data: function () {
 		    return {
 		    	users:{},
+		    	apartments:{},
+		    	selectedApartment:{},
 		    	searchUsername:"",
 				searchRole:"",
 				searchGender:"",
@@ -16,6 +18,39 @@ Vue.component("admin", {
 	template: ` 
 	<div>
 		<div class = "container">
+			<div class = "row justify-content-center" style="margin-top: 20px;">
+				<div class="col-md-auto">
+					<table class="table table-image table-hover">
+							  <thead>
+							    <tr>
+							      <th scope="col"></th>
+							      <th scope="col">ID</th>
+							      <th scope="col">Status</th>
+							      <th scope="col">Price</th>
+							      <th scope="col">Host</th>
+							      <th scope="col">Location</th>
+							      <th scope="col">Address</th>
+							    </tr>
+							  </thead>
+							  <tbody>
+										<tr v-for="a in apartments" v-on:click="selectApartment(a)"   v-bind:class = "{selectedApartment : selectedApartment.id === a.id}">
+											<td><img v-bind:src="a.pictures[0]" class="img-fluid img-thumbnail " width="250" height="100"></td>
+											<td>{{a.id }}</td>
+											<td>{{a.status}}</td>
+											<td>{{a.pricePerNight + " RSD"}}</td>
+											<td>{{a.user.firstName + " " + a.user.lastName }}</td>
+											<td>{{a.location.address.city.name}}</td>
+											<td>{{a.location.address.street}} {{a.location.address.number}}</td>
+										 </tr>
+							  </tbody>
+						</table>   
+					</div>
+					<div class="col-md-auto">
+						<button class="btn btn-outline-primary">Sort by price</button>
+					</div>
+				</div>
+		
+		
 		<div class = "row justify-content-end" style="margin-top: 20px;">
 				<div class="col-2 custom-control custom-checkbox">
 				    <input type="checkbox" class="custom-control-input" id="defaultUnchecked1" v-model="usernameChecked">
@@ -126,11 +161,14 @@ Vue.component("admin", {
 				</div>
 			</div>
 		</div>
-		
 		</div>
 	</div>
 	`,
 	mounted(){
+		axios
+		.get("/Project/rest/apartments/getAllApartments")
+		.then(response => (this.apartments = response.data));
+		
 		axios
 		.get("/Project/rest/users/getAllUsers")
 		.then(response => (this.users = response.data));
@@ -141,6 +179,9 @@ Vue.component("admin", {
 		
 	},
 	methods : {
+		selectApartment : function(apartment){
+			this.selectedApartment = apartment;
+		},
 		search : function(){
     		if(this.usernameChecked === true || this.roleChecked === true || this.genderChecked == true){
     			axios

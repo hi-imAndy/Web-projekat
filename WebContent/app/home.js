@@ -100,7 +100,7 @@ var login = new Vue({
 							router.push("host")
 						else if(this.logedUser.role == "GUEST")
 							router.push("guest")
-						else if(this.logedUser.role == "ADMIN")
+						else if(this.logedUser.role == "ADMINISTRATOR")
 							router.push("admin")
 						}
 					else{
