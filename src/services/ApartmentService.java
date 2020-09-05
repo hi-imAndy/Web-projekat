@@ -1,6 +1,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -9,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -48,6 +50,16 @@ public class ApartmentService {
 		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
 		return dao.getAllApartments();
 	}
+	
+	@GET
+	@Path("/filterApartments")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Apartment> filterApartments(@QueryParam("location") String location,@QueryParam("numberOfGuests") int numberOfGuests,@QueryParam("pricePerNight") double pricePerNight,@QueryParam("testDate") Date testDate,@QueryParam("numberOfRooms") int numberOfRooms){
+		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
+		return dao.filterApartments(location,numberOfGuests,pricePerNight,testDate,numberOfRooms);
+	}
+	
+	
 	
 	@POST
 	@Path("/deleteAmenitieInApartments")

@@ -7,8 +7,11 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.print.attribute.standard.DateTimeAtCompleted;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -108,4 +111,400 @@ public class ApartmentDAO {
 		//apartments.put("PROBNI ID3", new Apartment("PROBA 3", null, 1, 1, null, null, null, null, null, lista, 11, null, null, true, null, null));
 		return apartments.values();
 	}
+	
+	public Collection<Apartment> filterApartments(String location,int numberOfGuests,double pricePerNight , Date testDate , int numberOfRooms){
+		Map<String, Apartment> returnValue = new HashMap<>();
+
+
+		
+		
+		//LOKACIJA 
+			if(location != null && numberOfGuests == 0 && pricePerNight == 0 && testDate == null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location))
+						returnValue.put(ap.getId(),ap);
+				}
+			}	
+		
+		//LOKACIJA + SOBE
+			if(location != null && numberOfGuests == 0 && pricePerNight == 0 && testDate == null && numberOfRooms != 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfRooms() == numberOfRooms)
+						returnValue.put(ap.getId(),ap);
+				}
+			}	
+			
+		//DATUM 
+			if(location == null && numberOfGuests == 0 && pricePerNight == 0 && testDate != null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					try {
+						for(Date date : ap.getAvailableDates()) {
+							if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+								returnValue.put(ap.getId(),ap);
+							}
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+				}
+			}	
+		
+		//DATUM + SOBE
+			if(location == null && numberOfGuests == 0 && pricePerNight == 0 && testDate != null && numberOfRooms != 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getNumberOfRooms() == numberOfRooms)
+						try {
+							for(Date date : ap.getAvailableDates()) {
+								if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+									returnValue.put(ap.getId(),ap);
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+				}
+			}	
+			
+		//LOKACIJA + CENA
+			if(location != null && numberOfGuests == 0 && pricePerNight != 0 && testDate == null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getPricePerNight() == pricePerNight)
+						returnValue.put(ap.getId(),ap);
+				}
+			}	
+			
+		//LOKACIJA + CENA + SOBE
+			if(location != null && numberOfGuests == 0 && pricePerNight != 0 && testDate == null && numberOfRooms != 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getPricePerNight() == pricePerNight && ap.getNumberOfRooms() == numberOfRooms)
+						returnValue.put(ap.getId(),ap);
+				}
+			}		
+			
+		//LOKACIJA + DATUM
+			if(location != null && numberOfGuests == 0 && pricePerNight == 0 && testDate != null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location))
+						try {
+							for(Date date : ap.getAvailableDates()) {
+								if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+									returnValue.put(ap.getId(),ap);
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+				}
+			}	
+		
+			//LOKACIJA + DATUM + SOBE
+			if(location != null && numberOfGuests == 0 && pricePerNight == 0 && testDate != null && numberOfRooms != 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfRooms() == numberOfRooms)
+						try {
+							for(Date date : ap.getAvailableDates()) {
+								if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+									returnValue.put(ap.getId(),ap);
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+				}
+			}
+			
+		//BROJ GOSTIJU + LOKACIJA + CENA PO NOCENJU
+			if(location != null  && numberOfGuests != 0 && pricePerNight != 0 && testDate == null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() == pricePerNight)
+						returnValue.put(ap.getId(),ap);
+				}
+			}	
+			
+		//BROJ GOSTIJU + LOKACIJA + CENA PO NOCENJU + SOBE
+			if(location != null  && numberOfGuests != 0 && pricePerNight != 0 && testDate == null && numberOfRooms != 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() == pricePerNight && ap.getNumberOfRooms() == numberOfRooms)
+						returnValue.put(ap.getId(),ap);
+				}
+			}	
+			
+		//BROJ GOSTIJU + LOKACIJA + CENA PO NOCENJU + DATUM
+			if(location != null  && numberOfGuests != 0 && pricePerNight != 0 && testDate != null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() == pricePerNight)
+						try {
+							for(Date date : ap.getAvailableDates()) {
+								if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+									returnValue.put(ap.getId(),ap);
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+				}
+			}	
+		
+		//BROJ GOSTIJU + LOKACIJA + CENA PO NOCENJU + DATUM + SOBE
+			if(location != null  && numberOfGuests != 0 && pricePerNight != 0 && testDate != null && numberOfRooms != 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() == pricePerNight && ap.getNumberOfRooms() == numberOfRooms)
+						try {
+							for(Date date : ap.getAvailableDates()) {
+								if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+									returnValue.put(ap.getId(),ap);
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+				}
+			}		
+			
+		//BROJ GOSTIJU + LOKACIJA
+			if(location != null  && numberOfGuests != 0 && pricePerNight == 0 && testDate == null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests )
+						returnValue.put(ap.getId(),ap);
+				}
+			}
+		
+		//BROJ GOSTIJU + LOKACIJA + SOBE
+			if(location != null  && numberOfGuests != 0 && pricePerNight == 0 && testDate == null && numberOfRooms != 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests && ap.getNumberOfRooms() == numberOfRooms)
+						returnValue.put(ap.getId(),ap);
+				}
+			}	
+			
+		//BROJ GOSTIJU + LOKACIJA + DATUM
+		if(location != null  && numberOfGuests != 0 && pricePerNight == 0 && testDate != null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests )
+						try {
+							for(Date date : ap.getAvailableDates()) {
+								if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+									returnValue.put(ap.getId(),ap);
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+				}
+			}
+		
+		//BROJ GOSTIJU + LOKACIJA + DATUM + SOBE
+		if(location != null  && numberOfGuests != 0 && pricePerNight == 0 && testDate != null && numberOfRooms != 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests && ap.getNumberOfRooms() == numberOfRooms)
+						try {
+							for(Date date : ap.getAvailableDates()) {
+								if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+									returnValue.put(ap.getId(),ap);
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+				}
+			}
+		
+		// LOKACIJA + CENA + DATUM
+		if(location != null  && numberOfGuests == 0 && pricePerNight != 0 && testDate != null && numberOfRooms == 0) {
+			for(Apartment ap : apartments.values()) {
+				if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getPricePerNight() == pricePerNight )
+					try {
+						for(Date date : ap.getAvailableDates()) {
+							if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+								returnValue.put(ap.getId(),ap);
+							}
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+			}
+		}
+		
+		
+		// LOKACIJA + GOSTI + DATUM + SOBE
+		if(location != null  && numberOfGuests != 0 && pricePerNight == 0 && testDate != null && numberOfRooms != 0) {
+			for(Apartment ap : apartments.values()) {
+				if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests && ap.getNumberOfRooms() == numberOfRooms )
+					try {
+						for(Date date : ap.getAvailableDates()) {
+							if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+								returnValue.put(ap.getId(),ap);
+							}
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+			}
+		}
+		
+		//BROJ GOSTIJU
+			if(location == null  && numberOfGuests != 0 && pricePerNight == 0 && testDate == null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getNumberOfGuests() == numberOfGuests)
+						returnValue.put(ap.getId(),ap);
+				}
+			}	
+		
+		//BROJ GOSTIJU + SOBE
+			if(location == null  && numberOfGuests != 0 && pricePerNight == 0 && testDate == null && numberOfRooms != 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getNumberOfGuests() == numberOfGuests && ap.getNumberOfRooms() == numberOfRooms)
+						returnValue.put(ap.getId(),ap);
+				}
+			}	
+			
+		//BROJ GOSTIJU + DATUM
+			if(location == null  && numberOfGuests != 0 && pricePerNight == 0 && testDate != null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getNumberOfGuests() == numberOfGuests)
+						try {
+							for(Date date : ap.getAvailableDates()) {
+								if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+									returnValue.put(ap.getId(),ap);
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+				}
+			}	
+			
+		//BROJ GOSTIJU + DATUM + SOBE
+			if(location == null  && numberOfGuests != 0 && pricePerNight == 0 && testDate != null && numberOfRooms != 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getNumberOfGuests() == numberOfGuests && ap.getNumberOfRooms() == numberOfRooms)
+						try {
+							for(Date date : ap.getAvailableDates()) {
+								if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+									returnValue.put(ap.getId(),ap);
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+				}
+			}
+			
+		// BROJ GOSTIJU + CENA NOCENJA	
+			if(location == null  && numberOfGuests != 0 && pricePerNight != 0 && testDate == null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() == pricePerNight)
+						returnValue.put(ap.getId(),ap);
+				}
+			}	
+		
+		// BROJ GOSTIJU + CENA NOCENJA	+ SOBE
+			if(location == null  && numberOfGuests != 0 && pricePerNight != 0 && testDate == null && numberOfRooms != 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() == pricePerNight && ap.getNumberOfRooms() == numberOfRooms)
+						returnValue.put(ap.getId(),ap);
+				}
+			}	
+			
+		//BROJ GOSTIJU + CENA NOCENJA + DATUM
+			if(location == null  && numberOfGuests != 0 && pricePerNight != 0 && testDate != null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() == pricePerNight)
+
+						try {
+							for(Date date : ap.getAvailableDates()) {
+								if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+									returnValue.put(ap.getId(),ap);
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+				}
+			}	
+		
+		//BROJ GOSTIJU + CENA NOCENJA + DATUM + SOBE
+			if(location == null  && numberOfGuests != 0 && pricePerNight != 0 && testDate != null && numberOfRooms != 0) {
+				for(Apartment ap : apartments.values()) {
+					if(ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() == pricePerNight && ap.getNumberOfRooms() == numberOfRooms)
+
+						try {
+							for(Date date : ap.getAvailableDates()) {
+								if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+									returnValue.put(ap.getId(),ap);
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+				}
+			}	
+			
+		//CENA PO NOCENJU
+			if(location == null  && numberOfGuests == 0 && pricePerNight != 0 && testDate == null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					if( ap.getPricePerNight() == pricePerNight)
+						returnValue.put(ap.getId(),ap);
+				}
+			}
+			
+		//CENA PO NOCENJU + SOBE
+			if(location == null  && numberOfGuests == 0 && pricePerNight != 0 && testDate == null && numberOfRooms != 0) {
+				for(Apartment ap : apartments.values()) {
+					if( ap.getPricePerNight() == pricePerNight && ap.getNumberOfRooms() == numberOfRooms)
+						returnValue.put(ap.getId(),ap);
+				}
+			}
+			
+		//CENA PO NOCENJU + DATUM
+			if(location == null  && numberOfGuests == 0 && pricePerNight != 0 && testDate != null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					if( ap.getPricePerNight() == pricePerNight)
+						try {
+							for(Date date : ap.getAvailableDates()) {
+								if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+									returnValue.put(ap.getId(),ap);
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+				}
+			}	
+			
+			//CENA PO NOCENJU + DATUM
+			if(location == null  && numberOfGuests == 0 && pricePerNight != 0 && testDate != null && numberOfRooms == 0) {
+				for(Apartment ap : apartments.values()) {
+					if( ap.getPricePerNight() == pricePerNight)
+						try {
+							for(Date date : ap.getAvailableDates()) {
+								if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+									returnValue.put(ap.getId(),ap);
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+				}
+			}
+			
+			
+			//CENA PO NOCENJU + DATUM + SOBE
+			if(location == null  && numberOfGuests == 0 && pricePerNight != 0 && testDate != null && numberOfRooms != 0) {
+				for(Apartment ap : apartments.values()) {
+					if( ap.getPricePerNight() == pricePerNight && ap.getNumberOfRooms() == numberOfRooms)
+						try {
+							for(Date date : ap.getAvailableDates()) {
+								if(date.getDate() == testDate.getDate() && date.getMonth() == testDate.getMonth() && date.getYear() == testDate.getYear()) {
+									returnValue.put(ap.getId(),ap);
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+				}
+			}	
+		return returnValue.values();
+	}
+	
 }

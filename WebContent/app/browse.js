@@ -4,7 +4,8 @@ Vue.component("browse", {
 		return{
 			currentUser: {},
 			apartments:{},
-			selected:{}
+			selected:{},
+			searchCriteria:{}
 		}
 	},
 	template: ` 
@@ -19,7 +20,7 @@ Vue.component("browse", {
 			</div>
 			<div class = "row">
 				<div class="col">
-					<select class="browser-default custom-select">
+					<select class="browser-default custom-select" >
 						<option value="All">All</option>
 						<option value="Novi Sad">Novi Sad</option>
 						<option value="Beograd">Beograd</option>	
@@ -29,10 +30,12 @@ Vue.component("browse", {
 				<div class="col"><b>0 </b><input type="range" id="myRange" class="slider"  min="0" value="5" max="10" style="vertical-align:middle;"><b> 5000</b></div>
 				<div class="col"><input type = "number" value="1" min="1" max="25" step="1" class = "form-control"></div>
 			</div>
+				<button type = "button" class="btn btn-primary" v-on:click="filterApartments(searchCriteria)">Filter appartments</button>
 		</div>
 		
+		
 			<div class="container">
-				<table class="table">
+				<table class="table table-hover">
 				  <div class="row">
 				    <div class="col-12">
 						<table class="table table-image">
@@ -42,11 +45,11 @@ Vue.component("browse", {
 						      <th scope="col">Appartment ID</th>
 						      <th scope="col">Host</th>
 						      <th scope="col">Location</th>
-						      <th scope="col">Status</th>
+						      <th scope="col">Address</th>
 						    </tr>
 						  </thead>
 						  <tbody>
-									<tr v-for="u in apartments" v-on:click="selectApartment(u)" v-bind:class = "{selected : selected.id === u.id}" data-toggle="modal" data-target="#apartmentInfo">
+									<tr v-for="u in apartments" v-on:click="selectApartment(u)" v-if="u.status != 'ACTIVE' "  v-bind:class = "{selected : selected.id === u.id}" data-toggle="modal" data-target="#apartmentInfo">
 										<td><img v-bind:src="u.pictures[0]" class="img-fluid img-thumbnail " width="250" height="100"></td>
 										<td>{{u.id }}</td>
 										<td>{{u.user.username }}</td>
@@ -142,25 +145,7 @@ Vue.component("browse", {
 							</div>
 						</div>
 		
-					</div>
-			
-			
-			
-			
-			
-			
-			
-			
-			
-
-				
-				
-
-				
-
-
-				
-				
+					</div>		
 			</div>
 		</div>
 		</div>
@@ -178,6 +163,12 @@ Vue.component("browse", {
 
 	`,
 	mounted(){
+		this.searchCriteria.location = null;
+		this.searchCriteria.numberOfGuests = 0;
+		this.searchCriteria.testDate = null;
+		this.searchCriteria.numbeOfRooms = 0;
+		this.searchCriteria.pricePerNight = 0;
+		
 		axios
 			.get("/Project/rest/apartments/getAllApartments")
 			.then(response => {this.apartments = response.data;
@@ -186,9 +177,16 @@ Vue.component("browse", {
 	methods : {
 		selectApartment : function(apartment){
 			this.selected = apartment;
+},
+		filterApartments : function(searchCriteria){
+			axios
+				.get("/Project/rest/apartments/filterApartments")
+				.then(response => {this.apartments = response.data;
+				});
     	}
 	},
 });
+
 
 
 
