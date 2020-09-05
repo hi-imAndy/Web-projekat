@@ -35,9 +35,13 @@ public class ApartmentDAO {
 		loadApartments();
 	}
 	
-	public void addNewApartment(Apartment ap) {
+	public boolean addNewApartment(Apartment ap) {
+		if(apartments.containsKey(ap.getId())) {
+			return false;
+		}
 		apartments.put(ap.getId(), ap);
 		saveApartment(ap);
+		return true;
 	}
 	
 	

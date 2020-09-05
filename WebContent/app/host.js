@@ -118,12 +118,20 @@ Vue.component("host", {
 	methods:{
 		create: function(){
 			this.location.address = this.address;
-			var ap = {id : this.newApartment.id, apartmentType: this.newApartment.apartmentType, numberOfRooms:this.newApartment.numberOfRooms , numberOfGuests:this.newApartment.numberOfGuests, location: this.location, allDates: this.allDates, user : home.currentUser, pictures: this.pictures, pricePerNight: this.newApartment.pricePerNight, checkInTime: this.newApartment.checkInTime, checkOutTime: this.newApartment.checkOutTime, status: this.newApartment.status, amenities: this.newAmenities};
+			newPictures = [];
+			for(var i = 0; i < this.pictures.length; i++){
+				newPictures[i] = "pictures\\" + this.pictures[i];
+			}
+			var ap = {id : this.newApartment.id, apartmentType: this.newApartment.apartmentType, numberOfRooms:this.newApartment.numberOfRooms , numberOfGuests:this.newApartment.numberOfGuests, location: this.location, allDates: this.allDates, availableDates: this.allDates ,user : home.currentUser, pictures: newPictures, pricePerNight: this.newApartment.pricePerNight, checkInTime: this.newApartment.checkInTime, checkOutTime: this.newApartment.checkOutTime, status: this.newApartment.status, amenities: this.newAmenities};
 			
 			axios
 			.post("/Project/rest/apartments/addNewApartment", ap)
-			.then(alert("New apartment created!"))
-			.catch(alert("Error!Something went wrong!"));
+			.then(response => {
+				if(response.data == false)
+					alert("Apartment with that ID already exists!");
+				else
+					alert("New apartment created!");
+			});
 		},
 		updateImages : function(event){
     		var fileNames = [];
@@ -170,17 +178,3 @@ Vue.component("host", {
 		.then(response => (this.allCities = response.data));
 	}
 });
-
-
-/*
-$(function(){
-	$('#daterange').daterangepicker({
-		minDate: moment()
-	}, function(start,end){
-		console.log(start);
-		console.log(end);
-		this.startingDate = start.format('MM/DD/YYYY');
-		this.endingDate = end.format('MM/DD/YYYY');
-	}
-	);
-});*/

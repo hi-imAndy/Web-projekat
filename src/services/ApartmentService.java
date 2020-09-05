@@ -38,9 +38,9 @@ public class ApartmentService {
 	@POST
 	@Path("/addNewApartment")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void addNewApartment(Apartment ap) {
+	public boolean addNewApartment(Apartment ap) {
 		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
-		dao.addNewApartment(ap);
+		return dao.addNewApartment(ap);
 	}
 	
 	@GET

@@ -30,7 +30,7 @@ public class Apartment {
 	public Apartment() {}
 	
 	public Apartment(String id, ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
-			List<Date> allDates, User user, List<String> pictures,
+			List<Date> allDates,List<Date> availableDates, User user, List<String> pictures,
 			double pricePerNight, String checkInTime, String checkOutTime, ApartmentStatus status,
 			List<Amenities> amenities) {
 		this.id = id;
@@ -39,7 +39,7 @@ public class Apartment {
 		this.numberOfGuests = numberOfGuests;
 		this.location = location;
 		this.allDates = allDates;
-		this.availableDates = new ArrayList<Date>(this.allDates);
+		this.availableDates = availableDates;
 		this.user = user;
 		this.comments = new ArrayList<Comment>();
 		this.pictures = pictures;
