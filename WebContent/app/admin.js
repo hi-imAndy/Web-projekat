@@ -18,7 +18,8 @@ Vue.component("admin", {
 	template: ` 
 	<div>
 		<div class = "container">
-			<div class = "row" style="margin-top: 20px;">
+			<div class = "row justify-content-md-center" style="margin-top: 20px;">
+				
 				<div class="col-md-auto">
 					<table class="table table-image table-hover">
 							  <thead>
@@ -45,17 +46,38 @@ Vue.component("admin", {
 							  </tbody>
 						</table>   
 					</div>
-					<div class="col-md-auto" style = "margin-left:20px">
+					<div class="col" style = "margin-left:30px">
 						<div class = "row">
-							<button type="button" class="btn btn-outline-primary" v-on:click="sortApartments('asc')">Sort by price (asc)</button>
+							<button type="button" class="btn btn-outline-primary" style="margin-left:25px" v-on:click="sortApartments('asc')">Sort by price (asc)</button>
 						</div>
 						<div class="row" style = "margin-top: 20px">
-							<button type="button" class="btn btn-outline-primary" v-on:click="sortApartments('desc')">Sort by price (des)</button>
+							<button type="button" class="btn btn-outline-primary" style="margin-left:25px" v-on:click="sortApartments('desc')">Sort by price (des)</button>
+						</div>
+						<div class = "row justify-content-md-center" style = "margin-top: 40px">
+							<div class = "col-md-auto"><h5>Filter apartments:</h5></div>
+						</div>
+						<div class = "row" style = "margin-top: 10px">
+						<select class="browser-default custom-select" >
+							<option disabled selected value> -- select status -- </option>
+							<option>Active</option>
+							<option>Inactive</option>
+						</select>
+						</div>
+						<div class = "row" style = "margin-top: 10px">
+							<select class="browser-default custom-select" >
+								<option disabled selected value> -- select a type -- </option>
+								<option>Room</option>
+								<option>Entire apartment</option>
+							</select>
+						</div>
+						<div class = "row" style = "margin-top: 10px">
+							<input type="text" placeholder="Amenitie.." style="margin-left:20px"/>
+						</div>
+						<div class = "row justify-content-md-center" style = "margin-top: 10px">
+							<div class = "col-md-auto"><button class="btn btn-outline-primary">Reset</button></div>
+						</div>
 						</div>
 					</div>
-					</div>
-				</div>
-		
 		
 		<div class = "row justify-content-end" style="margin-top: 20px;">
 				<div class="col-2 custom-control custom-checkbox">
@@ -166,7 +188,6 @@ Vue.component("admin", {
 					<div class = "col-md-auto"><button class="btn btn-secondary" v-on:click="cancelCreate" >Cancel</button></div>
 				</div>
 			</div>
-		</div>
 		</div>
 	</div>
 	`,

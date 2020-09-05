@@ -179,7 +179,7 @@ public class Apartment {
 	}
 
 
-	public ApartmentStatus isStatus() {
+	public ApartmentStatus getStatus() {
 		return status;
 	}
 

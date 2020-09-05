@@ -1,6 +1,9 @@
 Vue.component("host", {
 	data: function () {
 		    return {
+		      currentUser:{},
+		      myApartments:{},
+		      selectedApartment:{},
 		      amenities:{},
 		      allCities:{},
 		      newApartment:{},
@@ -15,7 +18,40 @@ Vue.component("host", {
 	},
 	template: ` 
 	<div>
-		<div class="container" style="border: 1px solid gray">
+		<div class="container">
+			<div class = "row">
+				<h3>My ACTIVE apartments:</h3>
+			</div>
+			<div class = "row" style="margin-top: 20px;">
+				<div class="col-md-auto">
+					<table class="table table-image table-hover">
+							  <thead>
+							    <tr>
+							      <th scope="col"></th>
+							      <th scope="col">ID</th>
+							      <th scope="col">Status</th>
+							      <th scope="col">Price</th>
+							      <th scope="col">Host</th>
+							      <th scope="col">Location</th>
+							      <th scope="col">Address</th>
+							    </tr>
+							  </thead>
+							  <tbody>
+										<tr v-for="a in myApartments" v-on:click="selectApartment(a)"   v-bind:class = "{selectedApartment : selectedApartment.id === a.id}">
+											<td><img v-bind:src="a.pictures[0]" class="img-fluid img-thumbnail " width="250" height="100"></td>
+											<td>{{a.id }}</td>
+											<td>{{a.status}}</td>
+											<td>{{a.pricePerNight + " RSD"}}</td>
+											<td>{{a.user.firstName + " " + a.user.lastName }}</td>
+											<td>{{a.location.address.city.name}}</td>
+											<td>{{a.location.address.street}} {{a.location.address.number}}</td>
+										 </tr>
+							  </tbody>
+						</table>   
+					</div>
+			</div>
+			</div>
+			<div class="container" style="border:1px solid gray">
 			<div class = "row">
 				<div class="col" style="text-align: center;"><h3>Add a new apartment</h3></div>
 			</div>
@@ -164,10 +200,21 @@ Vue.component("host", {
 		},
 		clearDates: function(){
 			this.allDates = [];
-		}
+		},
+		selectApartment : function(apartment){
+			this.selectedApartment = apartment;
+		},
 	},
 	mounted(){
+		this.$root.$on('userFromParent', (user) =>{
+			this.currentUser = user;
+		});
+		
 		this.minDate = moment().format("YYYY-MM-DD");
+		
+		axios
+		.get("/Project/rest/apartments/getApartmentsByUsername", localStorage.currentUsername)
+		.then(response => (this.myApartments = response.data));
 		
 		axios
 		.get("/Project/rest/amenities/getAllAmenities")
@@ -176,5 +223,6 @@ Vue.component("host", {
 		axios
 		.get("/Project/rest/cities/getAllCities")
 		.then(response => (this.allCities = response.data));
+		
 	}
 });

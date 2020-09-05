@@ -56,7 +56,7 @@ Vue.component("browse", {
 						    </tr>
 						  </thead>
 						  <tbody>
-									<tr v-for="u in apartments" v-on:click="selectApartment(u)" v-if="u.status != 'ACTIVE' "  v-bind:class = "{selected : selected.id === u.id}" data-toggle="modal" data-target="#apartmentInfo">
+									<tr v-for="u in apartments" v-on:click="selectApartment(u)" v-if="u.status == 'ACTIVE' "  v-bind:class = "{selected : selected.id === u.id}" data-toggle="modal" data-target="#apartmentInfo">
 										<td><img v-bind:src="u.pictures[0]" class="img-fluid img-thumbnail " width="250" height="100"></td>
 										<td>{{u.id }}</td>
 										<td>{{u.user.username }}</td>

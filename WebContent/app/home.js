@@ -93,6 +93,7 @@ var login = new Vue({
 						home.currentUsername = this.logedUser.username;
 						home.currentUser.firstName = this.logedUser.firstName;
 						home.currentUser.lastName = this.logedUser.lastName;
+						this.$root.$emit('userFromParent', response.data);
 						home.mode = "LOGIN";
 						accountModal.updatedUser.password = null;
 						$('#loginModal').modal('hide')

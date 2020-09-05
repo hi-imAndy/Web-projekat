@@ -3,3 +3,6 @@
 {"username":"mika","password":"mikic","firstName":"Mika","lastName":"Mikic","gender":"MALE","role":"GUEST"}
 {"username":"jova","password":"jovanovic","firstName":"Jovan","lastName":"Jovanovic","gender":"MALE","role":"GUEST"}
 {"username":"iva","password":"ivic","firstName":"Iva","lastName":"Ivic","gender":"FEMALE","role":"ADMINISTRATOR"}
+{"username":"ana","password":"anic","firstName":"Ana","lastName":"Anic","gender":"FEMALE","role":"HOST"}
+{"username":"ivan","password":"ivanovic","firstName":"Ivan","lastName":"Ivanovic","gender":"MALE","role":"ADMINISTRATOR"}
+{"username":"dejan","password":"dejanovic","firstName":"Dejan","lastName":"Dejanovic","gender":"MALE","role":"HOST"}

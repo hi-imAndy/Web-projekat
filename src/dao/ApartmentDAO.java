@@ -105,14 +105,17 @@ public class ApartmentDAO {
 		}
 	}
 	
+	public Collection<Apartment> getApartmentsByUsername(String username){
+		ArrayList<Apartment> ret_list = new ArrayList<Apartment>();
+		for(Apartment ap : apartments.values()) {
+			if(ap.getUser().getUsername().equals(username)) {
+				ret_list.add(ap);
+			}
+		}
+		return ret_list;
+	}
+	
 	public Collection<Apartment> getAllApartments(){
-		ArrayList<String> lista = new ArrayList<String>();
-		Location lokacija = new Location(11, 11, new Address("Ulica", 11, new City("11", "Novi Sad")));
-		lista.add("2wCEAAkGBxMSEhUSExIVFhUXGBkYGBgYGRsaGhoaGBcdHRodHxcaHSggHR8lHRcbITEhJSkrLi4uGx8zODUtNygtLisBCgoKDg0OGxAQGy8lICUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf");
-		lista.add("https://www.ekapija.com/thumbs/novi_sad_051217_tw630.jpg");
-		//apartments.put("PROBNI ID1", new Apartment("PROBA 1", null, 1, 1, null, null, null, null, null, lista, 11, null, null, true, null, null));
-		//apartments.put("PROBNI ID2", new Apartment("PROBA 2", null, 1, 1, null, null, null, null, null, lista, 11, null, null, true, null, null));
-		//apartments.put("PROBNI ID3", new Apartment("PROBA 3", null, 1, 1, null, null, null, null, null, lista, 11, null, null, true, null, null));
 		return apartments.values();
 	}
 	

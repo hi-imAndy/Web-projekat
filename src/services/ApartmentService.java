@@ -54,6 +54,15 @@ public class ApartmentService {
 	}
 	
 	@GET
+	@Path("/getApartmentsByUsername")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Apartment> getApartmentsByUsername(String username){
+		System.out.println(username);
+		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
+		return dao.getApartmentsByUsername(username);
+	}
+	
+	@GET
 	@Path("/filterApartments")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Apartment> filterApartments(@QueryParam("location") String location,@QueryParam("numberOfGuests") int numberOfGuests,@QueryParam("pricePerNightMin") double pricePerNightMin,@QueryParam("pricePerNightMax") double pricePerNightMax,@QueryParam("startDate") Date startDate,@QueryParam("endDate") Date endDate,@QueryParam("numberOfRoomsMin") int numberOfRoomsMin,@QueryParam("numberOfRoomsMax") int numberOfRoomsMax ,@Context HttpServletRequest request){
