@@ -56,9 +56,9 @@ public class ApartmentService {
 	@GET
 	@Path("/filterApartments")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Apartment> filterApartments(@QueryParam("location") String location,@QueryParam("numberOfGuests") int numberOfGuests,@QueryParam("pricePerNight") double pricePerNight,@QueryParam("testDate") Date testDate,@QueryParam("numberOfRooms") int numberOfRooms, @Context HttpServletRequest request){
+	public Collection<Apartment> filterApartments(@QueryParam("location") String location,@QueryParam("numberOfGuests") int numberOfGuests,@QueryParam("pricePerNightMin") double pricePerNightMin,@QueryParam("pricePerNightMax") double pricePerNightMax,@QueryParam("testDate") Date testDate,@QueryParam("numberOfRooms") int numberOfRooms, @Context HttpServletRequest request){
 		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
-		return dao.filterApartments(location,numberOfGuests,pricePerNight,testDate,numberOfRooms);
+		return dao.filterApartments(location,numberOfGuests,pricePerNightMin,pricePerNightMax,testDate,numberOfRooms);
 	}
 	
 	

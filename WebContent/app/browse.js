@@ -28,8 +28,8 @@ Vue.component("browse", {
 				  	</select></div>
 				<div class="col"><input type="date" id="picker" class="form-control" v-model = "searchCriteria.testDate" ></div>
 				<div class="col"><input type="date" id="picker" class="form-control"></div>
-				<div class="col"><input type="text" class = "form-control" style="vertical-align:middle;" v-model = "searchCriteria.pricePerNight" >
-								 <input type="text" class = "form-control" style="vertical-align:middle;"  >
+				<div class="col"><input type="text" placeholder = "minimal price" class = "form-control" style="vertical-align:middle;" v-model = "searchCriteria.pricePerNightMin" >
+								 <input type="text" placeholder = "maximal price" class = "form-control" style="vertical-align:middle;" v-model = "searchCriteria.pricePerNightMax" >
 				</div>
 				<div class="col"><input type = "number"  min="1" max="25" step="1" class = "form-control" v-model = "searchCriteria.numberOfGuests"></div>
 								<div class="col"><input type = "number" value="1" min="1" max="25" step="1" class = "form-control" v-model = "searchCriteria.numberOfRooms"></div>
@@ -172,7 +172,8 @@ Vue.component("browse", {
 		this.searchCriteria.numberOfGuests = null;
 		this.searchCriteria.testDate = null;
 		this.searchCriteria.numberOfRooms = null;
-		this.searchCriteria.pricePerNight = null;
+			this.searchCriteria.pricePerNightMin = -1;
+			this.searchCriteria.pricePerNightMax = -1;
 		
 		axios
 			.get("/Project/rest/apartments/getAllApartments")
@@ -185,7 +186,7 @@ Vue.component("browse", {
 },
 		filterApartments : function(searchCriteria){
 			axios
-				.get("/Project/rest/apartments/filterApartments",{params : {location : this.searchCriteria.location, numberOfGuests : this.searchCriteria.numberOfGuests, pricePerNight : this.searchCriteria.pricePerNight, testDate : this.searchCriteria.testDate,numberOfRooms: this.searchCriteria.numberOfRooms}})
+				.get("/Project/rest/apartments/filterApartments",{params : {location : this.searchCriteria.location, numberOfGuests : this.searchCriteria.numberOfGuests, pricePerNightMin : this.searchCriteria.pricePerNightMin,pricePerNightMax : this.searchCriteria.pricePerNightMax , testDate : this.searchCriteria.testDate,numberOfRooms: this.searchCriteria.numberOfRooms}})
 				.then(response => {this.apartments = response.data;
 				});
     	},
@@ -194,7 +195,8 @@ Vue.component("browse", {
 			this.searchCriteria.numberOfGuests = null;
 			this.searchCriteria.testDate = null;
 			this.searchCriteria.numberOfRooms = null;
-			this.searchCriteria.pricePerNight = null;
+			this.searchCriteria.pricePerNightMin = -1;
+			this.searchCriteria.pricePerNightMax = -1;
 			axios
 				.get("/Project/rest/apartments/getAllApartments")
 				.then(response => {this.apartments = response.data;
