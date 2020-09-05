@@ -18,7 +18,7 @@ Vue.component("admin", {
 	template: ` 
 	<div>
 		<div class = "container">
-			<div class = "row justify-content-center" style="margin-top: 20px;">
+			<div class = "row" style="margin-top: 20px;">
 				<div class="col-md-auto">
 					<table class="table table-image table-hover">
 							  <thead>
@@ -45,8 +45,14 @@ Vue.component("admin", {
 							  </tbody>
 						</table>   
 					</div>
-					<div class="col-md-auto">
-						<button class="btn btn-outline-primary">Sort by price</button>
+					<div class="col-md-auto" style = "margin-left:20px">
+						<div class = "row">
+							<button type="button" class="btn btn-outline-primary" v-on:click="sortApartments('asc')">Sort by price (asc)</button>
+						</div>
+						<div class="row" style = "margin-top: 20px">
+							<button type="button" class="btn btn-outline-primary" v-on:click="sortApartments('desc')">Sort by price (des)</button>
+						</div>
+					</div>
 					</div>
 				</div>
 		
@@ -241,6 +247,30 @@ Vue.component("admin", {
     	},
     	cancelCreate: function(){
     		this.newAmenitie = {};
+    	},
+    	sortApartments: function(sort){
+    		var n = this.apartments.length;
+    		var sortedApartments = [n+1];
+    		
+    		for(let i = 0; i < n; i++) {
+    	        for(let j = i + 1; j < n; j++){
+    	        	if(sort == 'asc'){
+	    	            if(this.apartments[j].pricePerNight < this.apartments[i].pricePerNight) {
+	    	                t = this.apartments[i];
+	    	                this.apartments[i] = this.apartments[j];
+	    	                this.apartments[j] = t;
+	    	            }
+    	        	}else if(sort == 'desc'){
+    	        		if(this.apartments[j].pricePerNight > this.apartments[i].pricePerNight) {
+	    	                t = this.apartments[i];
+	    	                this.apartments[i] = this.apartments[j];
+	    	                this.apartments[j] = t;
+	    	            }
+    	        	}
+    	        }
+    	        sortedApartments[i] = this.apartments[i];
+    		}
+    		this.apartments = sortedApartments;
     	}
-	},
+	}
 });
