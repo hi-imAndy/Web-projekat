@@ -56,8 +56,7 @@ public class ApartmentService {
 	@GET
 	@Path("/getApartmentsByUsername")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Apartment> getApartmentsByUsername(String username){
-		System.out.println(username);
+	public Collection<Apartment> getApartmentsByUsername(@QueryParam("username") String username){
 		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
 		return dao.getApartmentsByUsername(username);
 	}
