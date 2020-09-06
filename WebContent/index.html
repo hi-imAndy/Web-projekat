@@ -19,7 +19,7 @@
 			<a href = "/Project/" style="margin-left: 30px;">Home</a>
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item" v-if="mode != 'BROWSE'">{{currentUser.firstName + "  " + currentUser.lastName}}</li>
+					<li class="nav-item" v-if="mode != 'BROWSE'">{{currentUser.firstName + "  " + currentUser.lastName }}</li>
 					<li class="nav-item" v-if="mode != 'LOGIN'"><a href = "#" data-toggle="modal" data-target="#loginModal">Log in</a></li>
 					<li class="nav-item" v-else><a href = "#" data-toggle="modal" data-target="#accountModal">Account settings</a></li>
 					<li class="nav-item" v-if="mode != 'LOGIN'"><a href = "#" data-toggle="modal" data-target="#registerModal">Register</a></li>

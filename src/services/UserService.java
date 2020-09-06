@@ -75,7 +75,7 @@ public class UserService {
 	@Path("/currentUser")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public User login(@Context HttpServletRequest request) {
+	public User currentUser(@Context HttpServletRequest request) {
 		return (User) request.getSession().getAttribute("loggedUser");
 	}
 

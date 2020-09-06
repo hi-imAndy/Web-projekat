@@ -149,10 +149,72 @@ const Host = { template: '<host></host>' }
 const router = new VueRouter({
 	  mode: 'hash',
 	  routes: [
-	    { path: '/', component: Browse},
-	    { path: '/guest', component: Guest },
-	    { path: '/admin', component: Admin },
-	    { path: '/host', component: Host }
+	    { 
+	    	path: '/', 
+	    	name : 'home', 
+	    	component: Browse,
+	    	beforeEnter : (to, from, next) => {
+	    		axios
+	    		.get("/Project/rest/users/currentUser")
+	    		.then(response => {
+	    			if(response.data.role == undefined){
+	    				next();
+	    			}else{
+	    				next(false);
+	    			}
+	    		})
+	    	}
+	    },
+	    { 
+	    	path: '/guest', 
+	    	name : 'guest', 
+	    	component: Guest,
+	    	beforeEnter : (to, from, next) => {
+	    		axios
+	    		.get("/Project/rest/users/currentUser")
+	    		.then(response => {
+	    			if(response.data.role === 'GUEST'){
+	    				next();
+	    			}else{
+	    				next(false);
+	    			}
+	    		})
+	    	}
+	    	
+	    },
+	    {
+	    	path: '/admin', 
+	    	name : 'admin', 
+	    	component: Admin,
+	    	beforeEnter : (to, from, next) => {
+	    		axios
+	    		.get("/Project/rest/users/currentUser")
+	    		.then(response => {
+	    			if(response.data.role === 'ADMINISTRATOR'){
+	    				next();
+	    			}else{
+	    				next(false);
+	    			}
+	    		})
+	    	}
+	    	
+	    },
+	    { 
+	    	path: '/host',  
+	    	name : 'host', 
+	    	component: Host,
+	    	beforeEnter : (to, from, next) => {
+	    		axios
+	    		.get("/Project/rest/users/currentUser")
+	    		.then(response => {
+	    			if(response.data.role === 'HOST'){
+	    				next();
+	    			}else{
+	    				next(false);
+	    			}
+	    		})
+	    	}
+	    }
 	  ]
 });
 
