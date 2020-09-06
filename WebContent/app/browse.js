@@ -196,9 +196,15 @@ Vue.component("browse", {
 			else if(Number(this.searchCriteria.numberOfRoomsMin)  > Number(this.searchCriteria.numberOfRoomsMax) &&  this.searchCriteria.numberOfRoomsMax != null ){
 				alert("Invalid number of rooms values");
 			}
-			else if(this.searchCriteria.location == null && this.searchCriteria.numberOfGuests == null && this.searchCriteria.testDate == null && this.searchCriteria.numberOfRooms == null
+			else if(this.searchCriteria.location == null && this.searchCriteria.numberOfGuests == null && this.searchCriteria.endDate==null && this.searchCriteria.startDate == null && this.searchCriteria.numberOfRooms == null
 					&& this.searchCriteria.pricePerNightMin == null && this.searchCriteria.pricePerNightMax == null && this.searchCriteria.numberOfRoomsMin == null && this.searchCriteria.numberOfRoomsMax == null){
 				alert("No values");
+			}
+			else if(this.searchCriteria.startDate != null && this.searchCriteria.endDate == null || this.searchCriteria.startDate == null && this.searchCriteria.endDate != null ){
+				alert("Both dates must be picked.");
+			}
+			else if(this.searchCriteria.startDate > this.searchCriteria.endDate ){
+				alert("Invalid date values");
 			}
 			else{
 				if(this.searchCriteria.pricePerNightMin == null)
@@ -210,7 +216,7 @@ Vue.component("browse", {
 				if(this.searchCriteria.numberOfRoomsMax == null)
 					this.searchCriteria.numberOfRoomsMax = -1;
 				axios
-					.get("/Project/rest/apartments/filterApartments",{params : {location : this.searchCriteria.location, numberOfGuests : this.searchCriteria.numberOfGuests, pricePerNightMin : this.searchCriteria.pricePerNightMin,pricePerNightMax : this.searchCriteria.pricePerNightMax , startDate : this.searchCriteria.startDate, endDate : this.searchCriteria.endDate ,numberOfRoomsMin: this.searchCriteria.numberOfRoomsMin , numberOfRoomsMax: this.searchCriteria.numberOfRoomsMax}})
+					.get("/Project/rest/apartments/filterApartments",{params : {location : this.searchCriteria.location, numberOfGuests : this.searchCriteria.numberOfGuests, pricePerNightMin : this.searchCriteria.pricePerNightMin,pricePerNightMax : this.searchCriteria.pricePerNightMax , startDate : this.searchCriteria.startDate, endDate :this.searchCriteria.endDate ,numberOfRoomsMin: this.searchCriteria.numberOfRoomsMin , numberOfRoomsMax: this.searchCriteria.numberOfRoomsMax}})
 					.then(response => {this.apartments = response.data;
 					});
 					
@@ -228,7 +234,6 @@ Vue.component("browse", {
 
 				this.searchCriteria.location = null;
 				this.searchCriteria.numberOfGuests = null;
-				this.searchCriteria.testDate = null;
 				this.searchCriteria.numberOfRoomsMin = null;
 				this.searchCriteria.numberOfRoomsMax = null;
 				this.searchCriteria.pricePerNightMin = null;

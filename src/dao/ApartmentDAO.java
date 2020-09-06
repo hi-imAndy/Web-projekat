@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.IntPredicate;
 
 import javax.print.attribute.standard.DateTimeAtCompleted;
 
@@ -19,7 +20,9 @@ import beans.Address;
 import beans.Amenities;
 import beans.Apartment;
 import beans.City;
+import beans.DateSubstitute;
 import beans.Location;
+import enums.ApartmentStatus;
 
 public class ApartmentDAO {
 
@@ -115,77 +118,81 @@ public class ApartmentDAO {
 		return ret_list;
 	}
 	
+
 	public Collection<Apartment> getAllApartments(){
+
 		return apartments.values();
 	}
 	
-	private boolean compareDates(Date startDate ,Date endDate,ArrayList<Date> availableDates) {
+	//POMOCNA FUNKCIJA ZA POREDJENJE DATUMA
+	private boolean compareDates(Date startDate ,Date endDate, ArrayList<Date> availableDates) {
+		ArrayList<DateSubstitute> availableDatesSub = new ArrayList<DateSubstitute>();
+		ArrayList<DateSubstitute> startToEnd = new ArrayList<DateSubstitute>();
+		
+		for(int i = 0 ; i < availableDates.size() ; i++) {
+			availableDatesSub.add(new DateSubstitute(availableDates.get(i).getDate(), availableDates.get(i).getMonth(), availableDates.get(i).getYear()+1900));
+			//System.out.println(availableDatesSub.get(i).getDay() + "." + availableDatesSub.get(i).getMonth() + "." + availableDatesSub.get(i).getYear() );
+		}
 		
 		int differenceDay = endDate.getDate() - startDate.getDate();
 		int differenceMonth = endDate.getMonth() - startDate.getMonth();
-		int addDay = 0;
-		int addMonth = 0;
+		int differenceYear = endDate.getYear() - startDate.getYear();
 		
-	if(differenceDay > 0 && differenceMonth == 0) {
-		try {
-			for(int i = 0 ; i < availableDates.size() ; i++) {
-				if(availableDates.get(i).getDate() == startDate.getDate() + addDay && availableDates.get(i).getMonth() + addMonth == startDate.getMonth() && availableDates.get(i).getYear() == startDate.getYear()) {
-					if(addDay != differenceDay) {
-						addDay++;
-					}
-					else {
-						return true;
-					}
+		//ISTI MESEC ISTA GODINA RAZLICIT DAN
+		if(differenceDay > 0 && differenceMonth == 0 && differenceYear == 0) {
+			for(int i = 0 ; i <= differenceDay ; i++) {
+				startToEnd.add(new DateSubstitute(startDate.getDate() + i, startDate.getMonth(), startDate.getYear()));
+				//System.out.println(startToEnd.get(i).getDay() + "." + startToEnd.get(i).getMonth() + "." + startToEnd.get(i).getYear() );
+			}
+		}
+		//RAZLICIT MESEC ISTA GODINA 
+		else if(differenceMonth > 0 && differenceYear == 0) {
+			if(startDate.getMonth() == 1 || startDate.getMonth() == 3 || startDate.getMonth() == 5 || startDate.getMonth() == 7 || startDate.getMonth() == 8 || startDate.getMonth() == 10 || startDate.getMonth() == 12) {
+			for(int i = 0 ; i <= 31 ; i++) {
+				startToEnd.add(new DateSubstitute(startDate.getDate()+i, startDate.getMonth(), startDate.getYear()));
+				if(startDate.getDate()+i == 31)
+					break;
+			}
+		}
+			else if(startDate.getMonth() == 4 || startDate.getMonth() == 6 || startDate.getMonth() == 9 || startDate.getMonth() == 11 ) {
+				for(int i = 0 ; i <= 30 ; i++) {
+					startToEnd.add(new DateSubstitute(startDate.getDate()+i, startDate.getMonth(), startDate.getYear()));
+					if(startDate.getDate()+i == 31)
+						break;
 				}
-				else
+				for(int i = 0 ; i <= endDate.getDate() ; i++) {
+					startToEnd.add(new DateSubstitute(0+i, endDate.getMonth(), startDate.getYear()));
+				}
+			}
+		}
+		
+		for(DateSubstitute ds : startToEnd) {
+			for(DateSubstitute dsAD : startToEnd) {
+				if(!checkIfContains(availableDatesSub, dsAD))
 					return false;
 			}
-		} catch (Exception e) {
-			// TODO: handle exception
 		}
-	}
-	if(differenceDay > 0 && differenceMonth > 0) {
-		try {
-			for(int i = 0 ; i < availableDates.size() ; i++) {
-				if(availableDates.get(i).getDate() == startDate.getDate() + addDay && availableDates.get(i).getMonth() + addMonth == startDate.getMonth() && availableDates.get(i).getYear() == startDate.getYear()) {
-					if(addDay != differenceDay) {
-						addDay++;
-					}
-					else {
-						return true;
-					}
-				}
-				else
-					return false;
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
-	if(differenceDay < 0 && differenceMonth > 0) {
-		try {
-			for(int i = 0 ; i < availableDates.size() ; i++) {
-				if(availableDates.get(i).getDate() == startDate.getDate() + addDay && availableDates.get(i).getMonth() + addMonth == startDate.getMonth() && availableDates.get(i).getYear() == startDate.getYear()) {
-					if(addDay != differenceDay) {
-						addDay++;
-					}
-					else {
-						return true;
-					}
-				}
-				else
-					return false;
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
+
 		return true;
 	}
 	
+	//POMOCNA FUNKCIJA 
+	private boolean checkIfContains (ArrayList<DateSubstitute> dsList, DateSubstitute ds ) {
+		for(DateSubstitute dsL : dsList) {
+			if(dsL.getDay() == ds.getDay() && dsL.getMonth() == ds.getMonth() && dsL.getYear() == ds.getYear()) {
+				return true;
+			}
+		}
+		return false;	
+	}
 	
-	public Collection<Apartment> filterApartments(String location,int numberOfGuests,double pricePerNightMin,double pricePerNightMax , Date startDate,Date endDate , int numberOfRoomsMin , int numberOfRoomsMax){
+	public Collection<Apartment> filterApartments(String location,int numberOfGuests,double pricePerNightMin,double pricePerNightMax , String startDateString,String endDateString , int numberOfRoomsMin , int numberOfRoomsMax){
 		Map<String, Apartment> returnValue = new HashMap<>();
+		
+		if(location != null) {
+			if(location.equalsIgnoreCase("All"))
+				location = null;
+		}
 		
 		if(pricePerNightMin != -1 && pricePerNightMax == -1) {
 			pricePerNightMax = 10000000;
@@ -199,12 +206,19 @@ public class ApartmentDAO {
 		else if (numberOfRoomsMax != -1 && numberOfRoomsMin == -1) {
 			numberOfRoomsMin = 1;
 		}
-		
-		
-		
+		Date startDate = null;
+		Date endDate = null;
+		try {
+			startDate = new Date(Integer.parseInt(startDateString.split("-")[0]),Integer.parseInt(startDateString.split("-")[1]),Integer.parseInt(startDateString.split("-")[2]));
+			endDate = new Date(Integer.parseInt(endDateString.split("-")[0]),Integer.parseInt(endDateString.split("-")[1]),Integer.parseInt(endDateString.split("-")[2]));
+		}
+		catch (Exception e) {
+			startDate = null;
+			endDate = null;
+		}
 		
 		//LOKACIJA 
-			if(location != null && numberOfGuests == 0 && pricePerNightMin == -1 && startDate == null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin == -1) {
+			if(location != null && numberOfGuests == 0 && pricePerNightMin == -1 && startDate == null && endDate == null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location))
 						returnValue.put(ap.getId(),ap);
@@ -212,7 +226,7 @@ public class ApartmentDAO {
 			}	
 		
 		//LOKACIJA + SOBE
-			if(location != null && numberOfGuests == 0 && pricePerNightMin == -1 && startDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
+			if(location != null && numberOfGuests == 0 && pricePerNightMin == -1 && startDate == null && endDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax)
 						returnValue.put(ap.getId(),ap);
@@ -220,11 +234,11 @@ public class ApartmentDAO {
 			}	
 			
 		//DATUM 
-			if(location == null && numberOfGuests == 0 && pricePerNightMin == -1 && startDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin == -1) {
+			if(location == null && numberOfGuests == 0 && pricePerNightMin == -1 && startDate != null && endDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					try {
-						for(Date date : ap.getAvailableDates()) {
-							if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
+						 {
+							if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
 								returnValue.put(ap.getId(),ap);
 							}
 						}
@@ -235,14 +249,12 @@ public class ApartmentDAO {
 			}	
 		
 		//DATUM + SOBE
-			if(location == null && numberOfGuests == 0 && pricePerNightMin == -1 && startDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
+			if(location == null && numberOfGuests == 0 && pricePerNightMin == -1 && startDate != null && endDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax)
 						try {
-							for(Date date : ap.getAvailableDates()) {
-								if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-									returnValue.put(ap.getId(),ap);
-								}
+							if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+								returnValue.put(ap.getId(),ap);
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
@@ -251,7 +263,7 @@ public class ApartmentDAO {
 			}	
 			
 		//LOKACIJA + CENA
-			if(location != null && numberOfGuests == 0 && pricePerNightMin != -1 && startDate == null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1) {
+			if(location != null && numberOfGuests == 0 && pricePerNightMin != -1 && startDate == null && endDate == null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getPricePerNight() >= pricePerNightMin && ap.getPricePerNight() <= pricePerNightMax)
 						returnValue.put(ap.getId(),ap);
@@ -259,7 +271,7 @@ public class ApartmentDAO {
 			}	
 			
 		//LOKACIJA + CENA + SOBE
-			if(location != null && numberOfGuests == 0 && pricePerNightMin != -1 && startDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin != -1) {
+			if(location != null && numberOfGuests == 0 && pricePerNightMin != -1 && startDate == null && endDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin != -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getPricePerNight() >= pricePerNightMin && ap.getPricePerNight() <= pricePerNightMax && ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax)
 						returnValue.put(ap.getId(),ap);
@@ -267,14 +279,12 @@ public class ApartmentDAO {
 			}		
 			
 		//LOKACIJA + DATUM
-			if(location != null && numberOfGuests == 0 && pricePerNightMin == -1 && startDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin == -1) {
+			if(location != null && numberOfGuests == 0 && pricePerNightMin == -1 && startDate != null && endDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location))
 						try {
-							for(Date date : ap.getAvailableDates()) {
-								if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-									returnValue.put(ap.getId(),ap);
-								}
+							if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+								returnValue.put(ap.getId(),ap);
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
@@ -283,14 +293,12 @@ public class ApartmentDAO {
 			}	
 		
 			//LOKACIJA + DATUM + SOBE
-			if(location != null && numberOfGuests == 0 && pricePerNightMin==-1 && startDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
+			if(location != null && numberOfGuests == 0 && pricePerNightMin==-1 && startDate != null && endDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax)
 						try {
-							for(Date date : ap.getAvailableDates()) {
-								if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-									returnValue.put(ap.getId(),ap);
-								}
+							if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+								returnValue.put(ap.getId(),ap);
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
@@ -299,7 +307,7 @@ public class ApartmentDAO {
 			}
 			
 		//BROJ GOSTIJU + LOKACIJA + CENA PO NOCENJU
-			if(location != null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate == null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1) {
+			if(location != null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate == null && endDate == null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() >= pricePerNightMin && ap.getPricePerNight() <= pricePerNightMax)
 						returnValue.put(ap.getId(),ap);
@@ -307,7 +315,7 @@ public class ApartmentDAO {
 			}	
 			
 		//BROJ GOSTIJU + LOKACIJA + CENA PO NOCENJU + SOBE
-			if(location != null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin != -1) {
+			if(location != null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate == null && endDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin != -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() >= pricePerNightMin&& ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax && ap.getPricePerNight() <= pricePerNightMax)
 						returnValue.put(ap.getId(),ap);
@@ -315,14 +323,12 @@ public class ApartmentDAO {
 			}	
 			
 		//BROJ GOSTIJU + LOKACIJA + CENA PO NOCENJU + DATUM
-			if(location != null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1) {
+			if(location != null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate != null && endDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() >= pricePerNightMin && ap.getPricePerNight() <= pricePerNightMax)
 						try {
-							for(Date date : ap.getAvailableDates()) {
-								if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-									returnValue.put(ap.getId(),ap);
-								}
+							if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+								returnValue.put(ap.getId(),ap);
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
@@ -331,14 +337,12 @@ public class ApartmentDAO {
 			}	
 		
 		//BROJ GOSTIJU + LOKACIJA + CENA PO NOCENJU + DATUM + SOBE
-			if(location != null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin != -1) {
+			if(location != null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate != null && endDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin != -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() >= pricePerNightMin&& ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax && ap.getPricePerNight() <= pricePerNightMax)
 						try {
-							for(Date date : ap.getAvailableDates()) {
-								if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-									returnValue.put(ap.getId(),ap);
-								}
+							if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+								returnValue.put(ap.getId(),ap);
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
@@ -347,7 +351,7 @@ public class ApartmentDAO {
 			}		
 			
 		//BROJ GOSTIJU + LOKACIJA
-			if(location != null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate == null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin == -1) {
+			if(location != null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate == null && endDate == null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests )
 						returnValue.put(ap.getId(),ap);
@@ -355,7 +359,7 @@ public class ApartmentDAO {
 			}
 		
 		//BROJ GOSTIJU + LOKACIJA + SOBE
-			if(location != null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
+			if(location != null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate == null && endDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests && ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax)
 						returnValue.put(ap.getId(),ap);
@@ -363,14 +367,12 @@ public class ApartmentDAO {
 			}	
 			
 		//BROJ GOSTIJU + LOKACIJA + DATUM
-		if(location != null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin == -1) {
+		if(location != null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate != null && endDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests )
 						try {
-							for(Date date : ap.getAvailableDates()) {
-								if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-									returnValue.put(ap.getId(),ap);
-								}
+							if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+								returnValue.put(ap.getId(),ap);
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
@@ -379,14 +381,12 @@ public class ApartmentDAO {
 			}
 		
 		//BROJ GOSTIJU + LOKACIJA + DATUM + SOBE
-		if(location != null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
+		if(location != null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate != null && endDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests && ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax)
 						try {
-							for(Date date : ap.getAvailableDates()) {
-								if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-									returnValue.put(ap.getId(),ap);
-								}
+							if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+								returnValue.put(ap.getId(),ap);
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
@@ -395,14 +395,12 @@ public class ApartmentDAO {
 			}
 		
 		// LOKACIJA + CENA + DATUM
-		if(location != null  && numberOfGuests == 0 && pricePerNightMin != -1 && startDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1) {
+		if(location != null  && numberOfGuests == 0 && pricePerNightMin != -1 && startDate != null && endDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1) {
 			for(Apartment ap : apartments.values()) {
 				if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getPricePerNight() >= pricePerNightMin && ap.getPricePerNight() <= pricePerNightMax)
 					try {
-						for(Date date : ap.getAvailableDates()) {
-							if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-								returnValue.put(ap.getId(),ap);
-							}
+						if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+							returnValue.put(ap.getId(),ap);
 						}
 					} catch (Exception e) {
 						// TODO: handle exception
@@ -412,14 +410,12 @@ public class ApartmentDAO {
 		
 		
 		// LOKACIJA + GOSTI + DATUM + SOBE
-		if(location != null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
+		if(location != null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate != null && endDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
 			for(Apartment ap : apartments.values()) {
 				if(ap.getLocation().getAddress().getCity().getName().equalsIgnoreCase(location) && ap.getNumberOfGuests() == numberOfGuests && ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax )
 					try {
-						for(Date date : ap.getAvailableDates()) {
-							if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-								returnValue.put(ap.getId(),ap);
-							}
+						if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+							returnValue.put(ap.getId(),ap);
 						}
 					} catch (Exception e) {
 						// TODO: handle exception
@@ -428,7 +424,7 @@ public class ApartmentDAO {
 		}
 		
 		//BROJ GOSTIJU
-			if(location == null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate == null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin == -1) {
+			if(location == null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate == null && endDate == null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getNumberOfGuests() == numberOfGuests)
 						returnValue.put(ap.getId(),ap);
@@ -436,7 +432,7 @@ public class ApartmentDAO {
 			}	
 		
 		//BROJ GOSTIJU + SOBE
-			if(location == null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
+			if(location == null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate == null && endDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getNumberOfGuests() == numberOfGuests && ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax)
 						returnValue.put(ap.getId(),ap);
@@ -444,14 +440,12 @@ public class ApartmentDAO {
 			}	
 			
 		//BROJ GOSTIJU + DATUM
-			if(location == null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin == -1) {
+			if(location == null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate != null && endDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getNumberOfGuests() == numberOfGuests)
 						try {
-							for(Date date : ap.getAvailableDates()) {
-								if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-									returnValue.put(ap.getId(),ap);
-								}
+							if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+								returnValue.put(ap.getId(),ap);
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
@@ -460,14 +454,12 @@ public class ApartmentDAO {
 			}	
 			
 		//BROJ GOSTIJU + DATUM + SOBE
-			if(location == null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
+			if(location == null  && numberOfGuests != 0 && pricePerNightMin==-1 && startDate != null && endDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getNumberOfGuests() == numberOfGuests && ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax)
 						try {
-							for(Date date : ap.getAvailableDates()) {
-								if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-									returnValue.put(ap.getId(),ap);
-								}
+							if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+								returnValue.put(ap.getId(),ap);
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
@@ -476,7 +468,7 @@ public class ApartmentDAO {
 			}
 			
 		// BROJ GOSTIJU + CENA NOCENJA	
-			if(location == null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate == null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1 ) {
+			if(location == null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate == null && endDate == null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1 ) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() >= pricePerNightMin && ap.getPricePerNight() <= pricePerNightMax)
 						returnValue.put(ap.getId(),ap);
@@ -484,7 +476,7 @@ public class ApartmentDAO {
 			}	
 		
 		// BROJ GOSTIJU + CENA NOCENJA	+ SOBE
-			if(location == null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin != -1) {
+			if(location == null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate == null && endDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin != -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() >= pricePerNightMin&& ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax && ap.getPricePerNight() <= pricePerNightMax)
 						returnValue.put(ap.getId(),ap);
@@ -492,7 +484,7 @@ public class ApartmentDAO {
 			}	
 			
 		//BROJ GOSTIJU + CENA NOCENJA + DATUM
-			if(location == null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1 ) {
+			if(location == null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate != null && endDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1 ) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() >= pricePerNightMin && ap.getPricePerNight() <= pricePerNightMax)
 
@@ -509,15 +501,13 @@ public class ApartmentDAO {
 			}	
 		
 		//BROJ GOSTIJU + CENA NOCENJA + DATUM + SOBE
-			if(location == null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin != -1) {
+			if(location == null  && numberOfGuests != 0 && pricePerNightMin != -1 && startDate != null && endDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin != -1) {
 				for(Apartment ap : apartments.values()) {
 					if(ap.getNumberOfGuests() == numberOfGuests && ap.getPricePerNight() >= pricePerNightMin&& ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax && ap.getPricePerNight() <= pricePerNightMax)
 
 						try {
-							for(Date date : ap.getAvailableDates()) {
-								if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-									returnValue.put(ap.getId(),ap);
-								}
+							if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+								returnValue.put(ap.getId(),ap);
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
@@ -526,7 +516,7 @@ public class ApartmentDAO {
 			}	
 			
 		//CENA PO NOCENJU
-			if(location == null  && numberOfGuests == 0 && pricePerNightMin != -1 && startDate == null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1) {
+			if(location == null  && numberOfGuests == 0 && pricePerNightMin != -1 && startDate == null && endDate == null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1) {
 				for(Apartment ap : apartments.values()) {
 					if( ap.getPricePerNight() >= pricePerNightMin && ap.getPricePerNight() <= pricePerNightMax)
 						returnValue.put(ap.getId(),ap);
@@ -534,7 +524,7 @@ public class ApartmentDAO {
 			}
 			
 		//CENA PO NOCENJU + SOBE
-			if(location == null  && numberOfGuests == 0 && pricePerNightMin != -1 && startDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin != -1) {
+			if(location == null  && numberOfGuests == 0 && pricePerNightMin != -1 && startDate == null && endDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin != -1) {
 				for(Apartment ap : apartments.values()) {
 					if( ap.getPricePerNight() >= pricePerNightMin && ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax && ap.getPricePerNight() <= pricePerNightMax)
 						returnValue.put(ap.getId(),ap);
@@ -542,7 +532,7 @@ public class ApartmentDAO {
 			}
 			
 		//SOBE
-			if(location == null  && numberOfGuests == 0 && pricePerNightMin == -1 && startDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
+			if(location == null  && numberOfGuests == 0 && pricePerNightMin == -1 && startDate == null && endDate == null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin == -1) {
 				for(Apartment ap : apartments.values()) {
 					if(  ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax)
 						returnValue.put(ap.getId(),ap);
@@ -550,14 +540,12 @@ public class ApartmentDAO {
 			}
 			
 		//CENA PO NOCENJU + DATUM
-			if(location == null  && numberOfGuests == 0 && pricePerNightMin != -1 && startDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1) {
+			if(location == null  && numberOfGuests == 0 && pricePerNightMin != -1 && startDate != null && endDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1) {
 				for(Apartment ap : apartments.values()) {
 					if( ap.getPricePerNight() >= pricePerNightMin && ap.getPricePerNight() <= pricePerNightMax)
 						try {
-							for(Date date : ap.getAvailableDates()) {
-								if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-									returnValue.put(ap.getId(),ap);
-								}
+							if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+								returnValue.put(ap.getId(),ap);
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
@@ -566,14 +554,12 @@ public class ApartmentDAO {
 			}	
 			
 			//CENA PO NOCENJU + DATUM
-			if(location == null  && numberOfGuests == 0 && pricePerNightMin != -1 && startDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1) {
+			if(location == null  && numberOfGuests == 0 && pricePerNightMin != -1 && startDate != null && endDate != null && numberOfRoomsMin == -1 && numberOfRoomsMax == -1 && pricePerNightMin != -1) {
 				for(Apartment ap : apartments.values()) {
 					if( ap.getPricePerNight() >= pricePerNightMin && ap.getPricePerNight() <= pricePerNightMax)
 						try {
-							for(Date date : ap.getAvailableDates()) {
-								if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-									returnValue.put(ap.getId(),ap);
-								}
+							if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+								returnValue.put(ap.getId(),ap);
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
@@ -583,20 +569,21 @@ public class ApartmentDAO {
 			
 			
 			//CENA PO NOCENJU + DATUM + SOBE
-			if(location == null  && numberOfGuests == 0 && pricePerNightMin != -1 && startDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin != -1) {
+			if(location == null  && numberOfGuests == 0 && pricePerNightMin != -1 && startDate != null && endDate != null && numberOfRoomsMin != -1 &&  numberOfRoomsMax != -1 && pricePerNightMin != -1) {
 				for(Apartment ap : apartments.values()) {
 					if( ap.getPricePerNight() >= pricePerNightMin&& ap.getNumberOfRooms() >= numberOfRoomsMin && ap.getNumberOfRooms() <= numberOfRoomsMax && ap.getPricePerNight() <= pricePerNightMax)
 						try {
-							for(Date date : ap.getAvailableDates()) {
-								if(date.getDate() == startDate.getDate() && date.getMonth() == startDate.getMonth() && date.getYear() == startDate.getYear()) {
-									returnValue.put(ap.getId(),ap);
-								}
+							if(compareDates(startDate, endDate, (ArrayList<Date>) ap.getAvailableDates())) {
+								returnValue.put(ap.getId(),ap);
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
 						}
 				}
 			}	
+			
+			if(location == null && numberOfGuests == 0 && pricePerNightMin == -1 && startDate == null && endDate == null && numberOfRoomsMin == -1 &&  numberOfRoomsMax == -1 && pricePerNightMin == -1 )
+				returnValue = apartments;
 		return returnValue.values();
 	}
 	
