@@ -6,6 +6,7 @@ public class Comment {
 	private Apartment apartment;
 	private String content;
 	private int rating;
+	private boolean approved;
 	
 	public Comment() {}
 	
@@ -14,6 +15,7 @@ public class Comment {
 		this.apartment = apartment;
 		this.content = content;
 		this.rating = rating;
+		this.approved = false;
 	}
 
 	public Guest getAuthor() {
@@ -46,6 +48,14 @@ public class Comment {
 
 	public void setRating(int rating) {
 		this.rating = rating;
+	}
+	
+	public boolean getApproved() {
+		return approved;
+	}
+	
+	public void setApproved(boolean approved) {
+		this.approved = approved;
 	}
 	
 }

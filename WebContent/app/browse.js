@@ -9,7 +9,13 @@ Vue.component("browse", {
 		}
 	},
 	template: ` 
+	
 	<div>
+	
+
+	
+		
+	
 		<div class="container" style="margin-top:40px">
 			<div class="row">
 				<div class="col" style="text-align: center;">Location</div>
@@ -81,9 +87,9 @@ Vue.component("browse", {
 		
 		
 			<div id="apartmentInfo" class="modal fade"> 
-			<div class = "modal-dialog modal-dialog-centered modal-xl">
+				<div class = "modal-dialog modal-dialog-centered modal-xl">
 				  <div class="modal-content">
-						      <div class="modal-header">
+						       <div class="modal-header">
 								        <h1 class="modal-title">{{selected.id}} informations</h1>
 								        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								         	 <span aria-hidden="true">&times;</span>
@@ -92,21 +98,25 @@ Vue.component("browse", {
 							      <div class="modal-body">
 							        	<table class="table table-image" >
 											<div v-for="(p, index) in selected.pictures">
-							    			<tr v-if="index % 3 == 0 ">
-									        	<td>
-									            	 <img class="d-block w-100" v-bind:src="selected.pictures[index]"  width="560" height="315" style = "margin-left : 15px" >
-									       		 </td>
-									        	<td>
-									            	 <img class="d-block w-100" v-bind:src="selected.pictures[index+1]" v-if="selected.pictures[index+1] != null" width="560" height="315" style = "margin-left : 15px" >
-									        	</td>
-									       		 <td>
-									            	 <img class="d-block w-100" v-bind:src="selected.pictures[index+2]" v-if="selected.pictures[index+2] != null" width="560" height="315" style = "margin-left : 15px " >
-									       		 </td>
-							    			</tr>        
-							 </div>
-				 			 </table>
+								    			<tr v-if="index % 3 == 0 ">
+										        	<td>
+										            	 <img class="d-block w-100" v-bind:src="selected.pictures[index]"  width="560" height="315" style = "margin-left : 15px" >
+										       		 </td>
+										        	<td>
+										            	 <img class="d-block w-100" v-bind:src="selected.pictures[index+1]" v-if="selected.pictures[index+1] != null" width="560" height="315" style = "margin-left : 15px" >
+										        	</td>
+										       		 <td>
+										            	 <img class="d-block w-100" v-bind:src="selected.pictures[index+2]" v-if="selected.pictures[index+2] != null" width="560" height="315" style = "margin-left : 15px " >
+										       		 </td>
+							    				</tr>        
+										  </div>
+				 			 	</table>
 
-							</br></br>
+							   </br></br>
+				
+							
+				
+				
 							<div class="row " style="margin-left :40px"  >
 						  		<div class="col-sm" style="margin-left: 10px">
 				             		  <h1><span class="badge badge-primary" style="margin-left: 10px" v-if = "selected.apartmentType === 'ENTIRE_APARTMENT'">Entire apartment</span></h1> 
@@ -142,24 +152,31 @@ Vue.component("browse", {
 
 
 							      </div>
+	
+								<div class = "container" v-for="(p, index) in selected.comments">
+									<td>
+										<p><i> <b>{{index}}. </b>{{p.content}}</i></p>
+										</br>
+										<p><b>by Anonymus &#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160 rating:{{p.rating}}/10</b></p>
+									</td>
+								</div>
+								
 							      <div class="modal-footer">
 											<div class="row justify-content-md-center">
 											<div class="col-md-auto">
 												<button type = "button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 											</div>
-										</div>
-						     	 </div>
+											</div>
+							     	 </div>
+								</div>
 							</div>
-						</div>
-		
-					</div>		
+						</div>		
+					</div>
+				</div>
+				</div>
+				</div>
 			</div>
-		</div>
-		</div>
-		</div>
-	</div>
-
-			
+	
 
 			
 			
