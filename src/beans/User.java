@@ -1,5 +1,8 @@
 package beans;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import enums.Gender;
 import enums.Role;
 
@@ -11,6 +14,8 @@ public class User {
 	private String lastName;
 	private Gender gender;
 	private Role role;
+	private ArrayList<Apartment> rentedApartments;
+	private ArrayList<Apartment> reservations;
 	
 	public User() {
 		
@@ -24,6 +29,8 @@ public class User {
 		this.lastName = lastName;
 		this.gender = gender;
 		this.role = role;
+		this.rentedApartments = new ArrayList<Apartment>();
+		this.reservations = new ArrayList<Apartment>();
 	}
 
 	public String getUsername() {
@@ -74,11 +81,31 @@ public class User {
 		this.role = role;
 	}
 
+	
+	
+	public ArrayList<Apartment> getRentedApartments() {
+		return rentedApartments;
+	}
+
+	public void setRentedApartments(ArrayList<Apartment> rentedApartments) {
+		this.rentedApartments = rentedApartments;
+	}
+
+	public ArrayList<Apartment> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(ArrayList<Apartment> reservations) {
+		this.reservations = reservations;
+	}
+
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", password=" + password + ", firstName=" + firstName + ", lastName="
 				+ lastName + ", gender=" + gender + ", role=" + role + "]";
 	}
+
+
 	
 	
 }

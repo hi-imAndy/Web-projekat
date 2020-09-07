@@ -22,7 +22,10 @@ import beans.Apartment;
 import beans.City;
 import beans.DateSubstitute;
 import beans.Location;
+import beans.Reservation;
+import beans.User;
 import enums.ApartmentStatus;
+import enums.ReservationStatus;
 
 public class ApartmentDAO {
 
@@ -124,6 +127,11 @@ public class ApartmentDAO {
 		return apartments.values();
 	}
 	
+	public Apartment getApartmentById(String id){
+
+		return apartments.get(id);
+	}
+	
 	//POMOCNA FUNKCIJA ZA POREDJENJE DATUMA
 	private boolean compareDates(Date startDate ,Date endDate, ArrayList<Date> availableDates) {
 		ArrayList<DateSubstitute> availableDatesSub = new ArrayList<DateSubstitute>();
@@ -153,6 +161,9 @@ public class ApartmentDAO {
 				if(startDate.getDate()+i == 31)
 					break;
 			}
+			for(int i = 0 ; i <= endDate.getDate() ; i++) {
+				startToEnd.add(new DateSubstitute(0+i, endDate.getMonth(), startDate.getYear()));
+			}
 		}
 			else if(startDate.getMonth() == 4 || startDate.getMonth() == 6 || startDate.getMonth() == 9 || startDate.getMonth() == 11 ) {
 				for(int i = 0 ; i <= 30 ; i++) {
@@ -175,6 +186,8 @@ public class ApartmentDAO {
 
 		return true;
 	}
+	
+	
 	
 	//POMOCNA FUNKCIJA 
 	private boolean checkIfContains (ArrayList<DateSubstitute> dsList, DateSubstitute ds ) {
@@ -585,6 +598,114 @@ public class ApartmentDAO {
 			if(location == null && numberOfGuests == 0 && pricePerNightMin == -1 && startDate == null && endDate == null && numberOfRoomsMin == -1 &&  numberOfRoomsMax == -1 && pricePerNightMin == -1 )
 				returnValue = apartments;
 		return returnValue.values();
+	}
+	
+	//POMOCNA FUNKCIJA ZA BRISANJE DATUMA
+		private ArrayList<Date> deleteDates(Date startDate ,Date endDate, ArrayList<Date> availableDates) {
+			ArrayList<DateSubstitute> availableDatesSub = new ArrayList<DateSubstitute>();
+			ArrayList<DateSubstitute> startToEnd = new ArrayList<DateSubstitute>();
+			
+			for(int i = 0 ; i < availableDates.size() ; i++) {
+				availableDatesSub.add(new DateSubstitute(availableDates.get(i).getDate(), availableDates.get(i).getMonth(), availableDates.get(i).getYear()+1900));
+				//System.out.println(availableDatesSub.get(i).getDay() + "." + availableDatesSub.get(i).getMonth() + "." + availableDatesSub.get(i).getYear() );
+			}
+			
+			int differenceDay = endDate.getDate() - startDate.getDate();
+			int differenceMonth = endDate.getMonth() - startDate.getMonth();
+			int differenceYear = endDate.getYear() - startDate.getYear();
+			
+			//ISTI MESEC ISTA GODINA RAZLICIT DAN
+			if(differenceDay > 0 && differenceMonth == 0 && differenceYear == 0) {
+				for(int i = 0 ; i <= differenceDay ; i++) {
+					startToEnd.add(new DateSubstitute(startDate.getDate() + i, startDate.getMonth(), startDate.getYear()));
+					//System.out.println(startToEnd.get(i).getDay() + "." + startToEnd.get(i).getMonth() + "." + startToEnd.get(i).getYear() );
+				}
+			}
+			//RAZLICIT MESEC ISTA GODINA 
+			else if(differenceMonth > 0 && differenceYear == 0) {
+				if(startDate.getMonth() == 1 || startDate.getMonth() == 3 || startDate.getMonth() == 5 || startDate.getMonth() == 7 || startDate.getMonth() == 8 || startDate.getMonth() == 10 || startDate.getMonth() == 12) {
+				for(int i = 0 ; i <= 31 ; i++) {
+					startToEnd.add(new DateSubstitute(startDate.getDate()+i, startDate.getMonth(), startDate.getYear()));
+					if(startDate.getDate()+i == 31)
+						break;
+				}
+				for(int i = 0 ; i <= endDate.getDate() ; i++) {
+					startToEnd.add(new DateSubstitute(0+i, endDate.getMonth(), startDate.getYear()));
+				}
+			}
+				else if(startDate.getMonth() == 4 || startDate.getMonth() == 6 || startDate.getMonth() == 9 || startDate.getMonth() == 11 ) {
+					for(int i = 0 ; i <= 30 ; i++) {
+						startToEnd.add(new DateSubstitute(startDate.getDate()+i, startDate.getMonth(), startDate.getYear()));
+						if(startDate.getDate()+i == 31)
+							break;
+					}
+					for(int i = 0 ; i <= endDate.getDate() ; i++) {
+						startToEnd.add(new DateSubstitute(0+i, endDate.getMonth(), startDate.getYear()));
+					}
+				}
+			}
+			
+			for(DateSubstitute ds : startToEnd) {
+				for(DateSubstitute dsAD : startToEnd) {
+					if(checkIfContains(availableDatesSub, dsAD))
+						availableDatesSub.remove(dsAD);
+				}
+			}
+
+			ArrayList<Date> retVal = new ArrayList<Date>();
+			for(DateSubstitute ds : availableDatesSub) {
+				retVal.add(new Date(ds.getYear(),ds.getMonth(),ds.getDay()));
+			}
+			return retVal;
+		}
+
+	public void bookApartment(String username , String startDateString , String endDateString , String apartmentID , String reservationMessage) {
+		
+		
+		Date startDate = new Date(Integer.parseInt(startDateString.split("-")[0]),Integer.parseInt(startDateString.split("-")[1]),Integer.parseInt(startDateString.split("-")[2]));
+		Date endDate = new Date(Integer.parseInt(endDateString.split("-")[0]),Integer.parseInt(endDateString.split("-")[1]),Integer.parseInt(endDateString.split("-")[2]));
+		UserDAO userDao = new UserDAO(); 
+		User user = userDao.findByUsername(username);
+		int numberOfNights = 0;
+		if(endDate.getDate() - startDate.getDate() != 0 && endDate.getMonth() - startDate.getMonth() == 0) {
+			numberOfNights = endDate.getDate() - startDate.getDate();
+		}
+		else if(endDate.getMonth() - startDate.getMonth() == 0) {
+			if(startDate.getMonth() == 1 || startDate.getMonth() == 3 || startDate.getMonth() == 5 || startDate.getMonth() == 7 || startDate.getMonth() == 8 || startDate.getMonth() == 10 || startDate.getMonth() == 12) {
+			for(int i = 0 ; i <= 31 ; i++) {
+				numberOfNights = i;
+				if(startDate.getDate()+i == 31)
+					break;
+			}
+			for(int i = 0 ; i <= endDate.getDate() ; i++) {
+				numberOfNights += i;
+			}
+		}
+			else if(startDate.getMonth() == 4 || startDate.getMonth() == 6 || startDate.getMonth() == 9 || startDate.getMonth() == 11 ) {
+				for(int i = 0 ; i <= 30 ; i++) {
+					numberOfNights = i;
+					if(startDate.getDate()+i == 31)
+						break;
+				}
+				for(int i = 0 ; i <= endDate.getDate() ; i++) {
+					numberOfNights += i;
+				}
+			}
+		}	
+		Reservation reservation = new Reservation(apartmentID, startDate, numberOfNights, apartments.get(apartmentID).getPricePerNight()*numberOfNights, reservationMessage, user , ReservationStatus.CREATED);
+		
+		//OVU LINIJU TREBA OBRISATI KADA SE SREDE OBJEKTI
+		apartments.get(apartmentID).setReservations(new ArrayList<Reservation>());
+		
+		
+		apartments.get(apartmentID).getReservations().add(reservation);
+		
+		//I OVOME JE POTREBNO SREDJIVANJE
+		userDao.addReservation(reservation, user);
+		
+		
+		ArrayList<Date> availableDates = (ArrayList<Date>) apartments.get(apartmentID).getAvailableDates();
+		apartments.get(apartmentID).setAvailableDates(deleteDates(startDate, endDate, availableDates));
 	}
 	
 }

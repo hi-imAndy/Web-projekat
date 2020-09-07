@@ -23,8 +23,8 @@ public class Guest extends User {
 		this.rentedApartments = rentedApartments;
 		this.reservations = reservations;
 	}
-
-	public List<Apartment> getRentedApartments() {
+/*
+	public ArrayList<Apartment> getRentedApartments() {
 		return rentedApartments;
 	}
 
@@ -32,13 +32,13 @@ public class Guest extends User {
 		this.rentedApartments = rentedApartments;
 	}
 
-	public List<Reservation> getReservations() {
+	public ArrayList<Apartment> getReservations() {
 		return reservations;
 	}
 
 	public void setReservations(List<Reservation> reservations) {
 		this.reservations = reservations;
 	}
-	
+	*/
 	
 }

@@ -17,6 +17,8 @@ import java.util.Set;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import beans.Amenities;
+import beans.Apartment;
+import beans.Reservation;
 import beans.User;
 import enums.Gender;
 import enums.Role;
@@ -129,6 +131,11 @@ public class UserDAO {
 	
 	public void updateUser(User user , String username) {
 		users.replace(username, user);
+	}
+	
+	public void addReservation(Reservation reservation , User user) {
+		//users.get(user.getUsername()).setReservations(new ArrayList<Apartment>());
+		//users.get(user.getUsername()).getReservations().add(new ApartmentDAO().getApartmentById(reservation.getReservedApartment()));
 	}
 	
 	public boolean changeUserData(String username, String oldPassword , String password, String passwordConfirm ,String firstName,String lastName) {

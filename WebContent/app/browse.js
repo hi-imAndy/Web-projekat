@@ -153,7 +153,7 @@ Vue.component("browse", {
 
 							      </div>
 	
-								<div class = "container" v-for="(p, index) in selected.comments">
+								<div class = "container" v-for="(p, index) in selected.comments" v-if="p.approved">
 									<td>
 										<p><i> <b>{{index}}. </b>{{p.content}}</i></p>
 										</br>

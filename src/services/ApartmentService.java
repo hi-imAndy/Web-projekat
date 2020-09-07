@@ -78,4 +78,14 @@ public class ApartmentService {
 		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
 		dao.deleteAmenitieInApartments(am);
 	}
+	
+	@GET
+	@Path("/bookApartment")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void bookApartment(@QueryParam("username") String username ,@QueryParam("startDate") String startDate ,@QueryParam("endDate") String endDate ,@QueryParam("apartmentID") String apartmentID,@QueryParam("reservationMessage") String reservationMessage) {
+
+		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
+		dao.bookApartment( username ,  startDate ,  endDate ,  apartmentID, reservationMessage);
+	}
+	
 }
