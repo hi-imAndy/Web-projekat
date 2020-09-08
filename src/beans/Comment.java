@@ -2,7 +2,7 @@ package beans;
 
 public class Comment {
 
-	private Guest author;
+	private User author;
 	private Apartment apartment;
 	private String content;
 	private int rating;
@@ -10,7 +10,7 @@ public class Comment {
 	
 	public Comment() {}
 	
-	public Comment(Guest author, Apartment apartment, String content, int rating) {
+	public Comment(User author, Apartment apartment, String content, int rating) {
 		this.author = author;
 		this.apartment = apartment;
 		this.content = content;
@@ -18,11 +18,11 @@ public class Comment {
 		this.approved = false;
 	}
 
-	public Guest getAuthor() {
+	public User getAuthor() {
 		return author;
 	}
 
-	public void setAuthor(Guest author) {
+	public void setAuthor(User author) {
 		this.author = author;
 	}
 

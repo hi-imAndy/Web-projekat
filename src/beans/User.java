@@ -14,8 +14,10 @@ public class User {
 	private String lastName;
 	private Gender gender;
 	private Role role;
-	private ArrayList<Apartment> rentedApartments;
-	private ArrayList<Apartment> reservations;
+	
+	private List<Apartment> apartmentsForRent;
+	private List<Apartment> rentedApartments;
+	private List<Reservation> reservations;
 	
 	public User() {
 		
@@ -29,8 +31,9 @@ public class User {
 		this.lastName = lastName;
 		this.gender = gender;
 		this.role = role;
+		this.apartmentsForRent = new ArrayList<Apartment>();
 		this.rentedApartments = new ArrayList<Apartment>();
-		this.reservations = new ArrayList<Apartment>();
+		this.reservations = new ArrayList<Reservation>();
 	}
 
 	public String getUsername() {
@@ -81,31 +84,35 @@ public class User {
 		this.role = role;
 	}
 
-	
-	
-	public ArrayList<Apartment> getRentedApartments() {
+	public List<Apartment> getApartmentsForRent() {
+		return apartmentsForRent;
+	}
+
+	public void setApartmentsForRent(List<Apartment> apartmentsForRent) {
+		this.apartmentsForRent = apartmentsForRent;
+	}
+
+	public List<Apartment> getRentedApartments() {
 		return rentedApartments;
 	}
 
-	public void setRentedApartments(ArrayList<Apartment> rentedApartments) {
+	public void setRentedApartments(List<Apartment> rentedApartments) {
 		this.rentedApartments = rentedApartments;
 	}
 
-	public ArrayList<Apartment> getReservations() {
+	public List<Reservation> getReservations() {
 		return reservations;
 	}
 
-	public void setReservations(ArrayList<Apartment> reservations) {
+	public void setReservations(List<Reservation> reservations) {
 		this.reservations = reservations;
 	}
 
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", password=" + password + ", firstName=" + firstName + ", lastName="
-				+ lastName + ", gender=" + gender + ", role=" + role + "]";
+				+ lastName + ", gender=" + gender + ", role=" + role + ", apartmentsForRent=" + apartmentsForRent
+				+ ", rentedApartments=" + rentedApartments + ", reservations=" + reservations + "]";
 	}
-
-
-	
 	
 }
