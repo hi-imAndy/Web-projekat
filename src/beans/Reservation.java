@@ -1,12 +1,12 @@
 package beans;
 
 import java.util.Date;
+
 import enums.ReservationStatus;
 
 public class Reservation {
 
-	private String id;
-	private Apartment reservedApartment;
+	private String reservedApartment;
 	private Date checkInDate;
 	private int numberOfNights; 
 	private double fullPrice; 
@@ -16,9 +16,9 @@ public class Reservation {
 	
 	public Reservation() {}
 	
-	public Reservation(String id, Apartment reservedApartment, Date checkInDate, int numberOfNights, double fullPrice,
+	public Reservation(String reservedApartment, Date checkInDate, int numberOfNights, double fullPrice,
 			String reservationMessage, User guest, ReservationStatus reservationStatus) {
-		this.id = id;
+		super();
 		this.reservedApartment = reservedApartment;
 		this.checkInDate = checkInDate;
 		this.numberOfNights = numberOfNights;
@@ -27,20 +27,12 @@ public class Reservation {
 		this.guest = guest;
 		this.reservationStatus = reservationStatus;
 	}
-	
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public Apartment getReservedApartment() {
+	public String getReservedApartment() {
 		return reservedApartment;
 	}
 
-	public void setReservedApartment(Apartment reservedApartment) {
+	public void setReservedApartment(String reservedApartment) {
 		this.reservedApartment = reservedApartment;
 	}
 
@@ -80,7 +72,7 @@ public class Reservation {
 		return guest;
 	}
 
-	public void setGuest(User guest) {
+	public void setGuest(Guest guest) {
 		this.guest = guest;
 	}
 

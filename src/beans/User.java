@@ -14,10 +14,8 @@ public class User {
 	private String lastName;
 	private Gender gender;
 	private Role role;
-	
-	private List<Apartment> apartmentsForRent;
-	private List<Apartment> rentedApartments;
-	private List<Reservation> reservations;
+	private ArrayList<Apartment> rentedApartments;
+	private ArrayList<Apartment> reservations;
 	
 	public User() {
 		
@@ -31,9 +29,8 @@ public class User {
 		this.lastName = lastName;
 		this.gender = gender;
 		this.role = role;
-		this.apartmentsForRent = new ArrayList<Apartment>();
 		this.rentedApartments = new ArrayList<Apartment>();
-		this.reservations = new ArrayList<Reservation>();
+		this.reservations = new ArrayList<Apartment>();
 	}
 
 	public String getUsername() {
@@ -84,35 +81,31 @@ public class User {
 		this.role = role;
 	}
 
-	public List<Apartment> getApartmentsForRent() {
-		return apartmentsForRent;
-	}
-
-	public void setApartmentsForRent(List<Apartment> apartmentsForRent) {
-		this.apartmentsForRent = apartmentsForRent;
-	}
-
-	public List<Apartment> getRentedApartments() {
+	
+	
+	public ArrayList<Apartment> getRentedApartments() {
 		return rentedApartments;
 	}
 
-	public void setRentedApartments(List<Apartment> rentedApartments) {
+	public void setRentedApartments(ArrayList<Apartment> rentedApartments) {
 		this.rentedApartments = rentedApartments;
 	}
 
-	public List<Reservation> getReservations() {
+	public ArrayList<Apartment> getReservations() {
 		return reservations;
 	}
 
-	public void setReservations(List<Reservation> reservations) {
+	public void setReservations(ArrayList<Apartment> reservations) {
 		this.reservations = reservations;
 	}
 
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", password=" + password + ", firstName=" + firstName + ", lastName="
-				+ lastName + ", gender=" + gender + ", role=" + role + ", apartmentsForRent=" + apartmentsForRent
-				+ ", rentedApartments=" + rentedApartments + ", reservations=" + reservations + "]";
+				+ lastName + ", gender=" + gender + ", role=" + role + "]";
 	}
+
+
+	
 	
 }
