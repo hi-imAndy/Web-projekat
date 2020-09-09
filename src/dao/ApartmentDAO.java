@@ -23,6 +23,7 @@ import beans.City;
 import beans.DateSubstitute;
 import beans.Location;
 import beans.Reservation;
+import beans.ReservationInfo;
 import beans.User;
 import enums.ApartmentStatus;
 import enums.ReservationStatus;
@@ -645,27 +646,32 @@ public class ApartmentDAO {
 				}
 			}
 			
-			for(DateSubstitute ds : startToEnd) {
-				for(DateSubstitute dsAD : startToEnd) {
-					if(checkIfContains(availableDatesSub, dsAD))
-						availableDatesSub.remove(dsAD);
-				}
+			ArrayList<DateSubstitute> retValT = new ArrayList<DateSubstitute>();
+			
+			for(DateSubstitute ds : availableDatesSub) {
+					if(!checkIfContains(startToEnd, ds))
+						retValT.add(ds);
 			}
 
 			ArrayList<Date> retVal = new ArrayList<Date>();
-			for(DateSubstitute ds : availableDatesSub) {
-				retVal.add(new Date(ds.getYear(),ds.getMonth(),ds.getDay()));
+			for(DateSubstitute ds : retValT) {
+				retVal.add(new Date(ds.getYear() - 1900,ds.getMonth(),ds.getDay()));
+				System.out.println(ds.getYear()+"."+ds.getMonth()+"."+	ds.getDay());
 			}
-			return retVal;
+			return  retVal;
 		}
 
-	public void bookApartment(String username , String startDateString , String endDateString , String apartmentID , String reservationMessage) {
+	public void bookApartment(ReservationInfo reservationInfo) {
 		
+		
+		User user = reservationInfo.getUser();
+		String startDateString = reservationInfo.getStartDate();
+		String endDateString = reservationInfo.getEndDate();
+		String reservationMessage = reservationInfo.getReservationMessage();
 		
 		Date startDate = new Date(Integer.parseInt(startDateString.split("-")[0]),Integer.parseInt(startDateString.split("-")[1]),Integer.parseInt(startDateString.split("-")[2]));
 		Date endDate = new Date(Integer.parseInt(endDateString.split("-")[0]),Integer.parseInt(endDateString.split("-")[1]),Integer.parseInt(endDateString.split("-")[2]));
 		UserDAO userDao = new UserDAO(); 
-		User user = userDao.findByUsername(username);
 		int numberOfNights = 0;
 		if(endDate.getDate() - startDate.getDate() != 0 && endDate.getMonth() - startDate.getMonth() == 0) {
 			numberOfNights = endDate.getDate() - startDate.getDate();
@@ -692,20 +698,17 @@ public class ApartmentDAO {
 				}
 			}
 		}	
-		Reservation reservation = new Reservation(apartmentID, startDate, numberOfNights, apartments.get(apartmentID).getPricePerNight()*numberOfNights, reservationMessage, user , ReservationStatus.CREATED);
+		
+		
+		Reservation reservation = new Reservation(reservationInfo.getApartment(), startDate, numberOfNights, reservationInfo.getApartment().getPricePerNight()*numberOfNights, reservationMessage, user , ReservationStatus.CREATED);
 		
 		//OVU LINIJU TREBA OBRISATI KADA SE SREDE OBJEKTI
-		apartments.get(apartmentID).setReservations(new ArrayList<Reservation>());
+		apartments.get(reservationInfo.getApartment().getId()).setReservations(new ArrayList<Reservation>());
 		
+		apartments.get(reservationInfo.getApartment().getId()).getReservations().add(reservation);
 		
-		apartments.get(apartmentID).getReservations().add(reservation);
-		
-		//I OVOME JE POTREBNO SREDJIVANJE
-		userDao.addReservation(reservation, user);
-		
-		
-		ArrayList<Date> availableDates = (ArrayList<Date>) apartments.get(apartmentID).getAvailableDates();
-		apartments.get(apartmentID).setAvailableDates(deleteDates(startDate, endDate, availableDates));
+		ArrayList<Date> availableDates = (ArrayList<Date>) apartments.get(reservationInfo.getApartment().getId()).getAvailableDates();
+		apartments.get(reservationInfo.getApartment().getId()).setAvailableDates(deleteDates(startDate, endDate, availableDates));
 	}
 	
 }

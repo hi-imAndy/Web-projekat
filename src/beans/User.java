@@ -15,7 +15,7 @@ public class User {
 	private Gender gender;
 	private Role role;
 	private ArrayList<Apartment> rentedApartments;
-	private ArrayList<Apartment> reservations;
+	private ArrayList<Reservation> reservations;
 	
 	public User() {
 		
@@ -30,7 +30,7 @@ public class User {
 		this.gender = gender;
 		this.role = role;
 		this.rentedApartments = new ArrayList<Apartment>();
-		this.reservations = new ArrayList<Apartment>();
+		this.reservations = new ArrayList<Reservation>();
 	}
 
 	public String getUsername() {
@@ -91,12 +91,12 @@ public class User {
 		this.rentedApartments = rentedApartments;
 	}
 
-	public ArrayList<Apartment> getReservations() {
+	public ArrayList<Reservation> getReservations() {
 		return reservations;
 	}
 
-	public void setReservations(ArrayList<Apartment> reservations) {
-		this.reservations = reservations;
+	public void setReservations(ArrayList<Reservation> arrayList) {
+		this.reservations = arrayList;
 	}
 
 	@Override

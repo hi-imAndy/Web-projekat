@@ -16,7 +16,7 @@ public class Apartment {
 	private int numberOfGuests;
 	private Location location;
 	private List<Date> allDates;
-	private List<Date> availableDates;
+	private ArrayList<Date> availableDates;
 	private User user;
 	private List<Comment> comments;
 	private List<String> pictures;
@@ -30,7 +30,7 @@ public class Apartment {
 	public Apartment() {}
 	
 	public Apartment(String id, ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
-			List<Date> allDates,List<Date> availableDates, User user, List<String> pictures,
+			List<Date> allDates,ArrayList<Date> availableDates, User user, List<String> pictures,
 			double pricePerNight, String checkInTime, String checkOutTime, ApartmentStatus status,
 			List<Amenities> amenities) {
 		this.id = id;
@@ -109,12 +109,12 @@ public class Apartment {
 	}
 
 
-	public List<Date> getAvailableDates() {
+	public ArrayList<Date> getAvailableDates() {
 		return availableDates;
 	}
 
 
-	public void setAvailableDates(List<Date> availableDates) {
+	public void setAvailableDates(ArrayList<Date> availableDates) {
 		this.availableDates = availableDates;
 	}
 

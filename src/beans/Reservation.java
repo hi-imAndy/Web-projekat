@@ -6,7 +6,7 @@ import enums.ReservationStatus;
 
 public class Reservation {
 
-	private String reservedApartment;
+	private Apartment reservedApartment;
 	private Date checkInDate;
 	private int numberOfNights; 
 	private double fullPrice; 
@@ -16,10 +16,10 @@ public class Reservation {
 	
 	public Reservation() {}
 	
-	public Reservation(String reservedApartment, Date checkInDate, int numberOfNights, double fullPrice,
+	public Reservation(Apartment apartment, Date checkInDate, int numberOfNights, double fullPrice,
 			String reservationMessage, User guest, ReservationStatus reservationStatus) {
 		super();
-		this.reservedApartment = reservedApartment;
+		this.reservedApartment = apartment;
 		this.checkInDate = checkInDate;
 		this.numberOfNights = numberOfNights;
 		this.fullPrice = fullPrice;
@@ -28,11 +28,11 @@ public class Reservation {
 		this.reservationStatus = reservationStatus;
 	}
 
-	public String getReservedApartment() {
+	public Apartment getReservedApartment() {
 		return reservedApartment;
 	}
 
-	public void setReservedApartment(String reservedApartment) {
+	public void setReservedApartment(Apartment reservedApartment) {
 		this.reservedApartment = reservedApartment;
 	}
 
@@ -72,7 +72,7 @@ public class Reservation {
 		return guest;
 	}
 
-	public void setGuest(Guest guest) {
+	public void setGuest(User guest) {
 		this.guest = guest;
 	}
 

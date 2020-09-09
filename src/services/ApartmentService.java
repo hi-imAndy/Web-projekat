@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 
 import beans.Amenities;
 import beans.Apartment;
+import beans.ReservationInfo;
 import beans.User;
 import dao.ApartmentDAO;
 
@@ -79,13 +80,17 @@ public class ApartmentService {
 		dao.deleteAmenitieInApartments(am);
 	}
 	
-	@GET
+	@POST
 	@Path("/bookApartment")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void bookApartment(@QueryParam("username") String username ,@QueryParam("startDate") String startDate ,@QueryParam("endDate") String endDate ,@QueryParam("apartmentID") String apartmentID,@QueryParam("reservationMessage") String reservationMessage) {
+	public void bookApartment(ReservationInfo reservationInfo) {
 
 		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
-		dao.bookApartment( username ,  startDate ,  endDate ,  apartmentID, reservationMessage);
+		dao.bookApartment(reservationInfo);
 	}
+	
+	
+	
 	
 }

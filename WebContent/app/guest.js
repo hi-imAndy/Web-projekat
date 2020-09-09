@@ -11,6 +11,8 @@ Vue.component("guest", {
 	template: ` 
 	<div>
 			
+			
+			
 		<div class="container" style="margin-top:40px">
 			<div class="row">
 				<div class="col" style="text-align: center;">Location</div>
@@ -88,15 +90,13 @@ Vue.component("guest", {
 						    </tr>
 						  </thead>
 						  <tbody>
-								<ul v-for="u in apartments">
-									<tr v-for="reservation in apartments.reservations" v-on:click="selectApartment(u)"  v-bind:class = "{selected : selected.id === u.id}" data-toggle="modal" data-target="#apartmentInfo">
-										<td><img v-bind:src="u.pictures[0]" class="img-fluid img-thumbnail " width="250" height="100"></td>
-										<td>{{u.id }}</td>
-										<td>{{u.user.username }}</td>
-										<td>{{u.location.address.city.name}}</td>
-										<td>{{u.location.address.street}} {{u.location.address.number}}</td>										
+									<tr v-for="reservation in currentUser.reservations" v-on:click="selectApartment(reservation.reservedApartment)"  v-bind:class = "{selected : selected.id === reservation.reservedApartment.id}" data-toggle="modal" data-target="#apartmentInfo">
+										<td><img v-bind:src="reservation.reservedApartment.pictures[0]" class="img-fluid img-thumbnail " width="250" height="100"></td>
+										<td>{{reservation.reservedApartment.id }}</td>
+										<td>{{reservation.reservedApartment.user.username }}</td>
+										<td>{{reservation.reservedApartment.location.address.city.name}}</td>
+										<td>{{reservation.reservedApartment.location.address.street}} {{reservation.reservedApartment.location.address.number}}</td>										
 							    	</tr>
-								</ul>
 						  </tbody>
 						</table>   
 				    </div>
@@ -200,6 +200,8 @@ Vue.component("guest", {
 			</div>
 	
 
+	
+
 			
 	</div>
 	`,
@@ -228,10 +230,11 @@ Vue.component("guest", {
 	methods : {
 		selectApartment : function(apartment){
 			this.selected = apartment;
-			this.reservationInfo = this.selected;
-			this.reservationInfo.username = this.currentUser.username;
+			this.reservationInfo.apartment = this.selected;
+			this.reservationInfo.user = this.currentUser;
 			this.reservationInfo.startDate = this.searchCriteria.startDate;
 			this.reservationInfo.endDate = this.searchCriteria.endDate;
+			this.reservationInfo.reservationMessage = null;
 			
 			
 },
@@ -278,8 +281,13 @@ Vue.component("guest", {
     	},	    	
 		createReservation: function(reservationInfo){
 			if(this.searchCriteria.startDate != null && this.searchCriteria.endDate != null){
+		var reservationInfo = {user:this.reservationInfo.user,apartment:this.reservationInfo.apartment,startDate:this.reservationInfo.startDate,endDate:this.reservationInfo.endDate,reservationMessage:this.reservationInfo.reservationMessage};
+				
 				axios
-					.get("/Project/rest/apartments/bookApartment",{params : {username : this.reservationInfo.username, startDate :this.reservationInfo.startDate, endDate : this.reservationInfo.endDate,apartmentID : this.reservationInfo.id , reservationMessage : this.reservationInfo.reservationMessage}})
+					.post("/Project/rest/apartments/bookApartment",reservationInfo)
+					.then(response =>{} );
+				axios
+					.post("/Project/rest/users/bookApartment",reservationInfo)
 					.then(response => {alert("Reservation sucessfull");
 					});
 					
@@ -287,7 +295,11 @@ Vue.component("guest", {
 					.get("/Project/rest/apartments/getAllApartments")
 					.then(response => {this.apartments = response.data;
 					});
-					
+			    axios
+				    .get("/Project/rest/users/currentUser")
+				    .then(response => {this.currentUser = response.data;
+				   });
+	
 				this.searchCriteria.location = null;
 				this.searchCriteria.numberOfGuests = null;
 				this.searchCriteria.numberOfRoomsMin = null;
