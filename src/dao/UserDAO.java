@@ -172,47 +172,58 @@ public class UserDAO {
 	public void bookApartment(ReservationInfo reservationInfo) {
 		User user = reservationInfo.getUser();
 		String startDateString = reservationInfo.getStartDate();
-		String endDateString = reservationInfo.getEndDate();
 		Apartment apartmentID = reservationInfo.getApartment();
 		String reservationMessage = reservationInfo.getReservationMessage();
+		int numberOfNights = reservationInfo.getNumberOfNights();
 		
 		Date startDate = new Date(Integer.parseInt(startDateString.split("-")[0]),Integer.parseInt(startDateString.split("-")[1]),Integer.parseInt(startDateString.split("-")[2]));
-		Date endDate = new Date(Integer.parseInt(endDateString.split("-")[0]),Integer.parseInt(endDateString.split("-")[1]),Integer.parseInt(endDateString.split("-")[2]));
-		UserDAO userDao = new UserDAO(); 
-		int numberOfNights = 0;
-		if(endDate.getDate() - startDate.getDate() != 0 && endDate.getMonth() - startDate.getMonth() == 0) {
-			numberOfNights = endDate.getDate() - startDate.getDate();
-		}
-		else if(endDate.getMonth() - startDate.getMonth() == 0) {
+
+		int dayEndDate= startDate.getDate();
+		int monthEndDate = startDate.getMonth();
+		int yearEndDAte = startDate.getYear();
+		
+		for(int i = 0 ; i <= numberOfNights ; i++) {
+			dayEndDate++;
 			if(startDate.getMonth() == 1 || startDate.getMonth() == 3 || startDate.getMonth() == 5 || startDate.getMonth() == 7 || startDate.getMonth() == 8 || startDate.getMonth() == 10 || startDate.getMonth() == 12) {
-			for(int i = 0 ; i <= 31 ; i++) {
-				numberOfNights = i;
-				if(startDate.getDate()+i == 31)
-					break;
+				if(dayEndDate == 31 && monthEndDate != 12) {
+					dayEndDate = 1;
+					monthEndDate++; 
+				}
+				else if(dayEndDate == 31 && monthEndDate == 12){
+					dayEndDate = 1;
+					monthEndDate = 1; 
+					yearEndDAte ++;
+				}
 			}
-			for(int i = 0 ; i <= endDate.getDate() ; i++) {
-				numberOfNights += i;
+			else if(startDate.getMonth() == 4 || startDate.getMonth() == 6 || startDate.getMonth() == 9 || startDate.getMonth() == 11 ) {
+				if(dayEndDate == 30 && monthEndDate != 12) {
+					dayEndDate = 1;
+					monthEndDate++; 
+				}
+			}
+			else if(startDate.getMonth() == 2 ) {
+				if(dayEndDate == 29 ) {
+					dayEndDate = 1;
+					monthEndDate++; 
+				}
 			}
 		}
-			else if(startDate.getMonth() == 4 || startDate.getMonth() == 6 || startDate.getMonth() == 9 || startDate.getMonth() == 11 ) {
-				for(int i = 0 ; i <= 30 ; i++) {
-					numberOfNights = i;
-					if(startDate.getDate()+i == 31)
-						break;
-				}
-				for(int i = 0 ; i <= endDate.getDate() ; i++) {
-					numberOfNights += i;
-				}
-			}
-		}	
 		
+		Date endDate = new Date(yearEndDAte,monthEndDate,dayEndDate);
 		
-		Reservation reservation = new Reservation(reservationInfo.getApartment(), startDate, numberOfNights, reservationInfo.getApartment().getPricePerNight()*numberOfNights, reservationMessage, user , ReservationStatus.CREATED);
+
+		String endDateString =new String(endDate.getYear() +"-"+endDate.getMonth()+"-"+endDate.getDate());
 		
+		Reservation reservation = new Reservation(reservationInfo.getApartment(), startDate,endDate ,numberOfNights, reservationInfo.getApartment().getPricePerNight()*numberOfNights, reservationMessage, user , ReservationStatus.CREATED,reservationInfo.getStartDate(),endDateString);
+	/*	
+		for(User u : users.values()) {
+			u.setReservations(new ArrayList<Reservation>());
+			saveUser(users.get(user.getUsername()));
+		}
+	*/
 		
-		
-		users.get(user.getUsername()).setReservations(new ArrayList<Reservation>());
 		users.get(user.getUsername()).getReservations().add(reservation);
+		saveUser(users.get(user.getUsername()));
 		
 	}
 	

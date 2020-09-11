@@ -6,14 +6,15 @@ public class ReservationInfo {
 	private String startDate;
 	private String endDate;
 	private String reservationMessage;
+	private int numberOfNights;
 	
-	public ReservationInfo(User user, Apartment apartment, String startDate, String endDate,
+	public ReservationInfo(User user, Apartment apartment, String startDate, String endDate,int numberOfNights,
 			String reservationMessage) {
 		super();
 		this.user = user;
 		this.apartment = apartment;
 		this.startDate = startDate;
-		this.endDate = endDate;
+		this.numberOfNights = numberOfNights; 
 		this.reservationMessage = reservationMessage;
 	}
 	
@@ -61,6 +62,14 @@ public class ReservationInfo {
 
 	public void setReservationMessage(String reservationMessage) {
 		this.reservationMessage = reservationMessage;
+	}
+
+	public int getNumberOfNights() {
+		return numberOfNights;
+	}
+
+	public void setNumberOfNights(int numberOfNights) {
+		this.numberOfNights = numberOfNights;
 	}
 	
 	

@@ -26,6 +26,7 @@ public class Apartment {
 	private ApartmentStatus status;
 	private List<Amenities> amenities;
 	private List<Reservation> reservations;
+	private ArrayList<String> availableDatesString;
 	
 	public Apartment() {}
 	
@@ -49,6 +50,8 @@ public class Apartment {
 		this.status = status;
 		this.amenities = amenities;
 		this.reservations = new ArrayList<Reservation>();
+
+		
 	}
 	
 	public String getId() {
@@ -206,6 +209,16 @@ public class Apartment {
 
 	public void setReservations(List<Reservation> reservations) {
 		this.reservations = reservations;
+	}
+
+	
+	
+	public ArrayList<String> getAvailableDatesString() {
+		return availableDatesString;
+	}
+
+	public void setAvailableDatesString(ArrayList<String> availableDatesString) {
+		this.availableDatesString = availableDatesString;
 	}
 
 	@Override

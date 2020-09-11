@@ -1,4 +1,4 @@
-{"username":"djura","password":"djuric","firstName":"Djura","lastName":"Djuric","gender":"MALE","role":"GUEST","rentedApartments":null,"reservations":null}
+{"username":"djura","password":"djuric123","firstName":"Djura","lastName":"Djuric","gender":"MALE","role":"GUEST","rentedApartments":null,"reservations":null}
 {"username":"pera","password":"peric123","firstName":"Pera","lastName":"Peric","gender":"MALE","role":"HOST","rentedApartments":null,"reservations":null}
 {"username":"mika","password":"mikic","firstName":"Mika","lastName":"Mikic","gender":"MALE","role":"GUEST","rentedApartments":null,"reservations":null}
 {"username":"jova","password":"jovanovic","firstName":"Jovan","lastName":"Jovanovic","gender":"MALE","role":"GUEST","rentedApartments":null,"reservations":null}

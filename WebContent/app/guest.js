@@ -75,6 +75,8 @@ Vue.component("guest", {
 				</table>
 			</div>
 			
+			
+			
 			<div class="container">
 				<table class="table table-hover">
 				  <div class="row">
@@ -87,15 +89,21 @@ Vue.component("guest", {
 						      <th scope="col">Host</th>
 						      <th scope="col">Location</th>
 						      <th scope="col">Address</th>
+						      <th scope="col">Start date</th>
+						      <th scope="col">End date</th>
+						      <th scope="col">Status</th>
 						    </tr>
 						  </thead>
 						  <tbody>
-									<tr v-for="reservation in currentUser.reservations" v-on:click="selectApartment(reservation.reservedApartment)"  v-bind:class = "{selected : selected.id === reservation.reservedApartment.id}" data-toggle="modal" data-target="#apartmentInfo">
+									<tr v-for="reservation in currentUser.reservations" v-on:click="selectApartment(reservation.reservedApartment)"  v-bind:class = "{selected : selected.id === reservation.reservedApartment.id}" data-toggle="modal" data-target="#">
 										<td><img v-bind:src="reservation.reservedApartment.pictures[0]" class="img-fluid img-thumbnail " width="250" height="100"></td>
 										<td>{{reservation.reservedApartment.id }}</td>
 										<td>{{reservation.reservedApartment.user.username }}</td>
 										<td>{{reservation.reservedApartment.location.address.city.name}}</td>
-										<td>{{reservation.reservedApartment.location.address.street}} {{reservation.reservedApartment.location.address.number}}</td>										
+										<td>{{reservation.reservedApartment.location.address.street}} {{reservation.reservedApartment.location.address.number}}</td>	
+										<td>{{String(reservation.startDateString)}}</td>
+										<td>{{String(reservation.endDateString)}}</td>
+										<td>{{reservation.reservationStatus}}</td>									
 							    	</tr>
 						  </tbody>
 						</table>   
@@ -135,36 +143,41 @@ Vue.component("guest", {
 										       		 </td>
 							    				</tr>        
 										  </div>
-				 			 	</table>
+				 			 			</table>
 
 							   </br></br>
-				
-							
-				
-				
-							<div class="row " style="margin-left :40px"  >
-						  		<div class="col-sm" style="margin-left: 10px">
-				             		  <h1><span class="badge badge-primary" style="margin-left: 10px" v-if = "selected.apartmentType === 'ENTIRE_APARTMENT'">Entire apartment</span></h1> 
-							  		  <h1><span class="badge badge-primary" style="margin-left: 10px" v-if = "selected.apartmentType === 'ROOM'" >Room	</span></h1>      
-						    	</div>
-							    <div class="col-sm">
-									<h1><span class="badge badge-success" style="margin-left: 10px">{{selected.numberOfRooms}} rooms</span></h1> 
-							    </div>
-							    <div class="col-sm">
-									<h1><span class="badge badge-danger" style="margin-left: 10px">{{selected.numberOfGuests}} guests</span></h1> 
-							    </div>
-							    <div class="col-sm">
-							       <h1><span class="badge badge-warning" style="margin-left: 10px">{{selected.pricePerNight}} RSD per night</span></h1> 
-							    </div>
-							    <div class="col-sm">
-							    </div>
-							    <div class="col-sm">
-							    </div>
-							    <div class="col-sm">
-							    </div>					
+								<div class="row " style="margin-left :40px"  >
+							  		<div class="col-sm" style="margin-left: 10px">
+					             		  <h1><span class="badge badge-primary" style="margin-left: 10px" v-if = "selected.apartmentType === 'ENTIRE_APARTMENT'">Entire apartment</span></h1> 
+								  		  <h1><span class="badge badge-primary" style="margin-left: 10px" v-if = "selected.apartmentType === 'ROOM'" >Room	</span></h1>      
+							    	</div>
+								    <div class="col-sm">
+										<h1><span class="badge badge-success" style="margin-left: 10px">{{selected.numberOfRooms}} rooms</span></h1> 
+								    </div>
+								    <div class="col-sm">
+										<h1><span class="badge badge-danger" style="margin-left: 10px">{{selected.numberOfGuests}} guests</span></h1> 
+								    </div>
+								    <div class="col-sm">
+								       <h1><span class="badge badge-warning" style="margin-left: 10px">{{selected.pricePerNight}} RSD per night</span></h1> 
+								    </div>
+								    <div class="col-sm">
+								    </div>
+								    <div class="col-sm">
+								    </div>
+								    <div class="col-sm">
+								    </div>					
 							</div> 
 					
-
+	
+								
+							<div class="col">
+								<select  class="browser-default custom-select" v-model = "reservationInfo.startDate">
+									<option div v-for="(p) in selected.availableDatesString" v-bind:value="p" 	>{{p}}</option>	
+						  	</select>
+								<input type = "number" placeholder = "number of nights" value="1" min="1" max="25" step="1" class = "form-control" v-model = "reservationInfo.numberOfNights">
+							</div>
+								
+								
 							<ul>
 								</br></br>
 								<li v-for="am in selected.amenities">
@@ -183,8 +196,12 @@ Vue.component("guest", {
 								</div>
 								
 							      <div class="modal-footer">
+										<div class="col-md-auto">
+											<input type="text" placeholder = " Reservation message" class = "form-control" style="vertical-align:middle;" v-model = "reservationInfo.reservationMessage">
+										</div>
 											<div class="row justify-content-md-center">
 												<div class="col-md-auto">
+													
 													<button type = "button" class="btn btn-primary" v-on:click="createReservation(reservationInfo)" >Book apartment</button>
 													<button type = "button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 												</div>
@@ -198,6 +215,7 @@ Vue.component("guest", {
 				</div>
 				</div>
 			</div>
+	
 	
 
 	
@@ -215,6 +233,8 @@ Vue.component("guest", {
 		this.searchCriteria.pricePerNightMax = null;
 		this.searchCriteria.numberOfRoomsMin = null;
 		this.searchCriteria.numberOfRoomsMax = null;
+		this.reservationInfo.reservationMessage = null;
+		this.reservationInfo.numberOfNights = null;
 		
 		
 		axios
@@ -280,8 +300,8 @@ Vue.component("guest", {
 			}
     	},	    	
 		createReservation: function(reservationInfo){
-			if(this.searchCriteria.startDate != null && this.searchCriteria.endDate != null){
-		var reservationInfo = {user:this.reservationInfo.user,apartment:this.reservationInfo.apartment,startDate:this.reservationInfo.startDate,endDate:this.reservationInfo.endDate,reservationMessage:this.reservationInfo.reservationMessage};
+			if(this.reservationInfo.startDate != null && this.reservationInfo.numberOfNights != null ){
+		var reservationInfo = {user:this.reservationInfo.user,apartment:this.reservationInfo.apartment,startDate:this.reservationInfo.startDate,endDate:this.reservationInfo.endDate,numberOfNights : this.reservationInfo.numberOfNights,reservationMessage:this.reservationInfo.reservationMessage};
 				
 				axios
 					.post("/Project/rest/apartments/bookApartment",reservationInfo)
@@ -308,9 +328,12 @@ Vue.component("guest", {
 				this.searchCriteria.pricePerNightMax = null;
 				this.searchCriteria.startDate = null;
 				this.searchCriteria.endDate = null;
+				this.reservationInfo.reservationMessage = null;
+				this.reservationInfo.numberOfNights = null;
+
 				}
 			else{
-				alert("Use date filter first");
+				alert("Select date and number of nights first");
 			}
 					
     	},
@@ -329,7 +352,10 @@ Vue.component("guest", {
 					.get("/Project/rest/apartments/getAllApartments")
 					.then(response => {this.apartments = response.data;
 					});
-			
+				axios
+					.get("/Project/rest/users/currentUser")
+					.then(response => {this.currentUser = response.data;
+					});
 }
 	},
 

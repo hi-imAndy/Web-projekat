@@ -8,24 +8,38 @@ public class Reservation {
 
 	private Apartment reservedApartment;
 	private Date checkInDate;
+	private Date endDate;
 	private int numberOfNights; 
 	private double fullPrice; 
 	private String reservationMessage;
 	private User guest;
 	private ReservationStatus reservationStatus;
+	private String startDateString;
+	private String endDateString;
 	
 	public Reservation() {}
 	
-	public Reservation(Apartment apartment, Date checkInDate, int numberOfNights, double fullPrice,
-			String reservationMessage, User guest, ReservationStatus reservationStatus) {
+	public Reservation(Apartment apartment, Date checkInDate, Date endDate,int numberOfNights, double fullPrice,
+			String reservationMessage, User guest, ReservationStatus reservationStatus , String startString , String endString) {
 		super();
 		this.reservedApartment = apartment;
 		this.checkInDate = checkInDate;
+		this.endDate = endDate;
 		this.numberOfNights = numberOfNights;
 		this.fullPrice = fullPrice;
 		this.reservationMessage = reservationMessage;
 		this.guest = guest;
 		this.reservationStatus = reservationStatus;
+		this.startDateString = startString;
+		this.endDateString = endString;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 
 	public Apartment getReservedApartment() {
@@ -83,6 +97,23 @@ public class Reservation {
 	public void setReservationStatus(ReservationStatus reservationStatus) {
 		this.reservationStatus = reservationStatus;
 	}
+
+	public String getStartDateString() {
+		return startDateString;
+	}
+
+	public void setStartDateString(String startDateString) {
+		this.startDateString = startDateString;
+	}
+
+	public String getEndDateString() {
+		return endDateString;
+	}
+
+	public void setEndDateString(String endDateString) {
+		this.endDateString = endDateString;
+	}
+	
 	
 	
 	
