@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.IntPredicate;
 
 import javax.print.attribute.standard.DateTimeAtCompleted;
@@ -21,6 +23,7 @@ import beans.Amenities;
 import beans.Apartment;
 import beans.City;
 import beans.DateSubstitute;
+import beans.FilterInfoHost;
 import beans.Location;
 import beans.Reservation;
 import beans.ReservationInfo;
@@ -68,6 +71,16 @@ public class ApartmentDAO {
 		}
 	}
 	
+	public void deleteApartment(String id) {
+		apartments.get(id).setDeleted("YES");
+		saveAllApartments();
+	}
+	
+	public void editApartment(Apartment ap) {
+		apartments.replace(ap.getId(), ap);
+		saveAllApartments();
+	}
+	
 	private void loadApartments() {
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -110,6 +123,55 @@ public class ApartmentDAO {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
+		
+		Set<Apartment> apByType = new HashSet<Apartment>();
+		Set<Apartment> apByStatus = new HashSet<Apartment>();
+		Set<Apartment> apByAmenities = new HashSet<Apartment>();
+		
+		for(Apartment ap : apartments.values()) {
+			if(filterInfo.getType() != null)
+				if(ap.getApartmentType().equals(filterInfo.getType()))
+					apByType.add(ap);
+			if(filterInfo.getStatus() != null)
+				if(ap.getStatus().equals(filterInfo.getStatus()))
+					apByStatus.add(ap);
+			if(filterInfo.getAmenities() != null) {
+				int i = 0;
+				for(Amenities a : filterInfo.getAmenities()) {
+					for(int j =  0; j < ap.getAmenities().size(); j++) {
+						if(ap.getAmenities().get(j).getId() == a.getId())
+							i++;
+					}
+						
+				}
+				if(i == filterInfo.getAmenities().size()) {
+					apByAmenities.add(ap);
+				}
+			}
+		}
+		
+		Set<Apartment> ret_apartments;
+		
+		if(filterInfo.getType() != null) {
+			ret_apartments = new HashSet<Apartment>(apByType);
+			if(filterInfo.getStatus() != null)
+				ret_apartments.retainAll(apByStatus);
+			if(filterInfo.getAmenities() != null)
+				ret_apartments.retainAll(apByAmenities);
+		}else {
+			if(filterInfo.getStatus() != null) {
+				ret_apartments = new HashSet<Apartment>(apByStatus);
+				if(filterInfo.getAmenities() != null)
+					ret_apartments.retainAll(apByAmenities);
+			}else {
+				ret_apartments = new HashSet<Apartment>(apByAmenities);
+			}
+		}
+		
+		return ret_apartments;
 	}
 	
 	public Collection<Apartment> getApartmentsByUsername(String username){

@@ -24,3 +24,11 @@ h4 {
     width:300px;
     height: 150px;
 }
+
+tr.selected {
+	background-color: #aaaaaa;
+}
+
+tr.selectedApartment {
+	background-color: #aaaaaa;
+}

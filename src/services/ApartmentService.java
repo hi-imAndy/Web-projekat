@@ -1,7 +1,9 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -17,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 
 import beans.Amenities;
 import beans.Apartment;
+import beans.FilterInfoHost;
 import beans.ReservationInfo;
 import beans.User;
 import dao.ApartmentDAO;
@@ -34,6 +37,7 @@ public class ApartmentService {
 		if (ctx.getAttribute("apartments") == null) {
 	    	String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("apartments", new ApartmentDAO(contextPath));
+			System.out.println(contextPath);
 		}
 	}
 	
@@ -45,13 +49,36 @@ public class ApartmentService {
 		return dao.addNewApartment(ap);
 	}
 	
+	@POST
+	@Path("/deleteApartment")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void deleteApartment(Apartment ap) {
+		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
+		dao.deleteApartment(ap.getId());
+	}
+	
+	@POST
+	@Path("/editApartment")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void editApartment(Apartment ap) {
+		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
+		dao.editApartment(ap);
+	}
+	
 	@GET
 	@Path("/getAllApartments")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Collection<Apartment> getAllApartments(){
 		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
-		return dao.getAllApartments();
+		List<Apartment> allApartments = new ArrayList<Apartment>(dao.getAllApartments());
+		List<Apartment> notDeletedApartments = new ArrayList<Apartment>();
+		for(Apartment ap : allApartments) {
+			if(ap.getDeleted().equals("NO")) {
+				notDeletedApartments.add(ap);
+			}
+		}
+		return notDeletedApartments;
 	}
 	
 	@GET
@@ -59,7 +86,14 @@ public class ApartmentService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Apartment> getApartmentsByUsername(@QueryParam("username") String username){
 		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
-		return dao.getApartmentsByUsername(username);
+		List<Apartment> allApartments = new ArrayList<Apartment>(dao.getApartmentsByUsername(username));
+		List<Apartment> notDeletedApartments = new ArrayList<Apartment>();
+		for(Apartment ap : allApartments) {
+			if(ap.getDeleted().equals("NO")) {
+				notDeletedApartments.add(ap);
+			}
+		}
+		return notDeletedApartments;
 	}
 	
 	@GET
@@ -70,6 +104,21 @@ public class ApartmentService {
 		return dao.filterApartments(location,numberOfGuests,pricePerNightMin,pricePerNightMax,startDate,endDate,numberOfRoomsMin,numberOfRoomsMax);
 	}
 	
+	@POST
+	@Path("/filterHost")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
+		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
+		List<Apartment> allApartments = new ArrayList<Apartment>(dao.filterHost(filterInfo));
+		List<Apartment> notDeletedApartments = new ArrayList<Apartment>();
+		for(Apartment ap : allApartments) {
+			if(ap.getDeleted().equals("NO")) {
+				notDeletedApartments.add(ap);
+			}
+		}
+		return notDeletedApartments;
+	}
 	
 	
 	@POST

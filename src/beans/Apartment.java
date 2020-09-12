@@ -10,6 +10,7 @@ import enums.ApartmentType;
 
 public class Apartment {
 	
+	private String deleted;
 	private String id;
 	private ApartmentType apartmentType;
 	private int numberOfRooms;
@@ -34,6 +35,7 @@ public class Apartment {
 			List<Date> allDates,ArrayList<Date> availableDates, User user, List<String> pictures,
 			double pricePerNight, String checkInTime, String checkOutTime, ApartmentStatus status,
 			List<Amenities> amenities) {
+		this.deleted = "NO";
 		this.id = id;
 		this.apartmentType = apartmentType;
 		this.numberOfRooms = numberOfRooms;
@@ -52,6 +54,14 @@ public class Apartment {
 		this.reservations = new ArrayList<Reservation>();
 
 		
+	}
+	
+	public String getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(String deleted) {
+		this.deleted = deleted;
 	}
 	
 	public String getId() {
@@ -223,14 +233,12 @@ public class Apartment {
 
 	@Override
 	public String toString() {
-		return "Apartment [id=" + id + ", apartmentType=" + apartmentType + ", numberOfRooms=" + numberOfRooms
-				+ ", numberOfGuests=" + numberOfGuests + ", location=" + location + ", allDates=" + allDates
-				+ ", availableDates=" + availableDates + ", user=" + user + ", comments=" + comments + ", pictures="
-				+ pictures + ", pricePerNight=" + pricePerNight + ", checkInTime=" + checkInTime + ", checkOutTime="
-				+ checkOutTime + ", status=" + status + ", amenities=" + amenities + ", reservations=" + reservations
-				+ "]";
+		return "Apartment [deleted=" + deleted + ", id=" + id + ", apartmentType=" + apartmentType + ", numberOfRooms="
+				+ numberOfRooms + ", numberOfGuests=" + numberOfGuests + ", location=" + location + ", allDates="
+				+ allDates + ", availableDates=" + availableDates + ", user=" + user + ", comments=" + comments
+				+ ", pictures=" + pictures + ", pricePerNight=" + pricePerNight + ", checkInTime=" + checkInTime
+				+ ", checkOutTime=" + checkOutTime + ", status=" + status + ", amenities=" + amenities
+				+ ", reservations=" + reservations + ", availableDatesString=" + availableDatesString + "]";
 	}
-	
-	
 	
 }
