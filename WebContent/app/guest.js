@@ -5,7 +5,8 @@ Vue.component("guest", {
 			apartments:{},
 			selected:{},
 			searchCriteria:{},
-			reservationInfo:{}
+			reservationInfo:{},
+			successFlag : {}
 		    }
 	},
 	template: ` 
@@ -235,6 +236,7 @@ Vue.component("guest", {
 		this.searchCriteria.numberOfRoomsMax = null;
 		this.reservationInfo.reservationMessage = null;
 		this.reservationInfo.numberOfNights = null;
+		this.successFlag = null;
 		
 		
 		axios
@@ -302,24 +304,28 @@ Vue.component("guest", {
 		createReservation: function(reservationInfo){
 			if(this.reservationInfo.startDate != null && this.reservationInfo.numberOfNights != null ){
 		var reservationInfo = {user:this.reservationInfo.user,apartment:this.reservationInfo.apartment,startDate:this.reservationInfo.startDate,endDate:this.reservationInfo.endDate,numberOfNights : this.reservationInfo.numberOfNights,reservationMessage:this.reservationInfo.reservationMessage};
-				
-				axios
-					.post("/Project/rest/apartments/bookApartment",reservationInfo)
-					.then(response =>{} );
 				axios
 					.post("/Project/rest/users/bookApartment",reservationInfo)
-					.then(response => {alert("Reservation sucessfull");
+					.then(response => {this.successFlag = response.data;
 					});
+				if(this.successFlag == "200 OK"){
+				axios
+					.post("/Project/rest/apartments/bookApartment",reservationInfo)
+					.then(response =>{alert("Reservation sucessfull");} );
+
 					
 				axios
 					.get("/Project/rest/apartments/getAllApartments")
-					.then(response => {this.apartments = response.data;
+					.then(response => {
 					});
 			    axios
 				    .get("/Project/rest/users/currentUser")
 				    .then(response => {this.currentUser = response.data;
 				   });
-	
+	}
+		else{
+			alert("Selected dates are not available");
+	}
 				this.searchCriteria.location = null;
 				this.searchCriteria.numberOfGuests = null;
 				this.searchCriteria.numberOfRoomsMin = null;

@@ -132,10 +132,10 @@ public class ApartmentService {
 	@Path("/bookApartment")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void bookApartment(ReservationInfo reservationInfo) {
+	public String bookApartment(ReservationInfo reservationInfo) {
 
 		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
-		dao.bookApartment(reservationInfo);
+		return dao.bookApartment(reservationInfo);
 	}
 	
 	

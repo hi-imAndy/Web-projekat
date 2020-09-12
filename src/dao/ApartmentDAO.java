@@ -722,7 +722,7 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 			return  retVal;
 		}
 
-	public void bookApartment(ReservationInfo reservationInfo) {
+	public String bookApartment(ReservationInfo reservationInfo) {
 		
 		
 		User user = reservationInfo.getUser();
@@ -735,6 +735,8 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 		int dayEndDate= startDate.getDate();
 		int monthEndDate = startDate.getMonth();
 		int yearEndDAte = startDate.getYear();
+		
+
 		
 		for(int i = 0 ; i <= numberOfNights ; i++) {
 			dayEndDate++;
@@ -764,18 +766,21 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 		}
 		
 		Date endDate = new Date(yearEndDAte,monthEndDate,dayEndDate);	
+		
+		if(checkIfDatesAreAvailable(reservationInfo.getApartment().getAvailableDatesString(), startDate, endDate)){
+		
 		String endDateString =new String(endDate.getYear() +"-"+endDate.getMonth()+"-"+endDate.getDate());
 		
 		Reservation reservation = new Reservation(reservationInfo.getApartment(), startDate, endDate , numberOfNights, reservationInfo.getApartment().getPricePerNight()*numberOfNights, reservationMessage, user , ReservationStatus.CREATED,reservationInfo.getStartDate(),endDateString);
 		
 		//OVU LINIJU TREBA OBRISATI KADA SE SREDE OBJEKTI
-	/*
+	/*//PRAVI LISTE REZERVACIJA
 		for(Apartment ap : apartments.values()) {
 			ap.setReservations(new ArrayList<Reservation>());
 		}
-			*/
+		*/	
 		
-	/*	
+	
 		for(Apartment ap: apartments.values()) {
 			ap.setAvailableDatesString(new ArrayList<String>());
 		
@@ -784,13 +789,77 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 				ap.getAvailableDatesString().add(date.getYear()+1900+"-"+date.getMonth()+"-"+date.getDate());
 			}	
 		}
-	*/	
+		
 		apartments.get(reservationInfo.getApartment().getId()).getReservations().add(reservation);
 		
 		ArrayList<Date> availableDates = (ArrayList<Date>) apartments.get(reservationInfo.getApartment().getId()).getAvailableDates();
 		apartments.get(reservationInfo.getApartment().getId()).setAvailableDates(deleteDates(startDate, endDate, availableDates));
 		
+		apartments.get(reservationInfo.getApartment().getId()).setAvailableDatesString(new ArrayList<String>());
+		
+		for(Date date : apartments.get(reservationInfo.getApartment().getId()).getAvailableDates()) {
+			apartments.get(reservationInfo.getApartment().getId()).getAvailableDatesString().add(date.getYear()+"-"+date.getMonth()+"-"+date.getDate());
+		}
+		
 		saveAllApartments();
+		return "200 OK";
+		}
+		return "400 BAD REQUEST";
 	}
+	
+	public boolean checkIfDatesAreAvailable(ArrayList<String> availableDatesString , Date startDate , Date endDate) {
+		ArrayList<DateSubstitute> availableDatesSub = new ArrayList<DateSubstitute>();
+		
+			for(String s : availableDatesString) {
+				availableDatesSub.add(new DateSubstitute(Integer.parseInt(s.split("-")[2]), Integer.parseInt(s.split("-")[1]), Integer.parseInt(s.split("-")[0])));
+			}
+		
+			int differenceDay = endDate.getDate() - startDate.getDate();
+			int differenceMonth = endDate.getMonth() - startDate.getMonth();
+			int differenceYear = endDate.getYear() - startDate.getYear();
+			
+			ArrayList<DateSubstitute> startToEnd = new ArrayList<DateSubstitute>();
+			
+			//ISTI MESEC ISTA GODINA RAZLICIT DAN
+			if(differenceDay > 0 && differenceMonth == 0 && differenceYear == 0) {
+				for(int i = 0 ; i <= differenceDay ; i++) {
+					startToEnd .add(new DateSubstitute(startDate.getDate() + i, startDate.getMonth(), startDate.getYear()));
+					//System.out.println(startToEnd.get(i).getDay() + "." + startToEnd.get(i).getMonth() + "." + startToEnd.get(i).getYear() );
+				}
+			}
+			//RAZLICIT MESEC ISTA GODINA 
+			else if(differenceMonth > 0 && differenceYear == 0) {
+				if(startDate.getMonth() == 1 || startDate.getMonth() == 3 || startDate.getMonth() == 5 || startDate.getMonth() == 7 || startDate.getMonth() == 8 || startDate.getMonth() == 10 || startDate.getMonth() == 12) {
+				for(int i = 0 ; i <= 31 ; i++) {
+					startToEnd.add(new DateSubstitute(startDate.getDate()+i, startDate.getMonth(), startDate.getYear()));
+					if(startDate.getDate()+i == 31)
+						break;
+				}
+				for(int i = 0 ; i <= endDate.getDate() ; i++) {
+					startToEnd.add(new DateSubstitute(0+i, endDate.getMonth(), startDate.getYear()));
+				}
+			}
+				else if(startDate.getMonth() == 4 || startDate.getMonth() == 6 || startDate.getMonth() == 9 || startDate.getMonth() == 11 ) {
+					for(int i = 0 ; i <= 30 ; i++) {
+						startToEnd.add(new DateSubstitute(startDate.getDate()+i, startDate.getMonth(), startDate.getYear()));
+						if(startDate.getDate()+i == 31)
+							break;
+					}
+					for(int i = 0 ; i <= endDate.getDate() ; i++) {
+						startToEnd.add(new DateSubstitute(0+i, endDate.getMonth(), startDate.getYear()));
+					}
+				}
+			}
+			
+			
+		for(DateSubstitute ds : startToEnd) {
+			if(!checkIfContains(availableDatesSub, ds)) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	
 }

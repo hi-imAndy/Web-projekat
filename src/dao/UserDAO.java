@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -220,11 +221,12 @@ public class UserDAO {
 		String endDateString =new String(endDate.getYear() +"-"+endDate.getMonth()+"-"+endDate.getDate());
 		
 		Reservation reservation = new Reservation(reservationInfo.getApartment(), startDate,endDate ,numberOfNights, reservationInfo.getApartment().getPricePerNight()*numberOfNights, reservationMessage, user , ReservationStatus.CREATED,reservationInfo.getStartDate(),endDateString);
-	/*	
-		for(User u : users.values()) {
-			u.setReservations(new ArrayList<Reservation>());
-			saveUser(users.get(user.getUsername()));
-		}
+		
+		/*//PRAVI LISTE REZERVACIJA
+			for(User u : users.values()) {
+				u.setReservations(new ArrayList<Reservation>());
+				saveUser(users.get(user.getUsername()));
+			}
 	*/
 		
 		users.get(user.getUsername()).getReservations().add(reservation);
