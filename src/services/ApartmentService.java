@@ -37,7 +37,6 @@ public class ApartmentService {
 		if (ctx.getAttribute("apartments") == null) {
 	    	String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("apartments", new ApartmentDAO(contextPath));
-			System.out.println(contextPath);
 		}
 	}
 	

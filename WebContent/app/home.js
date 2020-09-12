@@ -119,7 +119,6 @@ var accountModal = new Vue({
 		updatedUser : {}
 	},
 	mounted () {
-		
     },
 	methods:{
 		updateAccount : function(updatedUser){	

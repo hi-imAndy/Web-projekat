@@ -37,7 +37,6 @@ public class UserService {
 		if (ctx.getAttribute("users") == null) {
 	    	String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("users", new UserDAO(contextPath));
-			System.out.println(contextPath);
 		}
 	}
 	

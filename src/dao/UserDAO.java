@@ -2,22 +2,18 @@ package dao;
 
 import java.io.BufferedReader;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
-import beans.Amenities;
 import beans.Apartment;
 import beans.Reservation;
 import beans.ReservationInfo;
@@ -134,6 +130,23 @@ public class UserDAO {
 	
 	public void updateUser(User user , String username) {
 		users.replace(username, user);
+		saveAllUsers();
+	}
+	
+	private void saveAllUsers() {
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			FileWriter fileWriter = new FileWriter(path + "files\\users.json", false);
+			PrintWriter printWriter = new PrintWriter(fileWriter);
+			for(User u : users.values()) {
+				String uAsString = objectMapper.writeValueAsString(u);
+				printWriter.print(uAsString);
+			    printWriter.print("\n");
+			}
+			printWriter.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void addReservation(Reservation reservation , User user) {
@@ -142,14 +155,6 @@ public class UserDAO {
 	}
 	
 	public boolean changeUserData(String username, String oldPassword , String password, String passwordConfirm ,String firstName,String lastName) {
-			for(int i = 0 ; i < 100 ; i++) {
-				System.out.println("PASSWORD: " + password);
-			}
-			for(int i = 0 ; i < 100 ; i++) {
-				System.out.println("CONFIRM: " + passwordConfirm);
-			}
-
-
 			
 			User u = findByUsername(username);
 			if(password != null || passwordConfirm != null) {
@@ -159,6 +164,7 @@ public class UserDAO {
 					return false;			
 				else 
 					u.setPassword(password);
+				
 	}
 				u.setFirstName(firstName);
 				u.setLastName(lastName);
@@ -166,7 +172,6 @@ public class UserDAO {
 	
 				return true;
 			
-		
 	}
 
 	public void bookApartment(ReservationInfo reservationInfo) {
