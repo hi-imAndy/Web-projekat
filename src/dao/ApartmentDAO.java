@@ -22,6 +22,7 @@ import beans.Address;
 import beans.Amenities;
 import beans.Apartment;
 import beans.City;
+import beans.Comment;
 import beans.DateSubstitute;
 import beans.FilterInfoHost;
 import beans.Location;
@@ -198,8 +199,15 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 			
 
 		}
+		
+		for(Apartment ap: apartments.values()) {
+			if(ap.getComments() == null)
+				ap.setComments(new ArrayList<Comment> ());		
+
+		}
 			for(Apartment ap : apartments.values()) {
-				ap.setReservations(new ArrayList<Reservation>());
+				if(ap.getReservations() == null)
+					ap.setReservations(new ArrayList<Reservation>());
 			}
 			
 		return apartments.values();
@@ -818,10 +826,10 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 			}
 			
 			saveAllApartments();
-			System.out.println("200 OK");
+
 			return "200 OK";
 		}
-		System.out.println("400 BAD REQUEST");
+
 		return "400 BAD REQUEST";
 		
 	}
@@ -829,7 +837,7 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 	//PROVERAVA DA LI SU DATUMI DOSTUPNI -FUNKCIJA PROVERENA RADI!!!
 	public boolean checkIfDatesAreAvailable(ArrayList<String> availableDatesString , Date startDate , Date endDate , int numberOfNights) {
 		ArrayList<DateSubstitute> availableDatesSub = new ArrayList<DateSubstitute>();
-		System.out.println("END DATE: " +endDate.getYear()+"."+endDate.getMonth()+"."+endDate.getDate());
+
 		
 			for(String s : availableDatesString) {
 				availableDatesSub.add(new DateSubstitute(Integer.parseInt(s.split("-")[2]), Integer.parseInt(s.split("-")[1]), Integer.parseInt(s.split("-")[0])));
@@ -839,9 +847,7 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 			int differenceMonth = endDate.getMonth() - startDate.getMonth();
 			int differenceYear = endDate.getYear() - startDate.getYear();
 			
-			System.out.println("Day difference: " + differenceDay);
-			System.out.println("Month difference: " + differenceMonth);
-			System.out.println("Year difference: " + differenceYear);
+
 			
 			ArrayList<DateSubstitute> startToEnd = new ArrayList<DateSubstitute>();
 				
@@ -885,11 +891,18 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 			if(!checkIfContains(availableDatesSub, ds)) {
 				return false;
 			}
-			System.out.println(ds.getYear() +"."+ds.getMonth()+"."+ds.getDay());
+	
 		}
 		
 		return true;
 	}
 	
+	public String addComment(Comment comment) {
+		
+		apartments.get(comment.getApartment().getId()).getComments().add(comment);	
+		saveAllApartments();
+		
+		return "200 OK";
+	}
 	
 }

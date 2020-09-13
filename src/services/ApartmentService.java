@@ -19,10 +19,12 @@ import javax.ws.rs.core.MediaType;
 
 import beans.Amenities;
 import beans.Apartment;
+import beans.Comment;
 import beans.FilterInfoHost;
 import beans.ReservationInfo;
 import beans.User;
 import dao.ApartmentDAO;
+import dao.UserDAO;
 
 @Path("/apartments")
 public class ApartmentService {
@@ -139,6 +141,13 @@ public class ApartmentService {
 	}
 	
 	
-	
+	@POST
+	@Path("/addComment")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String addComment(Comment comment) {
+
+		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
+		return dao.addComment(comment);
+	}
 	
 }

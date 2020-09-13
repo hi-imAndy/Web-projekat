@@ -6,12 +6,16 @@ Vue.component("guest", {
 			selected:{},
 			searchCriteria:{},
 			reservationInfo:{},
-			successFlag : {}
+			successFlag : {},
+			selectedReservation : {},
+			reservationComment: {}
 		    }
 	},
 	template: ` 
 	<div>
 			
+			
+
 			
 			
 		<div class="container" style="margin-top:40px">
@@ -96,7 +100,7 @@ Vue.component("guest", {
 						    </tr>
 						  </thead>
 						  <tbody>
-									<tr v-for="reservation in currentUser.reservations" v-on:click="selectApartment(reservation.reservedApartment)"  v-bind:class = "{selected : selected.id === reservation.reservedApartment.id}" data-toggle="modal" data-target="#">
+									<tr v-for="reservation in currentUser.reservations" v-on:click="selectReservation(reservation)"   data-toggle="modal" data-target="#reservationInfo">
 										<td><img v-bind:src="reservation.reservedApartment.pictures[0]" class="img-fluid img-thumbnail " width="250" height="100"></td>
 										<td>{{reservation.reservedApartment.id }}</td>
 										<td>{{reservation.reservedApartment.user.username }}</td>
@@ -115,7 +119,28 @@ Vue.component("guest", {
 			
 			
 			
-			
+			<div id="reservationInfo" class="modal"  role="dialog">
+				  <div class="modal-dialog" role="document">
+						    <div class="modal-content">
+								      <div class="modal-header">
+										        <h5 class="modal-title">{{selectedReservation.id}} reservation options</h5>
+										        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										       		   <span aria-hidden="true">&times;</span>
+										        </button>
+								      </div>
+								      <div class="modal-body">									        
+												<input type="text" placeholder ="Comment text goes here" class = "form-control" v-model = "reservationComment.commentText">
+												<input type = "number" placeholder = "Rate this apartment from 0 to 10"  min="0" max="10" step="1" class = "form-control" v-model = "reservationComment.rating">
+
+								      </div>
+								      <div class="modal-footer">
+												<button type="button" class="btn btn-primary">Cancel reservation</button>
+												<button type="button" class="btn btn-primary" v-on:click="addComment(reservationComment)" >Submit comment</button>
+										        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								      </div>
+						    </div>
+				  </div>
+		</div>	
 				
 		
 		
@@ -192,7 +217,7 @@ Vue.component("guest", {
 									<td>
 										<p><i> <b>{{index}}. </b>{{p.content}}</i></p>
 										</br>
-										<p><b>by Anonymus &#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160 rating:{{p.rating}}/10</b></p>
+										<p><b>by {{p.author.username}} &#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160 rating:{{p.rating}}/10</b></p>
 									</td>
 								</div>
 								
@@ -218,6 +243,7 @@ Vue.component("guest", {
 			</div>
 	
 	
+
 
 	
 
@@ -258,6 +284,20 @@ Vue.component("guest", {
 			this.reservationInfo.endDate = this.searchCriteria.endDate;
 			this.reservationInfo.reservationMessage = null;
 			
+			
+},
+		selectReservation : function(reservation){
+			this.selectedReservation.reservation = reservation;
+			this.selectedReservation.id = reservation.reservedApartment.id;
+			
+},
+		addComment : function(reservationComment){
+				var comment = {author:this.currentUser,apartment:this.selectedReservation.reservation.reservedApartment,content:this.reservationComment.commentText,rating:this.reservationComment.rating,approved : false};
+				axios
+					.post("/Project/rest/apartments/addComment",comment)
+					.then(response => {this.apartments = response.data;
+					});
+					
 			
 },
 		filterApartments : function(searchCriteria){

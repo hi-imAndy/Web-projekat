@@ -17,6 +17,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import beans.Comment;
 import beans.ReservationInfo;
 import beans.User;
 import dao.UserDAO;
@@ -114,6 +115,9 @@ public class UserService {
 		UserDAO dao = (UserDAO) ctx.getAttribute("users");
 		dao.bookApartment(reservationInfo);
 	}
+	
+
+	
 	
 }
 	

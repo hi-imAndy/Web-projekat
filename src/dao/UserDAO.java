@@ -91,8 +91,10 @@ public class UserDAO {
 	public Collection<User> findAll() {
 		//OBRISATI KADA SE SREDI JSON
 		for(User u : users.values()) {
-			u.setReservations(new ArrayList<Reservation>());
-			saveUser(users.get(u.getUsername()));
+				if(u.getReservations() == null) {
+					u.setReservations(new ArrayList<Reservation>());
+					saveUser(users.get(u.getUsername()));
+			}
 		}
 		
 		return users.values();
