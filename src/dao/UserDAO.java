@@ -222,12 +222,12 @@ public class UserDAO {
 		
 		Reservation reservation = new Reservation(reservationInfo.getApartment(), startDate,endDate ,numberOfNights, reservationInfo.getApartment().getPricePerNight()*numberOfNights, reservationMessage, user , ReservationStatus.CREATED,reservationInfo.getStartDate(),endDateString);
 		
-		/*//PRAVI LISTE REZERVACIJA
+		//PRAVI LISTE REZERVACIJA
 			for(User u : users.values()) {
 				u.setReservations(new ArrayList<Reservation>());
 				saveUser(users.get(user.getUsername()));
 			}
-	*/
+	
 		
 		users.get(user.getUsername()).getReservations().add(reservation);
 		saveUser(users.get(user.getUsername()));

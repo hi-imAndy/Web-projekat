@@ -305,12 +305,12 @@ Vue.component("guest", {
 			if(this.reservationInfo.startDate != null && this.reservationInfo.numberOfNights != null ){
 		var reservationInfo = {user:this.reservationInfo.user,apartment:this.reservationInfo.apartment,startDate:this.reservationInfo.startDate,endDate:this.reservationInfo.endDate,numberOfNights : this.reservationInfo.numberOfNights,reservationMessage:this.reservationInfo.reservationMessage};
 				axios
-					.post("/Project/rest/users/bookApartment",reservationInfo)
+					.post("/Project/rest/apartments/bookApartment",reservationInfo)
 					.then(response => {this.successFlag = response.data;
 					});
-				if(this.successFlag == "200 OK"){
+				if(String(this.successFlag) == "200 OK"){
 				axios
-					.post("/Project/rest/apartments/bookApartment",reservationInfo)
+					.post("/Project/rest/users/bookApartment",reservationInfo)
 					.then(response =>{alert("Reservation sucessfull");} );
 
 					
@@ -336,7 +336,7 @@ Vue.component("guest", {
 				this.searchCriteria.endDate = null;
 				this.reservationInfo.reservationMessage = null;
 				this.reservationInfo.numberOfNights = null;
-
+				this.reservationInfo.successFlag = null;
 				}
 			else{
 				alert("Select date and number of nights first");
