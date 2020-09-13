@@ -89,6 +89,12 @@ public class UserDAO {
 	}
 	
 	public Collection<User> findAll() {
+		//OBRISATI KADA SE SREDI JSON
+		for(User u : users.values()) {
+			u.setReservations(new ArrayList<Reservation>());
+			saveUser(users.get(u.getUsername()));
+		}
+		
 		return users.values();
 	}
 	
@@ -150,10 +156,7 @@ public class UserDAO {
 		}
 	}
 	
-	public void addReservation(Reservation reservation , User user) {
-		//users.get(user.getUsername()).setReservations(new ArrayList<Apartment>());
-		//users.get(user.getUsername()).getReservations().add(new ApartmentDAO().getApartmentById(reservation.getReservedApartment()));
-	}
+
 	
 	public boolean changeUserData(String username, String oldPassword , String password, String passwordConfirm ,String firstName,String lastName) {
 			
@@ -222,12 +225,12 @@ public class UserDAO {
 		
 		Reservation reservation = new Reservation(reservationInfo.getApartment(), startDate,endDate ,numberOfNights, reservationInfo.getApartment().getPricePerNight()*numberOfNights, reservationMessage, user , ReservationStatus.CREATED,reservationInfo.getStartDate(),endDateString);
 		
-		//PRAVI LISTE REZERVACIJA
+		/*//PRAVI LISTE REZERVACIJA
 			for(User u : users.values()) {
 				u.setReservations(new ArrayList<Reservation>());
-				saveUser(users.get(user.getUsername()));
+				saveUser(users.get(u.getUsername()));
 			}
-	
+	*/
 		
 		users.get(user.getUsername()).getReservations().add(reservation);
 		saveUser(users.get(user.getUsername()));

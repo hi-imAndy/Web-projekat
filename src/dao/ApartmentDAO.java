@@ -186,7 +186,22 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 	
 
 	public Collection<Apartment> getAllApartments(){
+	
+		//OVA 2 FORA INICIJALIZUJU LISTE KOJE SU INACE NULL KADA SE SREDE JSON FAJLOVI OBRISATI ISTO VAZI I ZA USERA
+		for(Apartment ap: apartments.values()) {
+			ap.setAvailableDatesString(new ArrayList<String>());
+		
+		
+			for(Date date : ap.getAvailableDates()) {
+				ap.getAvailableDatesString().add(date.getYear()+ 1900 +"-"+date.getMonth()+"-"+date.getDate());
+			}	
+			
 
+		}
+			for(Apartment ap : apartments.values()) {
+				ap.setReservations(new ArrayList<Reservation>());
+			}
+			
 		return apartments.values();
 	}
 	
@@ -738,7 +753,7 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 		
 
 		
-		for(int i = 0 ; i < numberOfNights ; i++) {
+		for(int i = 0 ; i < numberOfNights-1 ; i++) {
 			System.out.println(dayEndDate);
 			if(startDate.getMonth() == 1 || startDate.getMonth() == 3 || startDate.getMonth() == 5 || startDate.getMonth() == 7 || startDate.getMonth() == 8 || startDate.getMonth() == 10 || startDate.getMonth() == 12) {
 				if(dayEndDate == 31 && monthEndDate != 12) {
@@ -763,7 +778,7 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 					monthEndDate++; 
 				}
 			}
-			dayEndDate++;
+			dayEndDate += i;
 		}
 		
 		Date endDate = new Date(yearEndDAte,monthEndDate,dayEndDate);	
@@ -772,16 +787,16 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 		
 			String endDateString =new String(endDate.getYear() +"-"+endDate.getMonth()+"-"+endDate.getDate());
 			
-			Reservation reservation = new Reservation(reservationInfo.getApartment(), startDate, endDate , numberOfNights, reservationInfo.getApartment().getPricePerNight()*numberOfNights, reservationMessage, user , ReservationStatus.CREATED,reservationInfo.getStartDate(),endDateString);
+			Reservation reservation = new Reservation(reservationInfo.getApartment(), startDate, endDate , numberOfNights, reservationInfo.getApartment().getPricePerNight()*numberOfNights, reservationMessage, user , ReservationStatus.CREATED,reservationInfo.getStartDate(),new String(endDate.getYear()+"-"+endDate.getMonth()+"-"+endDate.getDate()));
 			
 			//OVU LINIJU TREBA OBRISATI KADA SE SREDE OBJEKTI
-		//PRAVI LISTE REZERVACIJA
+		/*//PRAVI LISTE REZERVACIJA
 			for(Apartment ap : apartments.values()) {
 				ap.setReservations(new ArrayList<Reservation>());
 			}
-				
+		*/		
 			
-		
+		/*
 			for(Apartment ap: apartments.values()) {
 				ap.setAvailableDatesString(new ArrayList<String>());
 			
@@ -790,7 +805,7 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 					ap.getAvailableDatesString().add(date.getYear()+ 1900 +"-"+date.getMonth()+"-"+date.getDate());
 				}	
 			}
-			
+		*/	
 			apartments.get(reservationInfo.getApartment().getId()).getReservations().add(reservation);
 			
 			ArrayList<Date> availableDates = (ArrayList<Date>) apartments.get(reservationInfo.getApartment().getId()).getAvailableDates();
