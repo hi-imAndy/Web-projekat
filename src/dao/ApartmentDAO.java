@@ -762,7 +762,6 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 
 		
 		for(int i = 0 ; i < numberOfNights-1 ; i++) {
-			System.out.println(dayEndDate);
 			if(startDate.getMonth() == 1 || startDate.getMonth() == 3 || startDate.getMonth() == 5 || startDate.getMonth() == 7 || startDate.getMonth() == 8 || startDate.getMonth() == 10 || startDate.getMonth() == 12) {
 				if(dayEndDate == 31 && monthEndDate != 12) {
 					dayEndDate = 1;
@@ -898,11 +897,113 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 	}
 	
 	public String addComment(Comment comment) {
+		try {
+			apartments.get(comment.getApartment().getId()).getComments().add(comment);	
+			saveAllApartments();
+			
+			return "200 OK";
+		}
+		catch (Exception e) {
+			return "400 BAD REQUEST";
+		}
+	}
+	
+	public String cancelReservation(Reservation reservation) {
+	
+		try {
+			ArrayList<Reservation> reservations = (ArrayList<Reservation>) apartments.get(reservation.getReservedApartment().getId()).getReservations();
+			ArrayList<Reservation> newReservations = new ArrayList<Reservation>();
+			
+			for(Reservation res : reservations) {
+				if(!res.getStartDateString().equalsIgnoreCase(reservation.getStartDateString())) {
+					newReservations.add(res);
+				}
+			}
+			
+			apartments.get(reservation.getReservedApartment().getId()).setAvailableDates(returnDates(reservation.getCheckInDate(),reservation.getNumberOfNights(),apartments.get(reservation.getReservedApartment().getId()).getAvailableDates()));
+			
+			for(Date date : apartments.get(reservation.getReservedApartment().getId()).getAvailableDates()) {
+				apartments.get(reservation.getReservedApartment().getId()).getAvailableDatesString().add(date.getYear()+1900+"-"+date.getMonth()+"-"+date.getDate());
+			}
+			
+			saveAllApartments();
+	
+			return "200 OK";
+		}
+		catch (Exception e) {
+			return "400 BAD REQUEST";
+		}
 		
-		apartments.get(comment.getApartment().getId()).getComments().add(comment);	
-		saveAllApartments();
+	}
+	
+	public ArrayList<Date> returnDates(Date startDate ,int numberOfNights, ArrayList<Date> availableDates) {
+		ArrayList<DateSubstitute> availableDatesSub = new ArrayList<DateSubstitute>();
+		ArrayList<DateSubstitute> startToEnd = new ArrayList<DateSubstitute>();
 		
-		return "200 OK";
+		for(int i = 0 ; i < availableDates.size() ; i++) {
+			availableDatesSub.add(new DateSubstitute(availableDates.get(i).getDate(), availableDates.get(i).getMonth(), availableDates.get(i).getYear()+1900));
+		}
+		
+
+		
+		int date = startDate.getDate();
+		int month = startDate.getMonth();
+		int year = startDate.getYear();
+		
+	for(int i = 0 ; i < numberOfNights ; i++) {
+		
+		if(startDate.getMonth() == 1 || startDate.getMonth() == 3 || startDate.getMonth() == 5 || startDate.getMonth() == 7 || startDate.getMonth() == 8 || startDate.getMonth() == 10 || startDate.getMonth() == 12) {
+			if(date == 31 && month != 12) {
+				date = 1;
+				month++;
+			}
+			else if(date == 31 && month == 12) {
+				date = 1;
+				month = 1;
+				year++;
+			}
+		}
+		else if(startDate.getMonth() == 4 || startDate.getMonth() == 6 || startDate.getMonth() == 9 || startDate.getMonth() == 11) {
+			if(date == 30) {
+				date = 1;
+				month++;
+			}
+		}
+		else if(startDate.getMonth() == 2 ) {
+			if(date == 29) {
+				date = 1;
+				month++;
+			}
+		}
+		startToEnd.add(new DateSubstitute(date,month, year));
+		date++;
+	}
+		
+		ArrayList<DateSubstitute> retValT = availableDatesSub;
+		
+		int position = 0;
+
+		while(startToEnd.get(0).getDay() > availableDatesSub.get(position).getDay() && startToEnd.get(0).getMonth() > availableDatesSub.get(position).getMonth() && startToEnd.get(0).getYear() > availableDatesSub.get(position).getYear()) {
+			position++;
+		}
+		
+		position = position;
+			
+			for(DateSubstitute ds : startToEnd) {
+						retValT.add(position, ds);
+						position++;
+			}
+		
+		
+
+		
+		
+
+		ArrayList<Date> retVal = new ArrayList<Date>();
+		for(DateSubstitute ds : retValT) {
+			retVal.add(new Date(ds.getYear() - 1900,ds.getMonth(),ds.getDay()));
+		}
+		return  retVal;
 	}
 	
 }

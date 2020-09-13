@@ -18,6 +18,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import beans.Comment;
+import beans.Reservation;
 import beans.ReservationInfo;
 import beans.User;
 import dao.UserDAO;
@@ -117,6 +118,14 @@ public class UserService {
 	}
 	
 
+	@POST
+	@Path("/cancelReservation")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void bookApartment(Reservation reservation) {
+
+		UserDAO dao = (UserDAO) ctx.getAttribute("users");
+		dao.cancelReservation(reservation);
+	}
 	
 	
 }

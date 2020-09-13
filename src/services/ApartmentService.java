@@ -21,6 +21,7 @@ import beans.Amenities;
 import beans.Apartment;
 import beans.Comment;
 import beans.FilterInfoHost;
+import beans.Reservation;
 import beans.ReservationInfo;
 import beans.User;
 import dao.ApartmentDAO;
@@ -149,5 +150,15 @@ public class ApartmentService {
 		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
 		return dao.addComment(comment);
 	}
+	
+	@POST
+	@Path("/cancelReservation")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void bookApartment(Reservation reservation) {
+
+		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
+		dao.cancelReservation(reservation);
+	}
+	
 	
 }

@@ -134,7 +134,7 @@ Vue.component("guest", {
 
 								      </div>
 								      <div class="modal-footer">
-												<button type="button" class="btn btn-primary">Cancel reservation</button>
+												<button type="button" class="btn btn-primary" v-on:click="cancelReservation()">Cancel reservation</button>
 												<button type="button" class="btn btn-primary" v-on:click="addComment(reservationComment)" >Submit comment</button>
 										        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 								      </div>
@@ -292,12 +292,18 @@ Vue.component("guest", {
 			
 },
 		addComment : function(reservationComment){
+			if(this.reservationComment.commentText != null && this.reservationComment.rating!=null){
 				var comment = {author:this.currentUser,apartment:this.selectedReservation.reservation.reservedApartment,content:this.reservationComment.commentText,rating:this.reservationComment.rating,approved : false};
 				axios
 					.post("/Project/rest/apartments/addComment",comment)
-					.then(response => {this.apartments = response.data;
+					.then(response => {alert("Comment sent successfully");
+					this.reservationComment.commentText = null;
+					this.reservationComment.rating = null;
 					});
-					
+				}	
+			else{
+				alert("Comment text and rating can't be empty");
+			}
 			
 },
 		filterApartments : function(searchCriteria){
@@ -405,7 +411,27 @@ Vue.component("guest", {
 					.get("/Project/rest/users/currentUser")
 					.then(response => {this.currentUser = response.data;
 					});
-}
+					},
+					
+		cancelReservation : function(){
+				axios
+					.post("/Project/rest/apartments/cancelReservation",this.selectedReservation.reservation)
+					.then(response => {
+					});
+				axios
+					.post("/Project/rest/users/cancelReservation",this.selectedReservation.reservation)
+					.then(response => {
+					});
+				axios
+					.get("/Project/rest/apartments/getAllApartments")
+					.then(response => {this.apartments = response.data;
+					});
+				axios
+					.get("/Project/rest/users/currentUser")
+					.then(response => {this.currentUser = response.data;
+					});
+			},
+
 	},
 
 });

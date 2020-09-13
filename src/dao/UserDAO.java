@@ -1,4 +1,4 @@
-package dao;
+	package dao;
 
 import java.io.BufferedReader;
 
@@ -227,6 +227,14 @@ public class UserDAO {
 		
 		Reservation reservation = new Reservation(reservationInfo.getApartment(), startDate,endDate ,numberOfNights, reservationInfo.getApartment().getPricePerNight()*numberOfNights, reservationMessage, user , ReservationStatus.CREATED,reservationInfo.getStartDate(),endDateString);
 		
+		//OBRISATI KADA SE SREDI JSON
+		for(User u : users.values()) {
+				if(u.getReservations() == null) {
+					u.setReservations(new ArrayList<Reservation>());
+					saveUser(users.get(u.getUsername()));
+			}
+		}
+		
 		/*//PRAVI LISTE REZERVACIJA
 			for(User u : users.values()) {
 				u.setReservations(new ArrayList<Reservation>());
@@ -239,5 +247,28 @@ public class UserDAO {
 		
 	}
 	
+	public String cancelReservation(Reservation reservation) {
+		
+		try {
+			
+			ArrayList<Reservation> reservations = users.get(reservation.getGuest().getUsername()).getReservations();
+			ArrayList<Reservation> retVal =new ArrayList<Reservation>();
+			
+			for(Reservation res : reservations) {
+				if(!res.getStartDateString().equalsIgnoreCase(reservation.getStartDateString())) {
+					retVal.add(res);
+				}
+			}
+			
+			users.get(reservation.getGuest().getUsername()).setReservations(retVal);
+			saveAllUsers();
+			
+			return "200 OK";
+		}
+		catch (Exception e) {
+			return "400 BAD REQUEST";
+		}
+		
+	}
 
 }
