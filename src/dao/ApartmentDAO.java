@@ -896,6 +896,19 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 		return true;
 	}
 	
+	public void approveComment(Comment comment) {
+		ArrayList<Comment> comments = (ArrayList<Comment>)apartments.get(comment.getApartment().getId()).getComments();
+		
+		for(Comment c : apartments.get(comment.getApartment().getId()).getComments()) {
+			if(comment.getAuthor().getUsername().equals(c.getAuthor().getUsername()) && comment.getContent().equals(c.getContent())) {
+				c.setApproved(true);
+				break;
+			}
+		}
+		
+		saveAllApartments();
+	}
+	
 	public String addComment(Comment comment) {
 		try {
 			apartments.get(comment.getApartment().getId()).getComments().add(comment);	

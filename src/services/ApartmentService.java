@@ -40,6 +40,7 @@ public class ApartmentService {
 		if (ctx.getAttribute("apartments") == null) {
 	    	String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("apartments", new ApartmentDAO(contextPath));
+			System.out.println(contextPath);
 		}
 	}
 	
@@ -96,6 +97,14 @@ public class ApartmentService {
 			}
 		}
 		return notDeletedApartments;
+	}
+	
+	@POST
+	@Path("/approveComment")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void approveComment(Comment comment) {
+		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
+		dao.approveComment(comment);
 	}
 	
 	@GET

@@ -18,7 +18,8 @@ Vue.component("host", {
 		      minDate:{},
 		      filterAmenities:[],
 		      filter:{},
-		      label : ""
+		      label : "",
+		      selectedComment:{}
 		    }
 	},
 	template: ` 
@@ -74,6 +75,7 @@ Vue.component("host", {
 							      <th scope="col">Host</th>
 							      <th scope="col">Location</th>
 							      <th scope="col">Address</th>
+							      <th scope="col"><button class="btn btn-outline-success" v-on:click="viewComments"  data-toggle="modal" data-target="#commentsModal">Comments</button></th>
 							     </tr>
 							  </thead>
 							  <tbody>
@@ -127,6 +129,44 @@ Vue.component("host", {
 										 </tr>
 							  </tbody>
 						</table>   
+					</div>
+				</div>
+				
+				<div class = "row">
+					<div class = "col">
+						<h3>Reservations on my apartments:</h3>
+					</div>
+				</div>
+				<div class = "row">
+					<div class="col-md-auto">
+						<table class="table table-image table-hover">
+								  <thead>
+								    <tr>
+								      <th scope="col"></th>
+								      <th scope="col">ID</th>
+								      <th scope="col">Status</th>
+								      <th scope="col">Type</th>
+								      <th scope="col">Rooms</th>
+								      <th scope="col">Price</th>
+								      <th scope="col">Host</th>
+								      <th scope="col">Location</th>
+								      <th scope="col">Address</th>
+								    </tr>
+								  </thead>
+								  <tbody>
+										<tr v-for="r in myApartments.reservations">
+											<td><img v-bind:src="r.reservedApartment.pictures[0]" class="img-fluid img-thumbnail " width="250" height="100"></td>
+											<td>{{r.reservedApartment.id }}</td>
+											<td>{{r.reservedApartment.status}}</td>
+											<td>{{r.reservedApartment.apartmentType}}</td>
+											<td>{{r.reservedApartment.numberOfRooms}}</td>
+											<td>{{r.reservedApartment.pricePerNight + " RSD"}}</td>
+											<td>{{r.reservedApartment.user.firstName + " " + r.reservedApartment.user.lastName }}</td>
+											<td>{{r.reservedApartment.location.address.city.name}}</td>
+											<td>{{r.reservedApartment.location.address.street}} {{r.reservedApartment.location.address.number}}</td>
+										 </tr>
+								  </tbody>
+						</table>
 					</div>
 				</div>
 			</div>
@@ -267,6 +307,50 @@ Vue.component("host", {
 				</div>
 			</div>
 			</div>
+		</form>
+		
+		<form action = "" class = "main-form needs-validation" novalidate>
+				<div id="commentsModal" class="modal fade"> 
+					<div class = "modal-dialog modal-dialog-centered">
+						<div class = "modal-content">
+							<div class = "modal-header">
+								<h4 class = "modal-title" style="margin-left:120px">Comments on {{selectedApartment.id}}</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span>&times</span>
+								</button>
+							</div>
+							<div class = "modal-body">
+								<div class = "container">
+									<div class = "row justify-content-md-center">
+										<div class = "col-md-auto">
+											<table class="table table-hover">
+												<thead>	
+													<tr>
+														<th>Author:</th>
+														<th>Comment:</th>
+														<th>Approved:</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr v-for="c in selectedApartment.comments" v-on:click="selectComment(c)">
+														<td>{{c.author.firstName + " " + c.author.lastName}}</td>
+														<td><textarea readonly>{{c.content}}</textarea></td>
+														<td>{{c.approved}}</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class = "row justify-content-md-center">
+										<div class = "col-md-auto">
+											<button class="btn btn-outline-success" v-on:click="approveComment">Approve comment</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 		</form>
 		
 		<form action = "" class = "main-form needs-validation" novalidate>
@@ -703,6 +787,41 @@ Vue.component("host", {
     				}
     			}
     		})
+    	},
+    	viewComments : function(){
+    		if(this.selectedApartment.id == undefined){
+				alert("An apartment needs to be selected!");
+				event.stopPropagation();
+			}
+    		else{
+    			
+    		}
+    	},
+    	selectComment : function(comment){
+    		this.selectedComment = comment;
+    	},
+    	approveComment : function(){
+    		if(this.selectedComment.author == undefined){
+    			alert("Comment needs to be selected!");
+    			event.stopPropagation();
+    		}
+    		else{
+    			this.selectedComment.approved = true;
+    			axios
+    			.post("/Project/rest/apartments/approveComment", this.selectedComment);
+    			
+    			axios
+    			.get("/Project/rest/apartments/getApartmentsByUsername", {params : {username : user.username}})
+    			.then(response => {
+    				this.myApartments = response.data;
+    				for(var i = 0; i < response.data.length; i++){
+    					if(response.data[i].status === "ACTIVE")
+    						this.activeApartments.push(response.data[i]);
+    					else
+    						this.inactiveApartments.push(response.data[i]);
+    				}
+    			});
+    		}
     	}
 	},
 	mounted(){
