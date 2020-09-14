@@ -17,7 +17,8 @@ Vue.component("host", {
 		      selectedDate:{},
 		      minDate:{},
 		      filterAmenities:[],
-		      filter:{}
+		      filter:{},
+		      label : ""
 		    }
 	},
 	template: ` 
@@ -251,6 +252,9 @@ Vue.component("host", {
 								</div>
 							</div>
 							</br>
+							<div class = "row">
+								<div class = "col"><label style="color:red">{{label}}</label></div>
+							</div>
 							<div class = "row justify-content-md-center">
 								<div class = "col-md-auto">
 									<button class = "btn btn-primary" v-on:click="create">Create</button>
@@ -387,6 +391,11 @@ Vue.component("host", {
 								</div>
 							</div>
 							</br>
+							<div class = "row">
+								<div class = "col">
+									<label style="color:red">{{label}}</label>
+								</div>
+							</div>
 							<div class = "row justify-content-md-center">
 								<div class = "col-md-auto">
 									<button class = "btn btn-primary" v-on:click="edit">Save</button>
@@ -400,6 +409,7 @@ Vue.component("host", {
 			</div>
 			</div>
 		</form>
+		
 	</div>
 	`,
 	methods:{
@@ -411,26 +421,83 @@ Vue.component("host", {
 			}
 			var ap = {id : this.newApartment.id, apartmentType: this.newApartment.apartmentType, numberOfRooms:this.newApartment.numberOfRooms , numberOfGuests:this.newApartment.numberOfGuests, location: this.location, allDates: this.allDates, availableDates: this.allDates ,user : home.currentUser, pictures: newPictures, pricePerNight: this.newApartment.pricePerNight, checkInTime: this.newApartment.checkInTime, checkOutTime: this.newApartment.checkOutTime, status: this.newApartment.status, amenities: this.newAmenities};
 			
-			axios
-			.post("/Project/rest/apartments/addNewApartment", ap)
-			.then(response => {
-				if(response.data == false)
-					alert("Apartment with that ID already exists!");
-				else{
-					axios
-					.get("/Project/rest/apartments/getApartmentsByUsername", {params : {username : user.username}})
-					.then(response => {
-						this.myApartments = response.data;
-						for(var i = 0; i < response.data.length; i++){
-							if(response.data[i].status === "ACTIVE")
-								this.activeApartments.push(response.data[i]);
-							else
-								this.inactiveApartments.push(response.data[i]);
-						}
-					});
-					alert("New apartment created!");
-				}
-			});
+			this.label = "";
+			var i = 0;
+			if(ap.id == "" || ap.id == null){
+				this.label += "ID is required. ";
+				i++;
+			}
+			if(ap.apartmentType == null || ap.apartmentType == undefined || ap.apartmentType == ""){
+				this.label += "Apartment type is required. ";
+				i++;
+			}
+			if(ap.numberOfRooms == null || ap.numberOfRooms == undefined || numberOfRooms == ""){
+				this.label += "Number of rooms is required. ";
+				i++;
+			}
+			if(ap.numberOfGuests == null || ap.numberOfGuests == undefined || numberOfGuests == ""){
+				this.label += "Number of guests is required. ";
+				i++;
+			}
+			if(ap.allDates == null || ap.allDates == undefined || ap.allDates == "" || ap.allDates == []){
+				this.label += "Dates are required. ";
+				i++;
+			}
+			if(ap.pricePerNight == null || ap.pricePerNight == undefined || ap.pricePerNight == ""){
+				this.label += "Price per night is required. ";
+				i++;
+			}
+			if(ap.checkInTime == null || ap.checkInTime == undefined || ap.checkInTime == ""){
+				this.label += "Check in time is required. ";
+				i++;
+			}
+			if(ap.checkOutTime == null || ap.checkOutTime == undefined || ap.checkOutTime == ""){
+				this.label += "Check out time is required. ";
+				i++;
+			}
+			if(ap.location.latitude == null || ap.location.latitude == undefined || ap.location.latitude == ""){
+				this.label += "Latitude is required. ";
+				i++;
+			}
+			if(ap.location.longitude == null || ap.location.longitude == undefined || ap.location.longitude == ""){
+				this.label += "Longitude is required. ";
+				i++;
+			}
+			if(ap.location.address.street == null || ap.location.address.street == undefined || ap.location.address.street == ""){
+				this.label += "Street is required. ";
+				i++;
+			}
+			if(ap.location.address.number == null || ap.location.address.number == undefined || ap.location.address.number == ""){
+				this.label += "Number is required. ";
+				i++;
+			}
+			if(ap.location.address.city == null || ap.location.address.city == undefined || ap.location.address.city == ""){
+				this.label += "City is required. ";
+				i++;
+			}
+			if(i == 0){
+				axios
+				.post("/Project/rest/apartments/addNewApartment", ap)
+				.then(response => {
+					if(response.data == false)
+						alert("Apartment with that ID already exists!");
+					else{
+						axios
+						.get("/Project/rest/apartments/getApartmentsByUsername", {params : {username : user.username}})
+						.then(response => {
+							this.myApartments = response.data;
+							for(var i = 0; i < response.data.length; i++){
+								if(response.data[i].status === "ACTIVE")
+									this.activeApartments.push(response.data[i]);
+								else
+									this.inactiveApartments.push(response.data[i]);
+							}
+						});
+						alert("New apartment created!");
+					}
+				});
+				this.label = "";
+			}
 		},
 		updateImages : function(event){
     		var fileNames = [];
@@ -501,21 +568,75 @@ Vue.component("host", {
 		},
 		edit : function(){
 			
-			axios
-			.post("/Project/rest/apartments/editApartment", this.selectedApartment);
-			alert("Apartment " + this.selectedApartment.id + " edited!");
+			this.label = "";
+			var i = 0;
+			if(this.selectedApartment.apartmentType == null || this.selectedApartment.apartmentType == undefined || this.selectedApartment.apartmentType == ""){
+				this.label += "Apartment type is required. ";
+				i++;
+			}
+			if(this.selectedApartment.numberOfRooms == null || this.selectedApartment.numberOfRooms == undefined || this.selectedApartment.numberOfRooms == ""){
+				this.label += "Number of rooms is required. ";
+				i++;
+			}
+			if(this.selectedApartment.numberOfGuests == null || this.selectedApartment.numberOfGuests == undefined || this.selectedApartment.numberOfGuests == ""){
+				this.label += "Number of guests is required. ";
+				i++;
+			}
+			if(this.selectedApartment.location.latitude == null || this.selectedApartment.location.latitude == undefined || this.selectedApartment.location.latitude == ""){
+				this.label += "Latitude is required. ";
+				i++;
+			}
+			if(this.selectedApartment.location.longitude == null || this.selectedApartment.location.longitude == undefined || this.selectedApartment.location.longitude == ""){
+				this.label += "Longitude is required. ";
+				i++;
+			}
+			if(this.selectedApartment.location.address.street == null || this.selectedApartment.location.address.street == undefined || this.selectedApartment.location.address.street == ""){
+				this.label += "Street is required. ";
+				i++;
+			}
+			if(this.selectedApartment.location.address.number == null || this.selectedApartment.location.address.number == undefined || this.selectedApartment.location.address.number == ""){
+				this.label += "Number is required. ";
+				i++;
+			}
+			if(this.selectedApartment.location.address.city == null || this.selectedApartment.location.address.city == undefined || this.selectedApartment.location.address.city == ""){
+				this.label += "City is required. ";
+				i++;
+			}
+			if(this.selectedApartment.allDates == null || this.selectedApartment.allDates == undefined || this.selectedApartment.allDates == "" || this.selectedApartment.allDates == []){
+				this.label += "Dates are required. ";
+				i++;
+			}
+			if(this.selectedApartment.pricePerNight == null || this.selectedApartment.pricePerNight == undefined || this.selectedApartment.pricePerNight == ""){
+				this.label += "Price per night is required. ";
+				i++;
+			}
+			if(this.selectedApartment.checkInTime == null || this.selectedApartment.checkInTime == undefined || this.selectedApartment.checkInTime == ""){
+				this.label += "Check in time is required. ";
+				i++;
+			}
+			if(this.selectedApartment.checkOutTime == null || this.selectedApartment.checkOutTime == undefined || this.selectedApartment.checkOutTime == ""){
+				this.label += "Check out time is required. ";
+				i++;
+			}
 			
-			axios
-			.get("/Project/rest/apartments/getApartmentsByUsername", {params : {username : user.username}})
-			.then(response => {
-				this.myApartments = response.data;
-				for(var i = 0; i < response.data.length; i++){
-					if(response.data[i].status === "ACTIVE")
-						this.activeApartments.push(response.data[i]);
-					else
-						this.inactiveApartments.push(response.data[i]);
-				}
-			});
+			if(i == 0){
+				axios
+				.post("/Project/rest/apartments/editApartment", this.selectedApartment);
+				alert("Apartment " + this.selectedApartment.id + " edited!");
+				
+				axios
+				.get("/Project/rest/apartments/getApartmentsByUsername", {params : {username : user.username}})
+				.then(response => {
+					this.myApartments = response.data;
+					for(var i = 0; i < response.data.length; i++){
+						if(response.data[i].status === "ACTIVE")
+							this.activeApartments.push(response.data[i]);
+						else
+							this.inactiveApartments.push(response.data[i]);
+					}
+				});
+				this.label = "";
+			}
 		},
 		deleteApartment : function(){
 			if(this.selectedApartment.id == undefined)
@@ -540,6 +661,7 @@ Vue.component("host", {
 				alert("An apartment needs to be selected!");
 				event.stopPropagation();
 			}
+			this.label = "";
 		},
 		sortApartments: function(sort){
     		var n = this.activeApartments.length;
@@ -584,6 +706,7 @@ Vue.component("host", {
     	}
 	},
 	mounted(){
+		this.newApartment.status = "INACTIVE";
 		this.minDate = moment().format("YYYY-MM-DD");
 		
 		axios
