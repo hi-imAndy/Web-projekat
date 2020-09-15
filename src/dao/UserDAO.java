@@ -249,26 +249,108 @@ public class UserDAO {
 	
 	public String cancelReservation(Reservation reservation) {
 		
-		try {
-			
-			ArrayList<Reservation> reservations = users.get(reservation.getGuest().getUsername()).getReservations();
-			ArrayList<Reservation> retVal =new ArrayList<Reservation>();
-			
-			for(Reservation res : reservations) {
-				if(!res.getStartDateString().equalsIgnoreCase(reservation.getStartDateString())) {
-					retVal.add(res);
+		
+		if(reservation.getReservationStatus() == ReservationStatus.ACCEPTED || reservation.getReservationStatus() == ReservationStatus.CREATED) {
+			try {
+				
+				ArrayList<Reservation> reservations = users.get(reservation.getGuest().getUsername()).getReservations();
+				
+				for(Reservation res : reservations) {
+					if(res.getStartDateString().equalsIgnoreCase(reservation.getStartDateString())) {
+						res.setReservationStatus(ReservationStatus.DECLINED);
+					}
 				}
+				
+				users.get(reservation.getGuest().getUsername()).setReservations(reservations);
+				saveAllUsers();
+				
+				return "STATUS 200 OK";
 			}
-			
-			users.get(reservation.getGuest().getUsername()).setReservations(retVal);
-			saveAllUsers();
-			
-			return "200 OK";
+			catch (Exception e) {
+				return "STATUS 400 BAD REQUEST";
+			}
 		}
-		catch (Exception e) {
-			return "400 BAD REQUEST";
-		}
+		else
+			return "STATUS 403 FORBIDDEN";
 		
 	}
+
+	public String sortReservationsAsc(User user) {
+		try {
+				ArrayList<Reservation> reservations = user.getReservations();
+		
+				Reservation[] pV = new Reservation[reservations.size()];
+				
+				for(int i = 0 ; i < reservations.size() ; i++) {
+					pV[i] = reservations.get(i);
+				}
+				
+				
+			
+				int n = reservations.size();
+				ArrayList<Reservation> sortedApartments = new ArrayList<Reservation>();
+				
+				for(int i = 0; i < n; i++) {
+			        for(int j = i + 1; j < n; j++){
+		    	            if(pV[i].getReservedApartment().getPricePerNight() > pV[j].getReservedApartment().getPricePerNight()) {
+		    	                Reservation t = pV[i];
+		    	                pV[i] = pV[j];
+		    	                pV[j] = t;    	          
+			        	}
+			        }
+				}
+				
+				for(int i = 0 ; i <  pV.length ; i++) {
+					sortedApartments.add(pV[i]);
+					System.out.println(i+"."+pV[i].getReservedApartment().getPricePerNight());
+				}
+				users.get(user.getUsername()).setReservations(sortedApartments);
+				
+				return "STATUS 200 OK";
+		}
+		catch (Exception e) {
+			return "STATUS 400 BAD REQUEST";
+		}
+	}
+	
+	public String sortReservationsDesc(User user) {
+			try {
+			
+			
+			ArrayList<Reservation> reservations = user.getReservations();
+	
+			Reservation[] pV = new Reservation[reservations.size()];
+			
+			for(int i = 0 ; i < reservations.size() ; i++) {
+				pV[i] = reservations.get(i);
+			}
+			
+			
+		
+			int n = reservations.size();
+			ArrayList<Reservation> sortedApartments = new ArrayList<Reservation>();
+			
+			for(int i = 0; i < n; i++) {
+		        for(int j = i + 1; j < n; j++){
+		        		if(pV[i].getReservedApartment().getPricePerNight() < pV[j].getReservedApartment().getPricePerNight()) {
+	    	                Reservation t = pV[i];
+	    	                pV[i] = pV[j];
+	    	                pV[j] = t;	    	
+		        	}
+		        }
+			}
+			
+			for(int i = 0 ; i <  pV.length ; i++) {
+				sortedApartments.add(pV[i]);
+				System.out.println(i+"."+pV[i].getReservedApartment().getPricePerNight());
+			}
+			users.get(user.getUsername()).setReservations(sortedApartments);
+			
+			return "STATUS 200 OK";
+		}
+			catch (Exception e) {
+				return "STATUS 400 BAD REQUEST";
+			}
+}
 
 }

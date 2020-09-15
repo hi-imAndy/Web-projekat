@@ -8,7 +8,7 @@ Vue.component("guest", {
 			reservationInfo:{},
 			successFlag : {},
 			selectedReservation : {},
-			reservationComment: {}
+			reservationComment: {},
 		    }
 	},
 	template: ` 
@@ -44,11 +44,11 @@ Vue.component("guest", {
 								<input type = "number" placeholder = "maximal number of rooms" value="1" min="1" max="25" step="1" class = "form-control" v-model = "searchCriteria.numberOfRoomsMax">
 				</div>
 			</div>
-				<button type = "button" class="btn btn-primary" v-on:click="filterApartments(searchCriteria)">Filter appartments</button>
-				<button type = "button" class="btn btn-primary" v-on:click="resetFilters()">Reset filters</button>
+				<button type = "button" class="btn btn-success" v-on:click="filterApartments(searchCriteria)">Filter appartments</button>
+				<button type = "button" class="btn btn-warning" v-on:click="resetFilters()">Reset filters</button>
 		</div>
 		
-		
+
 			<div class="container">
 				<table class="table table-hover">
 				  <div class="row">
@@ -79,6 +79,44 @@ Vue.component("guest", {
 				  </div>
 				</table>
 			</div>
+			
+
+			
+			
+							<div class="row " style="margin-left :40px"  >
+							  		<div class="col-sm" style="margin-left: 10px"> 
+							    	</div>
+								    <div class="col-sm">
+								    </div>
+								    <div class="col-sm">
+										 <button class = "btn btn-outline-info" v-on:click="sortApartments('asc',apartments)">Sort ascending</button>
+								    </div>
+									<div class="col-sm">
+										<button class = "btn btn-outline-info " style="margin-left:20px" v-on:click="sortApartments('desc',apartments)">Sort descending</button>
+								    </div>
+								    <div class="col-sm">
+								    </div>
+									<div class="col-sm">
+								    </div>
+									<div class="col-sm">
+								    </div>
+								    <div class="col-sm">
+								    </div>
+								    <div class="col-sm">
+								    </div>
+								    <div class="col-sm">
+								    </div>
+								    <div class="col-sm">
+								    </div>
+								    <div class="col-sm">
+								    </div>
+											 
+								    <div class="col-sm">
+								    </div>					
+							</div> 
+			
+			
+			
 			
 			
 			
@@ -116,6 +154,43 @@ Vue.component("guest", {
 				  </div>
 				</table>
 			</div>
+			
+			
+			
+			
+							<div class="row " style="margin-left :40px"  >
+							  		<div class="col-sm" style="margin-left: 10px"> 
+							    	</div>
+								    <div class="col-sm">
+								    </div>
+								    <div class="col-sm">
+										 <button class = "btn btn-outline-info" v-on:click="sortReservationsAsc(currentUser)">Sort ascending</button>
+								    </div>
+									<div class="col-sm">
+										<button class = "btn btn-outline-info" style="margin-left:20px" v-on:click="sortReservationsDesc(currentUser)">Sort descending</button>
+								    </div>
+								    <div class="col-sm">
+								    </div>
+									<div class="col-sm">
+								    </div>
+									<div class="col-sm">
+								    </div>
+								    <div class="col-sm">
+								    </div>
+								    <div class="col-sm">
+								    </div>
+								    <div class="col-sm">
+								    </div>
+								    <div class="col-sm">
+								    </div>
+								    <div class="col-sm">
+								    </div>
+											 
+								    <div class="col-sm">
+								    </div>					
+							</div>
+			
+			
 			
 			
 			
@@ -265,6 +340,7 @@ Vue.component("guest", {
 		this.successFlag = null;
 		
 		
+		
 		axios
 			.get("/Project/rest/apartments/getAllApartments")
 			.then(response => {this.apartments = response.data;
@@ -300,6 +376,7 @@ Vue.component("guest", {
 					this.reservationComment.commentText = null;
 					this.reservationComment.rating = null;
 					});
+					$('#reservationInfo').modal('hide')
 				}	
 			else{
 				alert("Comment text and rating can't be empty");
@@ -368,6 +445,7 @@ Vue.component("guest", {
 						    .get("/Project/rest/users/currentUser")
 						    .then(response => {this.currentUser = response.data;
 						   });
+						   $('#apartmentInfo').modal('hide')
 		}
 					else{
 						alert("Selected dates are not available");
@@ -430,8 +508,52 @@ Vue.component("guest", {
 					.get("/Project/rest/users/currentUser")
 					.then(response => {this.currentUser = response.data;
 					});
+				$('#reservationInfo').modal('hide')
 			},
-
+			sortApartments: function(sort,apartments){
+	    		var n = apartments.length;
+	    		var sortedApartments = [n+1];
+	    		
+	    		for(let i = 0; i < n; i++) {
+	    	        for(let j = i + 1; j < n; j++){
+	    	        	if(sort == 'asc'){
+		    	            if(apartments[j].pricePerNight < apartments[i].pricePerNight) {
+		    	                t = this.apartments[i];
+		    	                apartments[i] = apartments[j];
+		    	                apartments[j] = t;
+		    	            }
+	    	        	}else if(sort == 'desc'){
+	    	        		if(this.apartments[j].pricePerNight > apartments[i].pricePerNight) {
+		    	                t = apartments[i];
+		    	                apartments[i] = apartments[j];
+		    	                apartments[j] = t;
+		    	            }
+	    	        	}
+	    	        }
+	    	        sortedApartments[i] = apartments[i];
+	    		}
+	    		this.apartments = sortedApartments;
+    	},
+			sortReservationsAsc: function(user){
+				axios
+					.post("/Project/rest/users/sortReservationsAsc",user)
+					.then(response => { 
+					 axios
+						.get("/Project/rest/users/currentUser")
+						.then(response => {this.currentUser = response.data;
+						});
+					});
+    	},
+			sortReservationsDesc: function(user){
+				axios
+					.post("/Project/rest/users/sortReservationsDesc",user)
+					.then(response => { 
+					 axios
+						.get("/Project/rest/users/currentUser")
+						.then(response => {this.currentUser = response.data;
+						});
+					});
+    	},		
 	},
 
 });

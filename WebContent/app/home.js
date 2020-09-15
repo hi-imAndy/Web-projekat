@@ -4,7 +4,8 @@ var home = new Vue({
 		mode:'',
 		loginInfo:{},
 		currentUser:{},
-		currentUsername:''
+		currentUsername:'',
+		apartments : {}
 	},
 	mounted(){
 		if(localStorage.currentUsername){

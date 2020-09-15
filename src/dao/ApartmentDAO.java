@@ -910,43 +910,47 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 	}
 	
 	public String addComment(Comment comment) {
-		try {
-			apartments.get(comment.getApartment().getId()).getComments().add(comment);	
-			saveAllApartments();
-			
-			return "200 OK";
-		}
-		catch (Exception e) {
-			return "400 BAD REQUEST";
-		}
+			try {
+				apartments.get(comment.getApartment().getId()).getComments().add(comment);	
+				saveAllApartments();
+				
+				return "STATUS 200 OK";
+			}
+			catch (Exception e) {
+				return "STATUS 400 BAD REQUEST";
+			}
 	}
 	
 	public String cancelReservation(Reservation reservation) {
-	
-		try {
-			ArrayList<Reservation> reservations = (ArrayList<Reservation>) apartments.get(reservation.getReservedApartment().getId()).getReservations();
-			ArrayList<Reservation> newReservations = new ArrayList<Reservation>();
-			
-			for(Reservation res : reservations) {
-				if(!res.getStartDateString().equalsIgnoreCase(reservation.getStartDateString())) {
-					newReservations.add(res);
+		if(reservation.getReservationStatus() == ReservationStatus.ACCEPTED || reservation.getReservationStatus() == ReservationStatus.CREATED) {
+			try {
+				ArrayList<Reservation> reservations = (ArrayList<Reservation>) apartments.get(reservation.getReservedApartment().getId()).getReservations();
+				
+				for(Reservation res : reservations) {
+					if(res.getStartDateString().equalsIgnoreCase(reservation.getStartDateString())) {
+						res.setReservationStatus(ReservationStatus.DECLINED);
+					}
 				}
-			}
-			
-			apartments.get(reservation.getReservedApartment().getId()).setAvailableDates(returnDates(reservation.getCheckInDate(),reservation.getNumberOfNights(),apartments.get(reservation.getReservedApartment().getId()).getAvailableDates()));
-			
-			for(Date date : apartments.get(reservation.getReservedApartment().getId()).getAvailableDates()) {
-				apartments.get(reservation.getReservedApartment().getId()).getAvailableDatesString().add(date.getYear()+1900+"-"+date.getMonth()+"-"+date.getDate());
-			}
-			
-			saveAllApartments();
-	
-			return "200 OK";
-		}
-		catch (Exception e) {
-			return "400 BAD REQUEST";
-		}
+				
+				apartments.get(reservation.getReservedApartment().getId()).setReservations(reservations);
+				
+				apartments.get(reservation.getReservedApartment().getId()).setAvailableDates(returnDates(reservation.getCheckInDate(),reservation.getNumberOfNights(),apartments.get(reservation.getReservedApartment().getId()).getAvailableDates()));
+				
+				for(Date date : apartments.get(reservation.getReservedApartment().getId()).getAvailableDates()) {
+					apartments.get(reservation.getReservedApartment().getId()).getAvailableDatesString().add(date.getYear()+1900+"-"+date.getMonth()+"-"+date.getDate());
+				}
+				
+				saveAllApartments();
 		
+				return "STATUS 200 OK";
+			}
+			catch (Exception e) {
+				return "STATUS 403 FORBIDEN";
+			}
+		}
+		else {
+			return "STATUS 403 FORBIDDEN";
+		}
 	}
 	
 	public ArrayList<Date> returnDates(Date startDate ,int numberOfNights, ArrayList<Date> availableDates) {

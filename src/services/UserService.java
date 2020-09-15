@@ -121,12 +121,28 @@ public class UserService {
 	@POST
 	@Path("/cancelReservation")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void bookApartment(Reservation reservation) {
+	public String bookApartment(Reservation reservation) {
 
 		UserDAO dao = (UserDAO) ctx.getAttribute("users");
-		dao.cancelReservation(reservation);
+		return dao.cancelReservation(reservation);
 	}
 	
+	
+	@POST
+	@Path("/sortReservationsAsc")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String sortReservationsAsc(User user) {
+		UserDAO dao = (UserDAO) ctx.getAttribute("users");
+		return dao.sortReservationsAsc(user);
+	}
+	
+	@POST
+	@Path("/sortReservationsDesc")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String sortReservationsDesc(User user) {
+		UserDAO dao = (UserDAO) ctx.getAttribute("users");
+		return dao.sortReservationsDesc(user);
+	}
 	
 }
 	
