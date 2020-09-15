@@ -17,7 +17,9 @@ Vue.component("admin", {
 				selectedDate: {},
 				allCities:{},
 				filter:{},
-				filterAmenities:[]
+				filterAmenities:[],
+				allReservations:{},
+				selectedStatus:{}
 		    }
 	},
 	template: ` 
@@ -74,6 +76,7 @@ Vue.component("admin", {
 							      <th scope="col">Host</th>
 							      <th scope="col">Location</th>
 							      <th scope="col">Address</th>
+							      <th scope="col"><button class="btn btn-outline-success" v-on:click="viewComments"  data-toggle="modal" data-target="#commentsModal">Comments</button></th>
 							    </tr>
 							  </thead>
 							  <tbody>
@@ -160,7 +163,7 @@ Vue.component("admin", {
 			</div>
 		</div>
 		<div class = "row justify-content-center" style="margin-top: 20px;">
-			<div class = "col-md-auto"><h2>List of all amenities</h2></div>
+			<div class = "col-md-auto"><h2>All amenities</h2></div>
 		</div>
 		<div class = "row justify-content-center" style="margin-top: 10px;">
 			<div class = "col-md-auto">
@@ -202,7 +205,55 @@ Vue.component("admin", {
 					<div class = "col-md-auto"><button class="btn btn-secondary" v-on:click="cancelCreate" >Cancel</button></div>
 				</div>
 			</div>
+		</div></br>
+		
+		<div class = "row" style="margin-left:100px">
+				<div class = "col"><h3> All reservations: </h3></div> 
 		</div>
+		
+		<div class = "row" style="margin-left:200px">
+					<div class="col-md-auto">
+						<table class="table table-image table-hover">
+								  <thead>
+								    <tr>
+								      <th scope="col">
+								      	<button class = "btn btn-outline-info" v-on:click="sortReservations('asc')">Sort(a)</button>
+								      	<button class = "btn btn-outline-info" style="margin-left:20px" v-on:click="sortReservations('desc')">Sort(d)</button>
+								      </th>
+								      <th scope="col">ID</th>
+								      <th scope="col">Ap status</th>
+								      <th scope="col">Type</th>
+								      <th scope="col">Host</th>
+								      <th scope="col">Res status</th>
+								      <th scope="col">Start</th>
+								      <th scope="col">End</th>
+								    </tr>
+								  </thead>
+								  <tbody>
+										<tr v-for="r in allReservations" v-on:click="selectReservation(r)">
+											<td v-if="r.reservedApartment != null"><img v-bind:src="r.reservedApartment.pictures[0]" class="img-fluid img-thumbnail " width="250" height="100"></td>
+											<td v-if="r.reservedApartment != null">{{r.reservedApartment.id }}</td>
+											<td v-if="r.reservedApartment != null">{{r.reservedApartment.status}}</td>
+											<td v-if="r.reservedApartment != null">{{r.reservedApartment.apartmentType}}</td>
+											<td v-if="r.reservedApartment != null">{{r.reservedApartment.user.firstName + " " + r.reservedApartment.user.lastName }}</td>
+											<td v-if="r.reservedApartment != null">{{r.reservationStatus}}</td>
+											<td>{{r.startDateString}}</td>
+											<td>{{r.endDateString}}</td>
+										</tr>
+								  </tbody>
+						</table>
+					</div>
+					<div class = "col-2">
+						<select class = "browser-default custom-select" v-on:change="filterReservations" v-model="selectedStatus">
+							<option disabled selected value> -- select status -- </option>
+							<option value="CREATED">CREATED</option>
+							<option value="REJECTED">REJECTED</option>
+							<option value="DECLINED">DECLINED</option>
+							<option value="ACCEPTED">ACCEPTED</option>
+							<option value="FINISHED">FINISHED</option>
+						</select>
+					</div>
+				</div>
 		
 		<form action = "" class = "main-form needs-validation" novalidate>
 				<div id="editModal" class="modal fade"> 
@@ -344,6 +395,46 @@ Vue.component("admin", {
 			</div>
 			</div>
 		</form>
+		
+		<form action = "" class = "main-form needs-validation" novalidate>
+				<div id="commentsModal" class="modal fade"> 
+					<div class = "modal-dialog modal-dialog-centered">
+						<div class = "modal-content">
+							<div class = "modal-header">
+								<h4 class = "modal-title" style="margin-left:120px">Comments on {{selectedApartment.id}}</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span>&times</span>
+								</button>
+							</div>
+							<div class = "modal-body">
+								<div class = "container">
+									<div class = "row justify-content-md-center">
+										<div class = "col-md-auto">
+											<table class="table table-hover">
+												<thead>	
+													<tr>
+														<th>Author:</th>
+														<th>Comment:</th>
+														<th>Approved:</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr v-for="c in selectedApartment.comments" v-on:click="selectComment(c)">
+														<td>{{c.author.firstName + " " + c.author.lastName}}</td>
+														<td><textarea readonly>{{c.content}}</textarea></td>
+														<td>{{c.approved}}</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+		</form>
+		
 	</div>
 	`,
 	mounted(){
@@ -367,6 +458,18 @@ Vue.component("admin", {
 	watch : {
 		 filterAmenities(newAmenities){
 		    	this.filter.amenities = newAmenities;
+		    },
+		 apartments(newApartments){
+		    	this.allReservations = [];
+		    	var len = 0;
+		    	for(var i = 0; i < newApartments.length; i++){
+		    		if(newApartments[i].reservations != null){
+		    			for(var j = 0; j < newApartments[i].reservations.length; j++){
+		    				this.allReservations[len] = newApartments[i].reservations[j];
+		    				len++;
+		    			}
+		    		}
+		    	}
 		    }
 	},
 	methods : {
@@ -589,6 +692,58 @@ Vue.component("admin", {
     				this.apartments = response.data;
     			}
     		})
+    	},
+    	selectReservation : function(reservation){
+    		this.selectedReservation = reservation;
+    	},
+    	filterReservations : function(){
+    		this.allReservations = [];
+	    	var len = 0;
+	    	for(var i = 0; i < this.apartments.length; i++){
+	    		if(this.apartments[i].reservations != null){
+	    			for(var j = 0; j < this.apartments[i].reservations.length; j++){
+	    				this.allReservations[len] = this.apartments[i].reservations[j];
+	    				len++;
+	    			}
+	    		}
+	    	}
+	    	var newReservations = [];
+	    	for(var i = 0; i < this.allReservations.length; i++){
+	    		if(this.allReservations[i].reservationStatus == this.selectedStatus)
+	    			newReservations.push(this.allReservations[i]);
+	    	}
+	    	this.allReservations = newReservations;
+    	},
+    	sortReservations : function(sort){
+    		var n = this.allReservations.length;
+    		var sortedReservations = [n+1];
+    		
+    		for(let i = 0; i < n; i++) {
+    	        for(let j = i + 1; j < n; j++){
+    	        	if(sort == 'asc'){
+	    	            if(this.allReservations[j].fullPrice < this.allReservations[i].fullPrice) {
+	    	                t = this.allReservations[i];
+	    	                this.allReservations[i] = this.allReservations[j];
+	    	                this.allReservations[j] = t;
+	    	            }
+    	        	}else if(sort == 'desc'){
+    	        		if(this.allReservations[j].fullPrice > this.allReservations[i].fullPrice) {
+	    	                t = this.allReservations[i];
+	    	                this.allReservations[i] = this.allReservations[j];
+	    	                this.allReservations[j] = t;
+	    	            }
+    	        	}
+    	        }
+    	        sortedReservations[i] = this.allReservations[i];
+    		}
+    		this.allReservations = sortedReservations;
+    	},
+    	viewComments : function(){
+    		if(this.selectedApartment.id == undefined){
+				alert("An apartment needs to be selected!");
+				event.stopPropagation();
+			}
     	}
+    	
 	}
 });

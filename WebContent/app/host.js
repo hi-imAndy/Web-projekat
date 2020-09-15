@@ -22,7 +22,8 @@ Vue.component("host", {
 		      selectedComment:{},
 		      myReservations:[],
 		      selectedReservation:{},
-		      labelForReservation: ""
+		      labelForReservation: "",
+		      selectedStatus:{}
 		    }
 	},
 	template: ` 
@@ -145,11 +146,14 @@ Vue.component("host", {
 						<table class="table table-image table-hover">
 								  <thead>
 								    <tr>
-								      <th scope="col"></th>
+								      <th scope="col">
+								      	 <button class = "btn btn-outline-info" v-on:click="sortReservations('asc')">Sort(a)</button>
+								      	 <button class = "btn btn-outline-info" style="margin-left:20px" v-on:click="sortReservations('desc')">Sort(d)</button>
+								      </th>
 								      <th scope="col">ID</th>
 								      <th scope="col">Ap status</th>
 								      <th scope="col">Type</th>
-								      <th scope="col">Host</th>
+								      <th scope="col">Full price</th>
 								      <th scope="col">Res status</th>
 								      <th scope="col">Start</th>
 								      <th scope="col">End</th>
@@ -161,13 +165,23 @@ Vue.component("host", {
 											<td v-if="r.reservedApartment != null">{{r.reservedApartment.id }}</td>
 											<td v-if="r.reservedApartment != null">{{r.reservedApartment.status}}</td>
 											<td v-if="r.reservedApartment != null">{{r.reservedApartment.apartmentType}}</td>
-											<td v-if="r.reservedApartment != null">{{r.reservedApartment.user.firstName + " " + r.reservedApartment.user.lastName }}</td>
+											<td v-if="r.reservedApartment != null">{{r.fullPrice }}</td>
 											<td v-if="r.reservedApartment != null">{{r.reservationStatus}}</td>
 											<td>{{r.startDateString}}</td>
 											<td>{{r.endDateString}}</td>
 										</tr>
 								  </tbody>
 						</table>
+					</div>
+					<div class="col">
+						<select class = "browser-default custom-select" v-on:change="filterReservations" v-model="selectedStatus">
+							<option disabled selected value> -- select status -- </option>
+							<option value="CREATED">CREATED</option>
+							<option value="REJECTED">REJECTED</option>
+							<option value="DECLINED">DECLINED</option>
+							<option value="ACCEPTED">ACCEPTED</option>
+							<option value="FINISHED">FINISHED</option>
+						</select>
 					</div>
 				</div>
 			</div>
@@ -826,9 +840,6 @@ Vue.component("host", {
 				alert("An apartment needs to be selected!");
 				event.stopPropagation();
 			}
-    		else{
-    			
-    		}
     	},
     	selectComment : function(comment){
     		this.selectedComment = comment;
@@ -907,6 +918,48 @@ Vue.component("host", {
     			this.labelForReservation = "Reservation mustn't have status: REJECTED";
     		}
     		
+    	},
+    	filterReservations : function(){
+    		this.myReservations = [];
+	    	var len = 0;
+	    	for(var i = 0; i < this.myApartments.length; i++){
+	    		if(this.myApartments[i].reservations != null){
+	    			for(var j = 0; j < this.myApartments[i].reservations.length; j++){
+	    				this.myReservations[len] = this.myApartments[i].reservations[j];
+	    				len++;
+	    			}
+	    		}
+	    	}
+	    	var newReservations = [];
+	    	for(var i = 0; i < this.myReservations.length; i++){
+	    		if(this.myReservations[i].reservationStatus == this.selectedStatus)
+	    			newReservations.push(this.myReservations[i]);
+	    	}
+	    	this.myReservations = newReservations;
+    	},
+    	sortReservations : function(sort){
+    		var n = this.myReservations.length;
+    		var sortedReservations = [n+1];
+    		
+    		for(let i = 0; i < n; i++) {
+    	        for(let j = i + 1; j < n; j++){
+    	        	if(sort == 'asc'){
+	    	            if(this.myReservations[j].fullPrice < this.myReservations[i].fullPrice) {
+	    	                t = this.myReservations[i];
+	    	                this.myReservations[i] = this.myReservations[j];
+	    	                this.myReservations[j] = t;
+	    	            }
+    	        	}else if(sort == 'desc'){
+    	        		if(this.myReservations[j].fullPrice > this.myReservations[i].fullPrice) {
+	    	                t = this.myReservations[i];
+	    	                this.myReservations[i] = this.myReservations[j];
+	    	                this.myReservations[j] = t;
+	    	            }
+    	        	}
+    	        }
+    	        sortedReservations[i] = this.myReservations[i];
+    		}
+    		this.myReservations = sortedReservations;
     	}
 	},
 	mounted(){
