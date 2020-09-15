@@ -55,6 +55,30 @@ public class UserService {
 		return "ERROR";
 	}
 	
+	@POST
+	@Path("/acceptReservation")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void acceptReservation(Reservation reservation) {
+		UserDAO dao = (UserDAO) ctx.getAttribute("users");
+		dao.acceptReservation(reservation);
+	}
+	
+	@POST
+	@Path("/rejectReservation")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void rejectReservation(Reservation reservation) {
+		UserDAO dao = (UserDAO) ctx.getAttribute("users");
+		dao.rejectReservation(reservation);
+	}
+	
+	@POST
+	@Path("/finishReservation")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void finishReservation(Reservation reservation) {
+		UserDAO dao = (UserDAO) ctx.getAttribute("users");
+		dao.finishReservation(reservation);
+	}
+	
 	@GET
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)

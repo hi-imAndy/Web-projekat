@@ -137,6 +137,60 @@ public class UserDAO {
 		}
 	}
 	
+	public void acceptReservation(Reservation reservation) {
+		for(User user : users.values()) {
+			if(user.getReservations() == null) {
+				continue;
+			}
+			for(Reservation r : user.getReservations()) {
+				if(r == null || r.getReservedApartment() == null) {
+					continue;
+				}
+				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getStartDateString().equals(reservation.getStartDateString()) && r.getEndDateString().equals(reservation.getEndDateString())) {
+					r.setReservationStatus(ReservationStatus.ACCEPTED);
+					break;
+				}
+			}
+		}
+		saveAllUsers();
+	}
+	
+	public void rejectReservation(Reservation reservation) {
+		for(User user : users.values()) {
+			if(user.getReservations() == null) {
+				continue;
+			}
+			for(Reservation r : user.getReservations()) {
+				if(r == null || r.getReservedApartment() == null) {
+					continue;
+				}
+				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getStartDateString().equals(reservation.getStartDateString()) && r.getEndDateString().equals(reservation.getEndDateString())) {
+					r.setReservationStatus(ReservationStatus.REJECTED);
+					break;
+				}
+			}
+		}
+		saveAllUsers();
+	}
+	
+	public void finishReservation(Reservation reservation) {
+		for(User user : users.values()) {
+			if(user.getReservations() == null) {
+				continue;
+			}
+			for(Reservation r : user.getReservations()) {
+				if(r == null || r.getReservedApartment() == null) {
+					continue;
+				}
+				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getStartDateString().equals(reservation.getStartDateString()) && r.getEndDateString().equals(reservation.getEndDateString())) {
+					r.setReservationStatus(ReservationStatus.FINISHED);
+					break;
+				}
+			}
+		}
+		saveAllUsers();
+	}
+	
 	public void updateUser(User user , String username) {
 		users.replace(username, user);
 		saveAllUsers();

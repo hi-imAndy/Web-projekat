@@ -107,6 +107,30 @@ public class ApartmentService {
 		dao.approveComment(comment);
 	}
 	
+	@POST
+	@Path("/acceptReservation")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void acceptReservation(Reservation reservation) {
+		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
+		dao.acceptReservation(reservation);
+	}
+	
+	@POST
+	@Path("/rejectReservation")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void rejectReservation(Reservation reservation) {
+		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
+		dao.rejectReservation(reservation);
+	}
+	
+	@POST
+	@Path("/finishReservation")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void finishReservation(Reservation reservation) {
+		ApartmentDAO dao = (ApartmentDAO) ctx.getAttribute("apartments");
+		dao.finishReservation(reservation);
+	}
+	
 	@GET
 	@Path("/filterApartments")
 	@Produces(MediaType.APPLICATION_JSON)

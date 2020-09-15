@@ -55,6 +55,50 @@ public class ApartmentDAO {
 		return true;
 	}
 	
+	public void acceptReservation(Reservation reservation) {
+		for(Apartment ap : apartments.values()) {
+			for(Reservation r : ap.getReservations()) {
+				if(r.getReservedApartment() == null) {
+					break;
+				}
+				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getStartDateString().equals(reservation.getStartDateString()) && r.getEndDateString().equals(reservation.getEndDateString())){
+					r.setReservationStatus(ReservationStatus.ACCEPTED);
+					break;
+				}
+			}
+		}
+		saveAllApartments();
+	}
+	
+	public void rejectReservation(Reservation reservation) {
+		for(Apartment ap : apartments.values()) {
+			for(Reservation r : ap.getReservations()) {
+				if(r.getReservedApartment() == null) {
+					break;
+				}
+				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getStartDateString().equals(reservation.getStartDateString()) && r.getEndDateString().equals(reservation.getEndDateString())){
+					r.setReservationStatus(ReservationStatus.REJECTED);
+					break;
+				}
+			}
+		}
+		saveAllApartments();
+	}
+	
+	public void finishReservation(Reservation reservation) {
+		for(Apartment ap : apartments.values()) {
+			for(Reservation r : ap.getReservations()) {
+				if(r.getReservedApartment() == null) {
+					break;
+				}
+				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getStartDateString().equals(reservation.getStartDateString()) && r.getEndDateString().equals(reservation.getEndDateString())){
+					r.setReservationStatus(ReservationStatus.FINISHED);
+					break;
+				}
+			}
+		}
+		saveAllApartments();
+	}
 	
 	private void saveApartment(Apartment ap) {
 		
