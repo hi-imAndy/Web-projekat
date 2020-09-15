@@ -113,8 +113,13 @@ public class Reservation {
 	public void setEndDateString(String endDateString) {
 		this.endDateString = endDateString;
 	}
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return "Reservation [reservedApartment=" + reservedApartment + ", checkInDate=" + checkInDate + ", endDate="
+				+ endDate + ", numberOfNights=" + numberOfNights + ", fullPrice=" + fullPrice + ", reservationMessage="
+				+ reservationMessage + ", guest=" + guest + ", reservationStatus=" + reservationStatus
+				+ ", startDateString=" + startDateString + ", endDateString=" + endDateString + "]";
+	}
 	
 }

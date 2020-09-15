@@ -19,7 +19,10 @@ Vue.component("host", {
 		      filterAmenities:[],
 		      filter:{},
 		      label : "",
-		      selectedComment:{}
+		      selectedComment:{},
+		      myReservations:[],
+		      selectedReservation:{},
+		      labelForReservation: ""
 		    }
 	},
 	template: ` 
@@ -144,32 +147,62 @@ Vue.component("host", {
 								    <tr>
 								      <th scope="col"></th>
 								      <th scope="col">ID</th>
-								      <th scope="col">Status</th>
+								      <th scope="col">Ap status</th>
 								      <th scope="col">Type</th>
-								      <th scope="col">Rooms</th>
-								      <th scope="col">Price</th>
 								      <th scope="col">Host</th>
-								      <th scope="col">Location</th>
-								      <th scope="col">Address</th>
+								      <th scope="col">Res status</th>
+								      <th scope="col">Start</th>
+								      <th scope="col">End</th>
 								    </tr>
 								  </thead>
 								  <tbody>
-										<tr v-for="r in myApartments.reservations">
-											<td><img v-bind:src="r.reservedApartment.pictures[0]" class="img-fluid img-thumbnail " width="250" height="100"></td>
-											<td>{{r.reservedApartment.id }}</td>
-											<td>{{r.reservedApartment.status}}</td>
-											<td>{{r.reservedApartment.apartmentType}}</td>
-											<td>{{r.reservedApartment.numberOfRooms}}</td>
-											<td>{{r.reservedApartment.pricePerNight + " RSD"}}</td>
-											<td>{{r.reservedApartment.user.firstName + " " + r.reservedApartment.user.lastName }}</td>
-											<td>{{r.reservedApartment.location.address.city.name}}</td>
-											<td>{{r.reservedApartment.location.address.street}} {{r.reservedApartment.location.address.number}}</td>
-										 </tr>
+										<tr v-for="r in myReservations" v-on:click="selectReservation(r)" data-toggle="modal" data-target="#reservationInfo">
+											<td v-if="r.reservedApartment != null"><img v-bind:src="r.reservedApartment.pictures[0]" class="img-fluid img-thumbnail " width="250" height="100"></td>
+											<td v-if="r.reservedApartment != null">{{r.reservedApartment.id }}</td>
+											<td v-if="r.reservedApartment != null">{{r.reservedApartment.status}}</td>
+											<td v-if="r.reservedApartment != null">{{r.reservedApartment.apartmentType}}</td>
+											<td v-if="r.reservedApartment != null">{{r.reservedApartment.user.firstName + " " + r.reservedApartment.user.lastName }}</td>
+											<td v-if="r.reservedApartment != null">{{r.reservationStatus}}</td>
+											<td>{{r.startDateString}}</td>
+											<td>{{r.endDateString}}</td>
+										</tr>
 								  </tbody>
 						</table>
 					</div>
 				</div>
 			</div>
+			
+			<div id="reservationInfo" class="modal fade"  role="dialog">
+				  <div class="modal-dialog modal-dialog-centered" role="document">
+						    <div class="modal-content">
+								      <div class="modal-header">
+										        <h5 class="modal-title" style="margin-left:120px" v-if="selectedReservation.reservedApartment != null">{{selectedReservation.reservedApartment.id}} reservation options</h5>
+										        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										       		   <span aria-hidden="true">&times;</span>
+										        </button>
+								      </div>
+								      <div class="modal-body">									        
+											<div class = "container">
+												<div class = "row">
+													<div class = "col-md-auto" v-if="selectedReservation.reservedApartment != null">{{selectedReservation.reservedApartment.id}}:</div>
+													<div class = "col-md-auto"><b>{{selectedReservation.reservationStatus}}</b></div>
+													<div class = "col-md-auto" style="margin-left:40px">Period:  {{selectedReservation.startDateString}}  :  {{selectedReservation.endDateString}}</div>
+												</div></br>
+												<div class = "row">
+													<div class="col"><label style="color:red">{{labelForReservation}}</label></div>
+												</div>
+									  </div>
+									  <div class="modal-footer">
+												<div class = "row ">
+													<div class = "col"><button class="btn btn-success" v-on:click="accept">Accept</button></div>
+													<div class = "col"><button class="btn btn-danger" v-on:click="reject">Reject</button></div>
+													<div class = "col"><button class="btn btn-info" v-on:click="finish">Finished</button></div>
+												</div>
+									  </div>
+						    </div>
+			       </div>
+		     </div>
+			</div>	
 			
 			<form action = "" class = "main-form needs-validation" novalidate>
 				<div id="createModal" class="modal fade"> 
@@ -821,7 +854,59 @@ Vue.component("host", {
     						this.inactiveApartments.push(response.data[i]);
     				}
     			});
+    			
+    			event.stopPropagation();
     		}
+    	},
+    	selectReservation : function(reservation){
+    		this.selectedReservation = reservation;
+    	},
+    	accept : function(){
+    		this.labelForReservation = "";
+    		if(this.selectedReservation.reservationStatus == "CREATED"){
+    			
+    			axios
+    			.post("/Project/rest/apartments/acceptReservation", this.selectedReservation);
+    			
+    			axios
+    			.post("/Project/rest/users/acceptReservation", this.selectedReservation);
+    			
+    			this.selectedReservation.reservationStatus = "ACCEPTED";
+    			
+    		}else{
+    			this.labelForReservation = "Reservation must have status: CREATED.";
+    		}
+    	},
+    	reject : function(){
+    		this.labelForReservation = "";
+    		if(this.selectedReservation.reservationStatus == "CREATED" || this.selectedReservation.reservationStatus == "ACCEPTED"){
+    			
+    			axios
+    			.post("/Project/rest/apartments/rejectReservation", this.selectedReservation);
+    			
+    			axios
+    			.post("/Project/rest/users/rejectReservation", this.selectedReservation);
+    			
+    			this.selectedReservation.reservationStatus = "REJECTED";
+    			
+    		}else{
+    			this.labelForReservation = "Reservation must have status: CREATED of ACCEPTED.";
+    		}
+    	},
+    	finish : function(){
+    		this.labelForReservation = "";
+    		if(this.selectedReservation.reservationStatus != "REJECTED"){
+    			axios
+    			.post("/Project/rest/apartments/finishReservation", this.selectedReservation);
+    			
+    			axios
+    			.post("/Project/rest/users/finishReservation", this.selectedReservation);
+    			
+    			this.selectedReservation.reservationStatus = "FINISHED";
+    		}else{
+    			this.labelForReservation = "Reservation mustn't have status: REJECTED";
+    		}
+    		
     	}
 	},
 	mounted(){
@@ -839,6 +924,7 @@ Vue.component("host", {
 		axios
 		.get("/Project/rest/cities/getAllCities")
 		.then(response => (this.allCities = response.data));
+		
 	},
 	watch: {
 		currentUser(user) {
@@ -851,6 +937,17 @@ Vue.component("host", {
 						this.activeApartments.push(response.data[i]);
 					else
 						this.inactiveApartments.push(response.data[i]);
+				}
+				
+				this.myReservations = [];
+				var len = 0;
+				for(var i = 0; i < response.data.length; i++){
+					for(var j = 0; j < response.data[i].reservations.length; j++){
+						if(response.data[i].reservations[j] != null && response.data[i].reservations[j] != []){
+							this.myReservations[len] = (response.data[i].reservations[j]);
+							len++;
+						}
+					}
 				}
 			});
 	    },
