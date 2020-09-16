@@ -9,14 +9,14 @@ Vue.component("guest", {
 			successFlag : {},
 			selectedReservation : {},
 			reservationComment: {},
+			filter : {},
+			amenities : {},
+			filterAmenities:[],
 		    }
 	},
 	template: ` 
 	<div>
-			
-			
-
-			
+		
 			
 		<div class="container" style="margin-top:40px">
 			<div class="row">
@@ -48,6 +48,36 @@ Vue.component("guest", {
 				<button type = "button" class="btn btn-warning" v-on:click="resetFilters()">Reset filters</button>
 		</div>
 		
+
+
+		<div class="container">
+			<div class = "row" style = "margin-top: 15px">
+				<div class = "col-1" style="margin-top:30px"><button class="btn btn-outline-secondary" v-on:click="filterApartments">Filter:</button></div>
+				<div class = "col-2" style="margin-top:30px">
+					<select  class="browser-default custom-select" v-model="filter.type">
+						<option disabled selected value> -- select type -- </option>
+						<option value= "ENTIRE_APARTMENT">Entire apartment</option>
+						<option value= "ROOM">Room</option>
+					</select>
+					
+				</div>
+				<div class = "col-2">
+					<select  class="browser-default custom-select" v-model="filter.status" style = "margin-top:30px">
+						<option disabled selected value> -- select status -- </option>
+						<option value= "ACTIVE">Active</option>
+						<option value = "INACTIVE">Inactive</option>
+					</select>
+				</div>
+				<div class = "col=3">
+					<select class="browser-default custom-select" multiple v-model="filterAmenities">
+						<option v-for="am in amenities" v-bind:value="am">{{am.name}}</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+
+
 
 			<div class="container">
 				<table class="table table-hover">
@@ -339,6 +369,9 @@ Vue.component("guest", {
 		this.reservationInfo.numberOfNights = null;
 		this.successFlag = null;
 		
+		axios
+			.get("/Project/rest/amenities/getAllAmenities")
+			.then(response => (this.amenities = response.data));
 		
 		
 		axios
@@ -359,6 +392,7 @@ Vue.component("guest", {
 			this.reservationInfo.startDate = this.searchCriteria.startDate;
 			this.reservationInfo.endDate = this.searchCriteria.endDate;
 			this.reservationInfo.reservationMessage = null;
+			
 			
 			
 },
@@ -553,7 +587,24 @@ Vue.component("guest", {
 						.then(response => {this.currentUser = response.data;
 						});
 					});
-    	},		
+    	},	
+    	filterApartments : function(){
+    		axios
+    		.post("/Project/rest/apartments/filterHost", this.filter)
+    		.then(response => {
+    			if(response.data != null){
+    				this.myApartments = response.data;
+    				this.activeApartments = [];
+    				this.inactiveApartments = [];
+    				for(var i = 0; i < response.data.length; i++){
+    					if(response.data[i].status === "ACTIVE")
+    						this.activeApartments.push(response.data[i]);
+    					else
+    						this.inactiveApartments.push(response.data[i]);
+    				}
+    			}
+    		})
+    	},	
 	},
 
 });

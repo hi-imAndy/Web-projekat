@@ -356,7 +356,6 @@ public class UserDAO {
 				
 				for(int i = 0 ; i <  pV.length ; i++) {
 					sortedApartments.add(pV[i]);
-					System.out.println(i+"."+pV[i].getReservedApartment().getPricePerNight());
 				}
 				users.get(user.getUsername()).setReservations(sortedApartments);
 				
@@ -396,7 +395,7 @@ public class UserDAO {
 			
 			for(int i = 0 ; i <  pV.length ; i++) {
 				sortedApartments.add(pV[i]);
-				System.out.println(i+"."+pV[i].getReservedApartment().getPricePerNight());
+				
 			}
 			users.get(user.getUsername()).setReservations(sortedApartments);
 			

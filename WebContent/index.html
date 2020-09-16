@@ -35,7 +35,7 @@
 			<router-view></router-view>
 </div>
 	
-<form action = "" class = "main-form needs-validation" novaidate  >
+<form action = "" class = "main-form "   >
 		<div id="loginModal" class="modal fade"> 
 			<div class = "modal-dialog modal-dialog-centered">
 				<div class = "modal-content">
@@ -56,16 +56,18 @@
 					</div>
 					<div class = "modal-body">
 						<div class="container">
-							<div class="row justify-content-md-center">
-								<div class="col-md-auto">
-									<input class = "form-control" type = "text" placeholder = "Username" v-model="loginInfo.username" required="required"/>
-									<div class = "invalid-feedback">This field can't be empty.</div></br>				
+							<div class="form-group row justify-content-md-center">
+							
+								<div class="col-md-auto">			
+									<input id = "loginUsername" class = "form-control" type = "text" placeholder = "Username" v-model="loginInfo.username" />
+									<label style="color:red">{{labelUsernameLogin}}</label>
+					
 								</div>
 							</div>
 							<div class="row justify-content-md-center">
 								<div class="col-md-auto">
-									<input class = "form-control" type = "password" placeholder = "Password " v-model="loginInfo.password" required="required" pattern=".{8,}"  title="8 characters minimum" />
-									<div class = "invalid-feedback">This field can't be empty.</div></br>								
+									<input class = "form-control" type = "password" placeholder = "Password " v-model="loginInfo.password"  />
+									<label style="color:red">{{labelPasswordLogin}}</label>								
 								</div>
 							</div>
 							<div class="row justify-content-md-center">

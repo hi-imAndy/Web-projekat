@@ -76,13 +76,27 @@ var login = new Vue({
 	data:{
 		loginInfo:{},
 		logedUser : {},
+		labelUsernameLogin : '',
+		labelPasswordLogin : '',
 	},
 	mounted () {
 		this.loginInfo.username = '';
+		this.loginInfo.password = '';
 		this.logedUser = {};
     },
 	methods:{
-		login : function(loginInfo){				
+		login : function(loginInfo){
+			if(this.loginInfo.username == '' && this.loginInfo.password != ''){
+				this.labelUsernameLogin = "Username can't be empty";
+			}
+			else if(this.loginInfo.password == '' && this.loginInfo.username != '' ){
+				this.labelPasswordLogin = "Password can't be empty";
+			}
+			else if(this.loginInfo.password == '' && this.loginInfo.username == '' ){
+				this.labelUsernameLogin = "Username can't be empty";
+				this.labelPasswordLogin = "Password can't be empty";
+			}
+			else{			
 				axios
 		          .get("/Project/rest/users/login", {params: {username:loginInfo.username, password : loginInfo.password}})
 		          .then(response => {
@@ -91,6 +105,8 @@ var login = new Vue({
 					accountModal.updatedUser.oldPassword = accountModal.logedUser.password;
 					this.logedUser = response.data; 					
 					if(this.logedUser != ""){
+						this.labelUsernameLogin = "";
+						this.labelPasswordLogin = "";
 						home.currentUsername = this.logedUser.username;
 						home.currentUser.firstName = this.logedUser.firstName;
 						home.currentUser.lastName = this.logedUser.lastName;
@@ -106,9 +122,11 @@ var login = new Vue({
 							router.push("admin")
 						}
 					else{
-						alert("Username or password are incorrect");
+						this.labelUsernameLogin = "Username or password incorrect";
+						this.labelPasswordLogin = "";
 						} })
 
+		}
 		}
 		}
 });
