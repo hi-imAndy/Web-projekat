@@ -49,7 +49,7 @@ public class AmenitiesDAO {
 	
 	public boolean deleteAmenitie(Amenities am) {
 		if(amenities.containsKey(am.getId())) {
-			amenities.remove(am.getId());
+			amenities.get(am.getId()).setDeleted("YES");
 			saveAllAmenities();
 			return true;
 		}

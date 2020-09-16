@@ -1,10 +1,10 @@
-{"id": 1, "name": "Wifi"}
-{"id": 2, "name": "Cable TV"}
-{"id": 3, "name": "Washer"}
-{"id": 4, "name": "Air conditioning"}
-{"id": 5, "name": "TV"}
-{"id": 6, "name": "Heating"}
-{"id": 7, "name": "Ethernet connection"}
-{"id": 8, "name": "Essentials"}
-{"id": 9, "name": "Hot water"}
-{"id": 10, "name": "Crib"}
+{"deleted":"NO","id":1,"name":"Wifi"}
+{"deleted":"NO","id":2,"name":"Cable TV"}
+{"deleted":"NO","id":3,"name":"Washer"}
+{"deleted":"NO","id":4,"name":"Air conditioning"}
+{"deleted":"NO","id":5,"name":"TV"}
+{"deleted":"NO","id":6,"name":"Heating"}
+{"deleted":"NO","id":7,"name":"Ethernet connection"}
+{"deleted":"NO","id":8,"name":"Essentials"}
+{"deleted":"NO","id":9,"name":"Hot water"}
+{"deleted":"NO","id":10,"name":"Crib"}

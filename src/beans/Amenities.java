@@ -1,14 +1,24 @@
 package beans;
 
 public class Amenities {
+	private String deleted;
 	private int id;
 	private String name;
 	
 	public Amenities() {}
 	
 	public Amenities(int id, String name) {
+		this.deleted = "NO";
 		this.id = id;
 		this.name = name;
+	}
+
+	public String getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(String deleted) {
+		this.deleted = deleted;
 	}
 
 	public int getId() {
@@ -29,9 +39,7 @@ public class Amenities {
 
 	@Override
 	public String toString() {
-		return "Amenities [id=" + id + ", name=" + name + "]";
+		return "Amenities [deleted=" + deleted + ", id=" + id + ", name=" + name + "]";
 	}
-	
-	
 	
 }

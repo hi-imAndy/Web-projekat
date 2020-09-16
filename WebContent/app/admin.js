@@ -223,7 +223,7 @@ Vue.component("admin", {
 								      <th scope="col">ID</th>
 								      <th scope="col">Ap status</th>
 								      <th scope="col">Type</th>
-								      <th scope="col">Host</th>
+								      <th scope="col">Full price</th>
 								      <th scope="col">Res status</th>
 								      <th scope="col">Start</th>
 								      <th scope="col">End</th>
@@ -235,7 +235,7 @@ Vue.component("admin", {
 											<td v-if="r.reservedApartment != null">{{r.reservedApartment.id }}</td>
 											<td v-if="r.reservedApartment != null">{{r.reservedApartment.status}}</td>
 											<td v-if="r.reservedApartment != null">{{r.reservedApartment.apartmentType}}</td>
-											<td v-if="r.reservedApartment != null">{{r.reservedApartment.user.firstName + " " + r.reservedApartment.user.lastName }}</td>
+											<td v-if="r.reservedApartment != null">{{r.fullPrice }}</td>
 											<td v-if="r.reservedApartment != null">{{r.reservationStatus}}</td>
 											<td>{{r.startDateString}}</td>
 											<td>{{r.endDateString}}</td>
