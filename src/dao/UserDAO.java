@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,6 +47,25 @@ public class UserDAO {
 			return null;
 		}
 		return user;
+	}
+	
+	public Collection<User> getUsersWhoReserved(String username){
+		List<User> ret_users = new ArrayList<User>();
+		for(User u : users.values()) {
+			if(u.getReservations() == null || u.getReservations().isEmpty()) {
+				continue;
+			}
+			
+			for(Reservation r : u.getReservations()) {
+				if(r.getReservedApartment() == null) {
+					continue;
+				}
+				if(r.getReservedApartment().getUser().getUsername().equals(username)) {
+					ret_users.add(u);
+				}
+			}
+		}
+		return ret_users;
 	}
 	
 

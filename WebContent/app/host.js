@@ -23,7 +23,11 @@ Vue.component("host", {
 		      myReservations:[],
 		      selectedReservation:{},
 		      labelForReservation: "",
-		      selectedStatus:{}
+		      selectedStatus:{},
+		      allUsers:{},
+		      usernameFilter:"",
+		      selectedGender:null,
+		      allUsersFull:{}
 		    }
 	},
 	template: ` 
@@ -182,6 +186,42 @@ Vue.component("host", {
 							<option value="ACCEPTED">ACCEPTED</option>
 							<option value="FINISHED">FINISHED</option>
 						</select>
+					</div>
+				</div>
+				
+				<div class = "row">
+					<div class = "col"><h3> Users who reserved my apartments: </h3></div>
+					<div class = "col">Username:   <input type="text" v-model="usernameFilter" v-on:change="filterUsersByUsername"/></div>
+					<div class = "col-2">
+								<select class = "browser-default custom-select" v-on:change="filterUsersByGender" v-model="selectedGender">
+									<option selected disabled> -- select gender -- </option>
+									<option value="MALE">Male</option>
+									<option value="FEMALE">Female</option>
+								</select>
+					</div>
+				</div>
+				<div class = "row">
+					<div class = "col">
+						<table class="table table-hover">	
+							<thead>
+								<tr>
+									<th>Username</th>
+									<th>First name</th>
+									<th>Last name</th>
+									<th>Gender</th>
+									<th>Role</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="user in allUsers">
+									<td>{{user.username}}</td>
+									<td>{{user.firstName}}</td>
+									<td>{{user.lastName}}</td>
+									<td>{{user.gender}}</td>
+									<td>{{user.role}}</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
@@ -960,6 +1000,33 @@ Vue.component("host", {
     	        sortedReservations[i] = this.myReservations[i];
     		}
     		this.myReservations = sortedReservations;
+    	},
+    	filterUsersByUsername : function(){
+    		
+    		if(this.selectedGender == null)
+    			this.allUsers = this.allUsersFull;
+    		var newUsers = [];
+    		var len = 0;
+    		for(var i = 0; i < this.allUsers.length; i++){
+    			if(this.allUsers[i].username.includes(this.usernameFilter)){
+    				newUsers[len] = this.allUsers[i];
+    				len++;
+    			}
+    		}
+    		this.allUsers = newUsers;
+    	},
+    	filterUsersByGender : function(){
+    		if(this.usernameFilter == "")
+    			this.allUsers = this.allUsersFull;
+    		var newUsers = [];
+			var len = 0;
+			for(var i = 0; i < this.allUsers.length; i++){
+				if(this.allUsers[i].gender == this.selectedGender){
+					newUsers[len] = this.allUsers[i];
+					len++;
+				}
+			}
+			this.allUsers = newUsers;
     	}
 	},
 	mounted(){
@@ -1003,15 +1070,16 @@ Vue.component("host", {
 					}
 				}
 			});
+			
+			axios
+			.get("/Project/rest/users/getUsersWhoReserved", {params: {username: this.currentUser.username}})
+			.then(response => {
+				this.allUsers = response.data;
+				this.allUsersFull = response.data;
+				});
 	    },
 	    filterAmenities(newAmenities){
 	    	this.filter.amenities = newAmenities;
 	    }
-	},
-	 filters: {
-	    	dateFormat: function (value, format) {
-	    		var parsed = moment(value);
-	    		return parsed.format(format);
-	    	}
-	   	}
+	}
 });

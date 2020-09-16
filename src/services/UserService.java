@@ -55,6 +55,14 @@ public class UserService {
 		return "ERROR";
 	}
 	
+	@GET
+	@Path("/getUsersWhoReserved")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<User> getUsersWhoReserved(@QueryParam("username") String username){
+		UserDAO dao = (UserDAO) ctx.getAttribute("users");
+		return dao.getUsersWhoReserved(username);
+	}
+	
 	@POST
 	@Path("/acceptReservation")
 	@Produces(MediaType.APPLICATION_JSON)

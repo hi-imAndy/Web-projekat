@@ -1,6 +1,8 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -36,7 +38,13 @@ public class AmenitiesService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Amenities> getAllAmenities(){
 		AmenitiesDAO dao = (AmenitiesDAO)ctx.getAttribute("amenities");
-		return dao.findAll();
+		List<Amenities> allAmenities = new ArrayList<Amenities>(dao.findAll());
+		List<Amenities> notDeletedAmenities = new ArrayList<Amenities>();
+		for(Amenities am : allAmenities){
+			if(am.getDeleted().equals("NO"))
+				notDeletedAmenities.add(am);
+		}
+		return notDeletedAmenities;
 	}
 	
 	@POST
