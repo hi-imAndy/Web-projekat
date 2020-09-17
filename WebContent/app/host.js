@@ -899,7 +899,7 @@ Vue.component("host", {
     			.post("/Project/rest/apartments/approveComment", this.selectedComment);
     			
     			axios
-    			.get("/Project/rest/apartments/getApartmentsByUsername", {params : {username : user.username}})
+    			.get("/Project/rest/apartments/getApartmentsByUsername", {params : {username : currentUser.username}})
     			.then(response => {
     				this.myApartments = response.data;
     				for(var i = 0; i < response.data.length; i++){
