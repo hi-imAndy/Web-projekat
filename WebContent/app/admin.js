@@ -639,17 +639,13 @@ Vue.component("admin", {
 				alert("Apartment " + this.selectedApartment.id + " edited!");
 				
 				axios
-				.get("/Project/rest/apartments/getApartmentsByUsername", {params : {username : user.username}})
+				.get("/Project/rest/apartments/getAllApartments")
 				.then(response => {
-					this.myApartments = response.data;
-					for(var i = 0; i < response.data.length; i++){
-						if(response.data[i].status === "ACTIVE")
-							this.activeApartments.push(response.data[i]);
-						else
-							this.inactiveApartments.push(response.data[i]);
-					}
+					this.apartments = response.data;
 				});
 				this.label = "";
+			}else{
+				event.stopPropagation();
 			}
 		},
 		addDateToSelected : function(){
