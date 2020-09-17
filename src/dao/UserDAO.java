@@ -168,7 +168,6 @@ public class UserDAO {
 				}
 				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getStartDateString().equalsIgnoreCase(reservation.getStartDateString())) {
 					r.setReservationStatus(ReservationStatus.ACCEPTED);
-					System.out.println("PROBA");
 					break;
 				}
 			}
