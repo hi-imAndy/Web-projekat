@@ -156,7 +156,7 @@ Vue.component("host", {
 								      </th>
 								      <th scope="col">ID</th>
 								      <th scope="col">Ap status</th>
-								      <th scope="col">Type</th>
+								      <th scope="col">Guest</th>
 								      <th scope="col">Full price</th>
 								      <th scope="col">Res status</th>
 								      <th scope="col">Start</th>
@@ -168,7 +168,7 @@ Vue.component("host", {
 											<td v-if="r.reservedApartment != null"><img v-bind:src="r.reservedApartment.pictures[0]" class="img-fluid img-thumbnail " width="250" height="100"></td>
 											<td v-if="r.reservedApartment != null">{{r.reservedApartment.id }}</td>
 											<td v-if="r.reservedApartment != null">{{r.reservedApartment.status}}</td>
-											<td v-if="r.reservedApartment != null">{{r.reservedApartment.apartmentType}}</td>
+											<td v-if="r.reservedApartment != null">{{r.guest.firstName}} {{r.guest.lastName}}</td>
 											<td v-if="r.reservedApartment != null">{{r.fullPrice }}</td>
 											<td v-if="r.reservedApartment != null">{{r.reservationStatus}}</td>
 											<td>{{r.startDateString}}</td>

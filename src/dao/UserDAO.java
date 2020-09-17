@@ -166,7 +166,7 @@ public class UserDAO {
 				if(r == null || r.getReservedApartment() == null) {
 					continue;
 				}
-				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getStartDateString().equals(reservation.getStartDateString()) && r.getEndDateString().equals(reservation.getEndDateString())) {
+				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getNumberOfNights() == reservation.getNumberOfNights()) {
 					r.setReservationStatus(ReservationStatus.ACCEPTED);
 					break;
 				}
@@ -184,7 +184,7 @@ public class UserDAO {
 				if(r == null || r.getReservedApartment() == null) {
 					continue;
 				}
-				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getStartDateString().equals(reservation.getStartDateString()) && r.getEndDateString().equals(reservation.getEndDateString())) {
+				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getNumberOfNights() == reservation.getNumberOfNights()) {
 					r.setReservationStatus(ReservationStatus.REJECTED);
 					break;
 				}
@@ -202,7 +202,7 @@ public class UserDAO {
 				if(r == null || r.getReservedApartment() == null) {
 					continue;
 				}
-				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getStartDateString().equals(reservation.getStartDateString()) && r.getEndDateString().equals(reservation.getEndDateString())) {
+				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getNumberOfNights() == reservation.getNumberOfNights()) {
 					r.setReservationStatus(ReservationStatus.FINISHED);
 					break;
 				}
