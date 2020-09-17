@@ -61,7 +61,7 @@ public class ApartmentDAO {
 				if(r.getReservedApartment() == null) {
 					break;
 				}
-				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getFullPrice() == reservation.getFullPrice()){
+				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getGuest().getUsername().equals(reservation.getGuest().getUsername())){
 					r.setReservationStatus(ReservationStatus.ACCEPTED);
 					break;
 				}
@@ -91,7 +91,7 @@ public class ApartmentDAO {
 				if(r.getReservedApartment() == null) {
 					break;
 				}
-				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getFullPrice() == reservation.getFullPrice()){
+				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getGuest().getUsername().equals(reservation.getGuest().getUsername())){
 					r.setReservationStatus(ReservationStatus.FINISHED);
 					break;
 				}
