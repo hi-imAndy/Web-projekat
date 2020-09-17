@@ -52,8 +52,6 @@ public class Apartment {
 		this.status = status;
 		this.amenities = amenities;
 		this.reservations = new ArrayList<Reservation>();
-
-		
 	}
 	
 	public String getDeleted() {

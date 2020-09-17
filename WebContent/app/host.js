@@ -584,17 +584,17 @@ Vue.component("host", {
 	</div>
 	`,
 	methods:{
-		create: function(){
+		create: function(event){
 			this.location.address = this.address;
 			newPictures = [];
 			for(var i = 0; i < this.pictures.length; i++){
 				newPictures[i] = "pictures\\" + this.pictures[i];
 			}
-			var ap = {id : this.newApartment.id, apartmentType: this.newApartment.apartmentType, numberOfRooms:this.newApartment.numberOfRooms , numberOfGuests:this.newApartment.numberOfGuests, location: this.location, allDates: this.allDates, availableDates: this.allDates ,user : home.currentUser, pictures: newPictures, pricePerNight: this.newApartment.pricePerNight, checkInTime: this.newApartment.checkInTime, checkOutTime: this.newApartment.checkOutTime, status: this.newApartment.status, amenities: this.newAmenities};
+			var ap = {deleted : "NO", id : this.newApartment.id, apartmentType: this.newApartment.apartmentType, numberOfRooms:this.newApartment.numberOfRooms , numberOfGuests:this.newApartment.numberOfGuests, location: this.location, allDates: this.allDates, availableDates: this.allDates ,user : this.currentUser, pictures: newPictures, pricePerNight: this.newApartment.pricePerNight, checkInTime: this.newApartment.checkInTime, checkOutTime: this.newApartment.checkOutTime, status: this.newApartment.status, amenities: this.newAmenities};
 			
 			this.label = "";
 			var i = 0;
-			if(ap.id == "" || ap.id == null){
+			if(ap.id == "" || ap.id == null || ap.id == undefined){
 				this.label += "ID is required. ";
 				i++;
 			}
@@ -602,11 +602,11 @@ Vue.component("host", {
 				this.label += "Apartment type is required. ";
 				i++;
 			}
-			if(ap.numberOfRooms == null || ap.numberOfRooms == undefined || numberOfRooms == ""){
+			if(ap.numberOfRooms == null || ap.numberOfRooms == undefined || ap.numberOfRooms == ""){
 				this.label += "Number of rooms is required. ";
 				i++;
 			}
-			if(ap.numberOfGuests == null || ap.numberOfGuests == undefined || numberOfGuests == ""){
+			if(ap.numberOfGuests == null || ap.numberOfGuests == undefined || ap.numberOfGuests == ""){
 				this.label += "Number of guests is required. ";
 				i++;
 			}
@@ -650,8 +650,10 @@ Vue.component("host", {
 				axios
 				.post("/Project/rest/apartments/addNewApartment", ap)
 				.then(response => {
-					if(response.data == false)
+					if(response.data == false){
+						event.stopPropagation();
 						alert("Apartment with that ID already exists!");
+					}
 					else{
 						axios
 						.get("/Project/rest/apartments/getApartmentsByUsername", {params : {username : user.username}})
@@ -668,6 +670,8 @@ Vue.component("host", {
 					}
 				});
 				this.label = "";
+			}else{
+				event.stopPropagation();
 			}
 		},
 		updateImages : function(event){
@@ -1062,6 +1066,8 @@ Vue.component("host", {
 				this.myReservations = [];
 				var len = 0;
 				for(var i = 0; i < response.data.length; i++){
+					if(response.data[i].reservations == null)
+						continue;
 					for(var j = 0; j < response.data[i].reservations.length; j++){
 						if(response.data[i].reservations[j] != null && response.data[i].reservations[j] != []){
 							this.myReservations[len] = (response.data[i].reservations[j]);
