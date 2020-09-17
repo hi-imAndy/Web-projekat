@@ -44,15 +44,15 @@ Vue.component("guest", {
 								<input type = "number" placeholder = "maximal number of rooms" value="1" min="1" max="25" step="1" class = "form-control" v-model = "searchCriteria.numberOfRoomsMax">
 				</div>
 			</div>
-				<button type = "button" class="btn btn-success" v-on:click="filterApartments(searchCriteria)">Filter appartments</button>
-				<button type = "button" class="btn btn-warning" v-on:click="resetFilters()">Reset filters</button>
+				<button type = "button" class="btn btn-primary" v-on:click="filterApartments(searchCriteria)">Filter appartments</button>
+				<button type = "button" class="btn btn-primary" v-on:click="resetFilters()">Reset filters</button>
 		</div>
 		
 
 
 		<div class="container">
 			<div class = "row" style = "margin-top: 15px">
-				<div class = "col-1" style="margin-top:30px"><button class="btn btn-outline-secondary" v-on:click="filterApartments">Filter:</button></div>
+				<div class = "col-1" style="margin-top:30px"><button class="btn btn-outline-secondary" v-on:click="filterHost()">Filter:</button></div>
 				<div class = "col-2" style="margin-top:30px">
 					<select  class="browser-default custom-select" v-model="filter.type">
 						<option disabled selected value> -- select type -- </option>
@@ -456,7 +456,7 @@ Vue.component("guest", {
 				if(this.searchCriteria.numberOfRoomsMax == -1)
 					this.searchCriteria.numberOfRoomsMax = null;
 			}
-    	},	    	
+    	},    	
 		createReservation: function(reservationInfo){
 			if(this.reservationInfo.startDate != null && this.reservationInfo.numberOfNights != null ){
 		var reservationInfo = {user:this.reservationInfo.user,apartment:this.reservationInfo.apartment,startDate:this.reservationInfo.startDate,endDate:this.reservationInfo.endDate,numberOfNights : this.reservationInfo.numberOfNights,reservationMessage:this.reservationInfo.reservationMessage};
@@ -587,7 +587,7 @@ Vue.component("guest", {
 						});
 					});
     	},	
-    	filterApartments : function(){
+    	filterHost : function(){
 			this.filter.amenities = this.filterAmenities;
     		axios
     		.post("/Project/rest/apartments/filterHost", this.filter)
