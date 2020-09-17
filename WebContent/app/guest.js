@@ -61,13 +61,6 @@ Vue.component("guest", {
 					</select>
 					
 				</div>
-				<div class = "col-2">
-					<select  class="browser-default custom-select" v-model="filter.status" style = "margin-top:30px">
-						<option disabled selected value> -- select status -- </option>
-						<option value= "ACTIVE">Active</option>
-						<option value = "INACTIVE">Inactive</option>
-					</select>
-				</div>
 				<div class = "col=3">
 					<select class="browser-default custom-select" multiple v-model="filterAmenities">
 						<option v-for="am in amenities" v-bind:value="am">{{am.name}}</option>
@@ -368,6 +361,8 @@ Vue.component("guest", {
 		this.reservationInfo.reservationMessage = null;
 		this.reservationInfo.numberOfNights = null;
 		this.successFlag = null;
+		this.filter.status = "ACTIVE";
+		
 		
 		axios
 			.get("/Project/rest/amenities/getAllAmenities")
@@ -402,6 +397,7 @@ Vue.component("guest", {
 			
 },
 		addComment : function(reservationComment){
+		if(this.selectedReservation.reservation.status === 'REJECTED' && this.selectedReservation.reservation.status === 'FINISHED' ){
 			if(this.reservationComment.commentText != null && this.reservationComment.rating!=null){
 				var comment = {author:this.currentUser,apartment:this.selectedReservation.reservation.reservedApartment,content:this.reservationComment.commentText,rating:this.reservationComment.rating,approved : false};
 				axios
@@ -415,7 +411,10 @@ Vue.component("guest", {
 			else{
 				alert("Comment text and rating can't be empty");
 			}
-			
+			}
+			else{
+				alert("Reservation status must be rejected or finished");
+			}
 },
 		filterApartments : function(searchCriteria){
 			if(Number(this.searchCriteria.pricePerNightMin)  > Number(this.searchCriteria.pricePerNightMax) &&  this.searchCriteria.pricePerNightMax != null  ){
@@ -589,19 +588,12 @@ Vue.component("guest", {
 					});
     	},	
     	filterApartments : function(){
+			this.filter.amenities = this.filterAmenities;
     		axios
     		.post("/Project/rest/apartments/filterHost", this.filter)
     		.then(response => {
     			if(response.data != null){
-    				this.myApartments = response.data;
-    				this.activeApartments = [];
-    				this.inactiveApartments = [];
-    				for(var i = 0; i < response.data.length; i++){
-    					if(response.data[i].status === "ACTIVE")
-    						this.activeApartments.push(response.data[i]);
-    					else
-    						this.inactiveApartments.push(response.data[i]);
-    				}
+    				this.apartments = response.data;
     			}
     		})
     	},	

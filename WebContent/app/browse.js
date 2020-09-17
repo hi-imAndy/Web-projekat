@@ -5,7 +5,10 @@ Vue.component("browse", {
 			currentUser: {},
 			apartments:{},
 			selected:{},
-			searchCriteria:{}
+			searchCriteria:{},
+			amenities : {},
+			filter : {},
+			filterAmenities:[],
 		}
 	},
 	template: ` 
@@ -45,6 +48,33 @@ Vue.component("browse", {
 				<button type = "button" class="btn btn-primary" v-on:click="filterApartments(searchCriteria)">Filter appartments</button>
 				<button type = "button" class="btn btn-primary" v-on:click="resetFilters()">Reset filters</button>
 		</div>
+		
+		
+		
+		
+		
+		
+		<div class="container">
+			<div class = "row" style = "margin-top: 15px">
+				<div class = "col-1" style="margin-top:30px"><button class="btn btn-outline-secondary" v-on:click="filterApartments">Filter:</button></div>
+				<div class = "col-2" style="margin-top:30px">
+					<select  class="browser-default custom-select" v-model="filter.type">
+						<option disabled selected value> -- select type -- </option>
+						<option value= "ENTIRE_APARTMENT">Entire apartment</option>
+						<option value= "ROOM">Room</option>
+					</select>
+					
+				</div>
+				<div class = "col=3">
+					<select class="browser-default custom-select" multiple v-model="filterAmenities">
+						<option v-for="am in amenities" v-bind:value="am">{{am.name}}</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		
+		
+		
 		
 		
 			<div class="container">
@@ -196,11 +226,18 @@ Vue.component("browse", {
 		this.searchCriteria.pricePerNightMax = null;
 		this.searchCriteria.numberOfRoomsMin = null;
 		this.searchCriteria.numberOfRoomsMax = null;
+		this.filter.status = "ACTIVE";
 		
 		axios
 			.get("/Project/rest/apartments/getAllApartments")
 			.then(response => {this.apartments = response.data;
 			});
+			
+			
+		axios
+			.get("/Project/rest/amenities/getAllAmenities")
+			.then(response => (this.amenities = response.data));
+		
 	},
 	methods : {
 		selectApartment : function(apartment){
@@ -264,6 +301,16 @@ Vue.component("browse", {
 			
 }
 	},
+	    	filterApartments : function(){
+			this.filter.amenities = this.filterAmenities;
+    		axios
+    		.post("/Project/rest/apartments/filterHost", this.filter)
+    		.then(response => {
+    			if(response.data != null){
+    				this.apartments = response.data;
+    			}
+    		})
+    	},	
 
 });
 
