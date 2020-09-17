@@ -397,7 +397,7 @@ Vue.component("guest", {
 			
 },
 		addComment : function(reservationComment){
-		if(this.selectedReservation.reservation.status == 'REJECTED' || this.selectedReservation.reservation.status == 'FINISHED' ){
+		if(this.selectedReservation.reservation.reservationStatus === "REJECTED" || this.selectedReservation.reservation.reservationStatus === "FINISHED" ){
 			if(this.reservationComment.commentText != null && this.reservationComment.rating!=null){
 				var comment = {author:this.currentUser,apartment:this.selectedReservation.reservation.reservedApartment,content:this.reservationComment.commentText,rating:this.reservationComment.rating,approved : false};
 				axios

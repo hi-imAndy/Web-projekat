@@ -989,11 +989,11 @@ public Collection<Apartment> filterHost(FilterInfoHost filterInfo){
 				return "STATUS 200 OK";
 			}
 			catch (Exception e) {
-				return "STATUS 403 FORBIDEN";
+				return "STATUS 400 BAD REQUEST";
 			}
 		}
 		else {
-			return "STATUS 403 FORBIDDEN";
+			return "STATUS 400 BAD REQUEST";
 		}
 	}
 	

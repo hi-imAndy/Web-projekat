@@ -166,8 +166,9 @@ public class UserDAO {
 				if(r == null || r.getReservedApartment() == null) {
 					continue;
 				}
-				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getNumberOfNights() == reservation.getNumberOfNights()) {
+				if(r.getReservedApartment().getId().equals(reservation.getReservedApartment().getId()) && r.getStartDateString().equalsIgnoreCase(reservation.getStartDateString())) {
 					r.setReservationStatus(ReservationStatus.ACCEPTED);
+					System.out.println("PROBA");
 					break;
 				}
 			}
@@ -234,24 +235,27 @@ public class UserDAO {
 	
 
 	
-	public boolean changeUserData(String username, String oldPassword , String password, String passwordConfirm ,String firstName,String lastName) {
+	public boolean changeUserData(String username, String oldPassword , String password, String passwordConfirm ,String firstName,String lastName, String oldPasswordX) {
 			
-			User u = findByUsername(username);
-			if(password != null || passwordConfirm != null) {
-				if(!password.equals(passwordConfirm))
-						return false;
-				else if(password.length() < 8 || passwordConfirm.length() < 8) 
-					return false;			
-				else 
-					u.setPassword(password);
+		if(oldPassword.equals(oldPasswordX)) {
+				User u = findByUsername(username);
+				if(password != null || passwordConfirm != null) {
+					if(!password.equals(passwordConfirm))
+							return false;
+					else if(password.length() < 8 || passwordConfirm.length() < 8) 
+						return false;			
+					else 
+						u.setPassword(password);
+					
+		}
+					u.setFirstName(firstName);
+					u.setLastName(lastName);
+					updateUser(u, username);
+					saveUser(u);
+					return true;
 				
-	}
-				u.setFirstName(firstName);
-				u.setLastName(lastName);
-				updateUser(u, username);
-	
-				return true;
-			
+		}
+		return false;
 	}
 
 	public void bookApartment(ReservationInfo reservationInfo) {

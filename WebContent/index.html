@@ -88,7 +88,7 @@
 
 
 
-<form  action = "" class = "main-form needs-validation" novalidate >
+<form  action = "" class = "main-form"  >
 	<div id="accountModal" class="modal fade"> 
 		<div class = "modal-dialog modal-dialog-centered">
 		<div class = "modal-content">
@@ -100,15 +100,21 @@
 		</div>
 		<div class="container" v-if="updatedUser">
 			<label for = "username">Username:</label>
-			<input type = "text" name = "username" class = "form-control" v-bind:placeholder="updatedUser.username" readonly="readonly">
+			<input type = "text" name = "username" class = "form-control" v-bind:placeholder="logedUser.username" readonly="readonly">
 			<label for = "password">New Password:</label>
 			<input type = "password" name = "password" class = "form-control" v-model = "updatedUser.password">
 			<label for = "confirmPassword">Confirm password:</label>
 			<input type = "password" name = "confirmPassword" class = "form-control" v-model = "updatedUser.confirmPassword">
+			<label style="color:red">{{labelOldPasswordConfirm}}</label>	
+			</br>
 			<label for = "firstName">First name:</label>
 			<input type = "text" name = "firstName" class = "form-control" v-bind:placeholder="logedUser.firstName" v-model = "updatedUser.firstName">
 			<label for = "lastName">Last name:</label>
 			<input type = "text" name = "lastName" class = "form-control" v-bind:placeholder="logedUser.lastName" v-model = "updatedUser.lastName">
+			<label for = "old password">Confirm password:</label>
+			<input type = "password" name = "confirmPassword" class = "form-control" v-model = "updatedUser.oldPasswordX">
+			<label style="color:red">{{labelOldPassword}}</label>		
+			</br></br>
 			<div class="row justify-content-md-center" style="margin-top: 10px;">
 				<div class="col-md-auto">
 					<button type = "button" class="btn btn-primary" v-on:click="updateAccount(updatedUser)">Save changes</button>
@@ -126,7 +132,7 @@
 </form>	
 
 
-<form action = "" class = "main-form needs-validation" novalidate >
+<form action = "" class = "main-form" >
 		<div id="registerModal" class="modal fade"  > 
 					<div class = "modal-dialog modal-dialog-centered">
 						<div class = "modal-content">
@@ -151,31 +157,31 @@
 									<div class="row justify-content-md-center">
 										<div class="col-md-auto">
 											<input class = "form-control" type = "text" placeholder = "Username" v-model="newUser.username" required>
-											<div class = "invalid-feedback">This field can't be empty.</div></br>
+											<label style="color:red">{{usernameLabel}}</label></br>
 										</div>
 									</div>
 									<div class="row justify-content-md-center">
 										<div class="col-md-auto">
 											<input class = "form-control"type = "password" placeholder = "Password" v-model="newUser.password" required pattern=".{8,}"  title="8 characters minimum" >
-											<div class = "invalid-feedback">Password must contain minimum 8 characters.</div></br>
+											<label style="color:red">{{passwordLabel}}</label></br>
 										</div>
 									</div>
 									<div class="row justify-content-md-center">
 										<div class="col-md-auto">
 											<input class = "form-control" type = "password" placeholder = "Confirm Password" v-model="newUser.passwordConfirm" required pattern=".{8,}"  title="8 characters minimum" >
-											<div class = "invalid-feedback">Password must contain minimum 8 characters.</div></br>
+											<label style="color:red">{{confirmLabel}}</label></br>
 										</div>
 									</div>
 									<div class="row justify-content-md-center">
 										<div class="col-md-auto">
 											<input class = "form-control" type = "firstName" placeholder = "First Name " v-model="newUser.firstName" required>
-											<div class = "invalid-feedback">This field can't be empty.</div></br>
+											<label style="color:red">{{firstNameLabel}}</label></br>
 										</div>
 									</div>
 									<div class="row justify-content-md-center">
 										<div class="col-md-auto">
 											<input class = "form-control" type = "lastName" placeholder = "Last Name " v-model="newUser.lastName" required>
-											<div class = "invalid-feedback">This field can't be empty.</div></br>
+											<label style="color:red">{{lastNameLabel}}</label></br>
 										</div>
 									</div>		
 									<div class="row justify-content-md-center">
@@ -184,7 +190,7 @@
 												<option value="MALE">Male</option>
 												<option value="FEMALE">Female</option>	
 											</select>
-											<div class = "invalid-feedback">This field can't be empty.</div></br>
+											<label style="color:red">{{genderLabel}}</label></br>
 										</div>
 									</div>		
 									<div class="row justify-content-md-center" style="margin-top: 10px;">
@@ -216,24 +222,7 @@
 <script src="app/guest.js"></script>
 <script src="app/home.js"></script>
 
-<script>
 
-	//$('#input_starttime').pickatime({});
-	
-	var form = document.querySelector('.needs-validation');
-	
-	form.addEventListener('click',function(event){
-		if(form.checkValidity() === false){
-			event.preventDefault(); 
-			event.stopPropagation();
-		}
-		
-		form.classList.add('was-validated');
-		
-		
-	})
-	
-</script>
 
 </body>
 

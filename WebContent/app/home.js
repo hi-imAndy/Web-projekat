@@ -5,7 +5,8 @@ var home = new Vue({
 		loginInfo:{},
 		currentUser:{},
 		currentUsername:'',
-		apartments : {}
+		apartments : {} ,
+		labelOldPassword : ""
 	},
 	mounted(){
 		if(localStorage.currentUsername){
@@ -17,6 +18,8 @@ var home = new Vue({
 		}else{
 			this.mode = "BROWSE";
 		}
+		
+			
 		
 	},
 	watch: {
@@ -43,16 +46,45 @@ var home = new Vue({
 var register = new Vue({
 	el:'#registerModal',
 	data:{
-		newUser:{}
+		newUser:{},
+		usernameLabel : "",
+		passwordLabel : "",
+		confirmLabel : "",
+		firstNameLabel : "",
+		lastNameLabel : "",
+		roleLabel : "",
+		genderLabel : ""
 	},
 	mounted () {
 		this.newUser.role = "GUEST";
     },
 	methods:{
 		register : function(user){
+			if(user.username == "" || user.username == null){
+				this.usernameLabel = "This field must be filled";
+			}
+			if(user.password == "" || user.password == null){
+				this.passwordLabel = "This field must be filled";
+			}
+			if(user.passwordConfirm == "" || user.passwordConfirm == null){
+				this.confirmLabel = "This field must be filled";
+			}
+			if(user.firstName == "" || user.firstName == null){
+				this.firstNameLabel = "This field must be filled";
+			}
+			if(user.lastName == "" || user.lastName == null){
+				this.lastNameLabel = "This field must be filled";
+			}
+			if(user.gender == "" || user.gender == null ){
+				this.genderLabel = "This field must be filled";
+			}
+			if(user.role == "" || user.role == null){
+				this.roleLabel = "This field must be filled";
+			}
+			
 			if(user.username != "" && user.username != undefined && user.username != null && user.password != "" && user.password != undefined && user.password != null && user.passwordConfirm != "" && user.passwordConfirm != undefined && user.passwordConfirm != null && user.firstName != "" &&  user.firstName != undefined && user.firstName != null && user.lastName != "" && user.lastName != undefined && user.lastName != null && user.gender != "" && user.gender != undefined && user.gender != null){
 				if(user.password != user.passwordConfirm){
-					alert("Passwords don't match!");
+					this.confirmLabel = "Passwords dont match";
 				}else{
 				var u = {username : user.username, password : user.password, firstName : user.firstName, lastName : user.lastName, role:user.role, gender:user.gender};
 				axios
@@ -60,6 +92,13 @@ var register = new Vue({
 		          .then(response => { 
 		        	  if(response.data=="OK"){
 		        		  (alert("User " + u.firstName + " " + u.lastName + " is successfuly registered."));
+									this.usernameLabel = "";
+									this.passwordLabel = "";
+									this.confirmLabel = "";
+									this.firstNameLabel = "";
+									this.lastNameLabel = "";
+									this.roleLabel = "";
+									this.genderLabel = "";
 							$('#registerModal').modal('hide')
 						}
 		        	  else
@@ -135,26 +174,62 @@ var accountModal = new Vue({
 	el:'#accountModal',
 	data:{
 		logedUser : {},
-		updatedUser : {}
+		updatedUser : {},
+		labelOldPassword : "",
+		labelOldPasswordConfirm : ""
 	},
 	mounted () {
+			
+		axios	
+			.get("/Project/rest/users/currentUser")
+			.then(response => {this.logedUser = response.data;
+			this.updatedUser.username = this.logedUser.username;
+			this.updatedUser.oldPassword = this.logedUser.password;
+			this.updatedUser.username = this.logedUser.username;
+			this.updatedUser.firstName = this.logedUser.firstName;
+			this.updatedUser.lastName = this.logedUser.lastName;
+			this.updatedUser.oldPasswordX = "";
+			});
+
+			
+
+		
     },
 	methods:{
 		updateAccount : function(updatedUser){	
-				
+			if(updatedUser.oldPassword == updatedUser.oldPasswordX){	
 				axios
 		          .get("/Project/rest/users/updateAccount",{params:{username : updatedUser.username, oldPassword : updatedUser.oldPassword,
 															password : updatedUser.password , confirmPassword : updatedUser.confirmPassword ,
-															firstName : updatedUser.firstName , lastName : updatedUser.lastName}})
+															firstName : updatedUser.firstName , lastName : updatedUser.lastName ,oldPasswordX : updatedUser.oldPasswordX}})
 		          .then(response => {
 						if(response.data){
+						axios	
+							.get("/Project/rest/users/currentUser")
+							.then(response => {this.logedUser = response.data;
+								this.updatedUser.username = this.logedUser.username;
+								this.updatedUser.oldPassword = this.logedUser.password;
+								this.updatedUser.username = this.logedUser.username;
+								this.updatedUser.firstName = this.logedUser.firstName;
+								this.updatedUser.lastName = this.logedUser.lastName;
+								this.labelOldPassword = "";
+								this.labelOldPasswordConfirm = "";
+								this.updatedUser.oldPasswordX = "";	
+												
+												
+												
+							});
 							alert("Sucessfuly updated");
 							$('#accountModal').modal('hide')
 						}
 						else
-							alert("Passwords are not matching");
+							this.labelOldPasswordConfirm = "Passwords are not matching";
 							})
 
+		}
+		else if(updatedUser.oldPasswordX == ""){
+			this.labelOldPassword = "This field cant remain empty";
+		}
 		}
 		}
 });
