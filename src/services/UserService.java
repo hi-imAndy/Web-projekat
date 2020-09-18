@@ -55,6 +55,18 @@ public class UserService {
 		return "ERROR";
 	}
 	
+	@POST
+	@Path("/saveHost")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String saveHost(User user) {
+		UserDAO dao = (UserDAO) ctx.getAttribute("users");
+		if(dao.findByUsername(user.getUsername()) == null) {
+			dao.saveUser(user);
+			return "OK";
+		}
+		return "ERROR";
+	}
+	
 	@GET
 	@Path("/getUsersWhoReserved")
 	@Produces(MediaType.APPLICATION_JSON)

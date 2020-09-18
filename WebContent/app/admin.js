@@ -19,7 +19,9 @@ Vue.component("admin", {
 				filter:{},
 				filterAmenities:[],
 				allReservations:{},
-				selectedStatus:{}
+				selectedStatus:{},
+				newHost:{},
+				labelNewHost: ""
 		    }
 	},
 	template: ` 
@@ -162,6 +164,40 @@ Vue.component("admin", {
 				</div>
 			</div>
 		</div>
+		
+		<div class = "row justify-content-center">
+			<div class = "col-md-auto"><h3>Add a new host:</h3></div>
+		</div>
+		</br>
+		<div class = "row justify-content-center">
+			<div class = "col-md-auto">Username:<input type="text" v-model="newHost.username"/></div>
+			<div class = "col-md-auto">Password:<input type="text" v-model="newHost.password"/></div>
+		</div>
+		</br>
+		<div class = "row justify-content-center">
+			<div class = "col-md-auto">First name:<input type="text" v-model="newHost.firstName"/></div>
+			<div class = "col-md-auto">Last name:<input type="text" v-model="newHost.lastName"/></div>
+		</div>
+		</br>
+		<div class = "row justify-content-center">
+			<div class = "col-2">
+				<select class="browser-default custom-select" v-model="newHost.gender">
+						<option value = "MALE">Male</option>
+						<option value = "FEMALE">Female</option>
+					</select>
+			</div>
+		</div>
+		</br> 
+		<div class = "row justify-content-center">
+			<div class = "col-md-auto"> <label style="color:red">{{labelNewHost}}</label>
+			</div>
+		</div>
+		<div class = "row justify-content-center">
+			<div class = "col-md-auto">
+				<button class = "btn btn-success" v-on:click="saveHost">Save host</button>
+			</div>
+		</div>
+		</br></br>
 		<div class = "row justify-content-center" style="margin-top: 20px;">
 			<div class = "col-md-auto"><h2>All amenities</h2></div>
 		</div>
@@ -438,6 +474,9 @@ Vue.component("admin", {
 	</div>
 	`,
 	mounted(){
+		
+		this.newHost.role = "HOST";
+		
 		axios
 		.get("/Project/rest/apartments/getAllApartments")
 		.then(response => (this.apartments = response.data));
@@ -739,6 +778,53 @@ Vue.component("admin", {
 				alert("An apartment needs to be selected!");
 				event.stopPropagation();
 			}
+    	},
+    	saveHost: function(){
+    		
+    		this.labelNewHost = "";
+    		var i = 0;
+    		if(this.newHost.username == null || this.newHost.username == undefined || this.newHost.username == ""){
+    			i++;
+    			this.labelNewHost += "Username is required!";
+    		}
+    		if(this.newHost.password == null || this.newHost.password == undefined || this.newHost.password == ""){
+    			i++;
+    			this.labelNewHost += "Password is required!";
+    		}
+    		if(this.newHost.firstName == null || this.newHost.firstName == undefined || this.newHost.firstName == ""){
+    			i++;
+    			this.labelNewHost += "First name is required!";
+    		}
+    		if(this.newHost.lastName == null || this.newHost.lastName == undefined || this.newHost.lastName == ""){
+    			i++;
+    			this.labelNewHost += "Last name is required!";
+    		}
+    		if(this.newHost.gender == null || this.newHost.gender == undefined || this.newHost.gender == ""){
+    			i++;
+    			this.labelNewHost += "Gender is required!";
+    		}
+    	
+    		if(i == 0){
+    			axios
+        		.post("/Project/rest/users/saveHost", this.newHost)
+        		.then(response => {
+        			if(response.data == "OK"){
+        				alert("Host " + this.newHost.firstName + " " + this.newHost.lastName + " created.");
+        				
+        				axios
+                		.get("/Project/rest/users/getAllUsers")
+                		.then(response => (this.users = response.data));
+        			}
+        			else{
+        				alert("That username already exists!");
+        			}
+        		});
+        		
+        		
+        		
+        		
+    		}
+    		
     	}
     	
 	}
